@@ -19,4 +19,9 @@ public class Rm : MonoBehaviour
             _instance = this;
     }
     #endregion
+
+    public GameManager gameManager;
+    public GameStateManager gameStateManager;
+    public BetBarHandler betBarHandler;
+    public PotHandler potHandler;
 }
