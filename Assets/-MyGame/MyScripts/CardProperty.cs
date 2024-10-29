@@ -7,6 +7,7 @@ namespace com.mani.muzamil.amjad
         public CardState.SUIT Suit;
         public CardState.CARDVALUE Card;
         public int Power;
+        public int SecondPower;
         public int CardIndexInArray;
 
 

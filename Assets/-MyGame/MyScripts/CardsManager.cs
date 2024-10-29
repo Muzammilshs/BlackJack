@@ -10,7 +10,7 @@ public class CardsManager : MonoBehaviour
     [ShowOnly]
     public List<int> cardsIndexes;
     [ShowOnly]
-    public List<CardProperty> cardsStack;
+    public List<CardProperty> cardsStackList;
     [SerializeField] RectTransform cardsStackPos, wasteCardsPos;
 
     void Start()
@@ -33,14 +33,14 @@ public class CardsManager : MonoBehaviour
     }
     void CreateLimitedCardsForStack()
     {
-        if (cardsStack.Count < cardsLimit)
+        if (cardsStackList.Count < cardsLimit)
         {
             int cardIndex = GetRandomCard();
             GameObject card = Instantiate(allCards.Card[GetRandomCard()].gameObject);
             LocalSetting.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
-            Vector2 cardPos = card.transform.position + (Vector3.up * (-cardsStack.Count * 15));
+            Vector2 cardPos = card.transform.position + (Vector3.up * (-cardsStackList.Count * 15));
             card.transform.position = cardPos;
-            cardsStack.Add(card.GetComponent<CardProperty>());
+            cardsStackList.Add(card.GetComponent<CardProperty>());
             card.GetComponent<CardProperty>().ShowDummySkin();
             CreateLimitedCardsForStack();
         }
@@ -67,16 +67,16 @@ public class CardsManager : MonoBehaviour
     }
     void ClearCardsStack()
     {
-        if (cardsStack == null)
+        if (cardsStackList == null)
         {
-            cardsStack = new List<CardProperty>();
+            cardsStackList = new List<CardProperty>();
             return;
         }
-        if (cardsStack.Count > 0)
+        if (cardsStackList.Count > 0)
         {
-            foreach (CardProperty card in cardsStack)
+            foreach (CardProperty card in cardsStackList)
                 Destroy(card.gameObject);
         }
-        cardsStack.Clear();
+        cardsStackList.Clear();
     }
 }

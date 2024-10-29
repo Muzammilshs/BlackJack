@@ -32,7 +32,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.46871582, y: 0.6630039}
   m_AnchorMax: {x: 0.53846204, y: 0.8901778}
@@ -91,7 +90,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Suit: 1
   Card: 12
-  Power: 12
+  Power: 10
+  SecondPower: 0
   CardIndexInArray: 10
-  CardPowerHeartsGame: 1
-  cardOwnerViewID: 0

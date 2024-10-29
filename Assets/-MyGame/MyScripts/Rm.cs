@@ -26,4 +26,5 @@ public class Rm : MonoBehaviour
     public PotHandler potHandler;
     public CardsManager cardsManager;
     public TableDealer tableDealer;
+    public ScoreManager scoreManager;
 }
