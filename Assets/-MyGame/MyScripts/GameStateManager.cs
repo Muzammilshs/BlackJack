@@ -2,15 +2,7 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
-    //public enum GameState
-    //{
-    //    CHOOSINGBET,
-    //    CARDDROP,
-    //    BETRAISE,
-    //    STAND,
-    //    RESULT
-    //}
-
+    [SerializeField] Rm refMgr;
     //GameState currentState;
     void Start()
     {
@@ -47,11 +39,12 @@ public class GameStateManager : MonoBehaviour
 
     void OnChoosingBet()
     {
+        refMgr.betBarHandler.CreateBetButtons();
 
     }
     void OnCardDrop()
     {
-
+        refMgr.tableDealer.FirstTimeDealCards();
     }
     void OnBetRaise()
     {

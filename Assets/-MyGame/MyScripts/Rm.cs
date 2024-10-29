@@ -24,4 +24,6 @@ public class Rm : MonoBehaviour
     public GameStateManager gameStateManager;
     public BetBarHandler betBarHandler;
     public PotHandler potHandler;
+    public CardsManager cardsManager;
+    public TableDealer tableDealer;
 }
