@@ -8,16 +8,14 @@ namespace com.mani.muzamil.amjad
         public CardState.CARDVALUE Card;
         public int Power;
         public int CardIndexInArray;
-        public int CardPowerHeartsGame;
 
-        [ShowOnly]
-        public int cardOwnerViewID;
 
         Sprite originalSprite;
         public void ShowDummySkin()
         {
-            originalSprite = GetComponent<Image>().sprite;
-
+            if (originalSprite == null)
+                originalSprite = GetComponent<Image>().sprite;
+            GetComponent<Image>().sprite = Rm.Instance.gameManager.dummyCardSprite;
         }
 
         public void ShowOriginalSprite() => GetComponent<Image>().sprite = originalSprite;
