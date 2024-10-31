@@ -31,7 +31,7 @@ public static class LocalSetting
 
     public static void SetPosAndRect(GameObject InstantiatedObj, RectTransform ALReadyObjPos, Transform Parentobj)
     {
-        InstantiatedObj.transform.parent = Parentobj;
+        InstantiatedObj.transform.SetParent(Parentobj);
         RectTransform MyPlayerRectTransform = InstantiatedObj.GetComponent<RectTransform>();
         MyPlayerRectTransform.localScale = ALReadyObjPos.localScale;
         MyPlayerRectTransform.localPosition = ALReadyObjPos.localPosition;

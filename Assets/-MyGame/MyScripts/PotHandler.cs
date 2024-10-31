@@ -29,8 +29,18 @@ public class PotHandler : MonoBehaviour
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
     }
 
+    public int GetPotAmount { get { return totalBetPlaced; } }
     #region Total Cash update
-    public void UpDateTotalCash(int amount, bool isReward)
+
+    public void BetAmountDeduction(int amount)
+    {
+        UpDateTotalCash(amount, false);
+    }
+    public void CollectReward(int amount)
+    {
+        UpDateTotalCash(amount, true);
+    }
+    void UpDateTotalCash(int amount, bool isReward)
     {
         int prevAmount = 0;
         prevAmount = LocalSetting.GetTotalCash();

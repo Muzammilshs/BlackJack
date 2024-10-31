@@ -10,7 +10,7 @@ public class Toaster : MonoBehaviour
         AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 
         currentActivity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        toastString = toastString;
+        //toastString = toastString;
 
         currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(showToast));
     }

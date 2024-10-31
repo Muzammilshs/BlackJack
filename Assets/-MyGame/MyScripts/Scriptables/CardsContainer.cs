@@ -1,4 +1,4 @@
-using com.mani.muzamil.amjad;
+using com.muzamil;
 using UnityEngine;
 
 

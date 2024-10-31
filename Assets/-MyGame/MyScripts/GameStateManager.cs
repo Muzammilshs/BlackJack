@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
@@ -48,14 +50,33 @@ public class GameStateManager : MonoBehaviour
     }
     void OnBetRaise()
     {
-
+        refMgr.hitStandBarHandler.CompareScoresAfter4Cards();
     }
     void OnStand()
     {
-
+        refMgr.dealerAIPlay.isDealerTurn = true;
+        refMgr.hitStandBarHandler.ShowHitStandBar(false);
+        refMgr.dealerAIPlay.DropDealerCard();
     }
     void OnResult()
     {
+        refMgr.hitStandBarHandler.ShowHitStandBar(false);
+
+        StartCoroutine(ResetGame());
+    }
+
+    IEnumerator ResetGame()
+    {
+        yield return new WaitForSeconds(1);
+        refMgr.dealerAIPlay.ResetDealer();
+        refMgr.cardsManager.SendCardsToWasteCardsPos();
+        refMgr.scoreManager.ResetTotalScore();
+        refMgr.betBarHandler.ShowBetbar(false);
+        yield return new WaitForSeconds(1);
+        refMgr.hitStandBarHandler.ShowHitStandBar(true);
+        refMgr.betBarHandler.ResetThings();
 
     }
+
+
 }

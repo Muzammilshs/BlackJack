@@ -1,8 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using com.mani.muzamil.amjad;
+using com.muzamil;
 using DG.Tweening;
 using System.Collections.Generic;
+using TMPro;
 public class TableDealer : MonoBehaviour
 {
     [SerializeField] Rm RefMgr;
@@ -14,12 +15,28 @@ public class TableDealer : MonoBehaviour
     [ShowOnly]
     public List<CardProperty> dealerCards;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    ScoreManager scoreManager;
+    public enum Winner
+    {
+        BUST,
+        JACKPOT,
+        DEALERWINS,
+        WON,
+        PUSH
+    };
+    Winner winStatus;
+
+    [Space]
+    [Header("Win and loose ")]
+    [SerializeField] GameObject WinLoosepanel;
+    [SerializeField] TMP_Text winLooseStatusTxt;
+
     void Start()
     {
-
+        scoreManager = Rm.Instance.scoreManager;
     }
-
+    #region Cards Distribution
     public void FirstTimeDealCards()
     {
         StartCoroutine(FirstTimeDealCardsCrt());
@@ -27,7 +44,6 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator FirstTimeDealCardsCrt()
     {
-        Debug.LogError("distributing card  2");
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < 4; i++)
         {
@@ -41,10 +57,34 @@ public class TableDealer : MonoBehaviour
                 playerCards.Add(card);
             else
                 dealerCards.Add(card);
-            yield return new WaitForSeconds(0.6f);
+            RefMgr.cardsManager.RearrangeCardsStack();
+            yield return new WaitForSeconds(1f);
         }
+        yield return new WaitForSeconds(1.25f);
+        RefMgr.gameStateManager.UpDateGameState(GameState.State.BETRAISE);
+    }
+    public void SendOneCard(bool isPlayer)
+    {
+        StartCoroutine(SendOneCardCrt(isPlayer));
     }
 
+    IEnumerator SendOneCardCrt(bool isPlayer)
+    {
+        //string aa = isPlayer ? "Player" : "dealer";
+        yield return new WaitForSeconds(0.1f);
+
+        RectTransform cardPos = isPlayer ? playerCardPos : dealerCardPos;
+        CardProperty card = Get1Card(cardPos);
+        int totalCards = isPlayer ? playerCards.Count : dealerCards.Count;
+        playCardAnimation(card.gameObject, cardPos.gameObject, totalCards, true, isPlayer);
+        if (isPlayer)
+            playerCards.Add(card);
+        else
+            dealerCards.Add(card);
+        RefMgr.cardsManager.RearrangeCardsStack();
+        yield return new WaitForSeconds(1f);
+        RefMgr.cardsManager.ReCreateLimitedCards();
+    }
     CardProperty Get1Card(RectTransform rect)
     {
         int card = Random.Range(0, RefMgr.cardsManager.cardsStackList.Count);
@@ -56,7 +96,8 @@ public class TableDealer : MonoBehaviour
     {
         GameObject card = ObjectToAnimate;
         GameObject TgtObj = targetObj;
-        card.transform.parent = TgtObj.transform.parent.transform;
+        //card.transform.parent = TgtObj.transform.parent.transform;
+        card.transform.SetParent(TgtObj.transform.parent.transform);
 
         Vector3 tgtPos = TgtObj.transform.position + Vector3.right * offSet * 50;
         ObjectToAnimate.transform.DOMove(tgtPos, 0.25f)
@@ -66,7 +107,7 @@ public class TableDealer : MonoBehaviour
 
     }
 
-    void FlipCard(GameObject obj, bool shouldFLip, bool isPlayer)
+    public void FlipCard(GameObject obj, bool shouldFLip, bool isPlayer)
     {
         if (!shouldFLip)
         {
@@ -79,11 +120,12 @@ public class TableDealer : MonoBehaviour
         }
     }
 
-    void ReverseRotate(GameObject obj, bool isPlayer)
+    public void ReverseRotate(GameObject obj, bool isPlayer)
     {
+        bool isPlyr = isPlayer;
+        scoreManager.SetScores(isPlyr);
         obj.GetComponent<CardProperty>().ShowOriginalSprite();
         obj.transform.DORotate(Vector2.zero, 0.25f);
-        RefMgr.scoreManager.SetScores(obj.GetComponent<CardProperty>(), isPlayer);
     }
 
     void MoveSlightlyUp(GameObject obj)
@@ -92,4 +134,72 @@ public class TableDealer : MonoBehaviour
         obj.transform.DOMove(targetPosition, 0.25f).SetLoops(2, LoopType.Yoyo);
     }
 
+    #endregion
+
+    public void DeclearWinner(bool isJackpot)
+    {
+
+        if (isJackpot)
+        {
+            UpDateWinStatus(Winner.JACKPOT);
+            return;
+        }
+
+        if (scoreManager.playerTotalScores > scoreManager.targetScores)
+            UpDateWinStatus(Winner.BUST);
+        else if (scoreManager.playerTotalScores > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > scoreManager.targetScores)
+            UpDateWinStatus(Winner.WON);
+        else if (scoreManager.playerTotalScores < scoreManager.dealerTotalScores)
+            UpDateWinStatus(Winner.DEALERWINS);
+        else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
+            UpDateWinStatus(Winner.PUSH);
+    }
+
+    public void UpDateWinStatus(Winner status)
+    {
+        winStatus = status;
+        RefMgr.gameStateManager.UpDateGameState(GameState.State.RESULT);
+        ShowWinningDetail(winStatus);
+    }
+
+    void ShowWinningDetail(Winner status)
+    {
+        switch (status)
+        {
+            case Winner.DEALERWINS:
+                Debug.LogError("Dealer Winner");
+                StartCoroutine(ShowWinPanel("Dealer win"));
+                break;
+            case Winner.PUSH:
+                Debug.LogError("Match tie");
+                StartCoroutine(ShowWinPanel("Push"));
+
+                break;
+            case Winner.JACKPOT:
+                Debug.LogError("Jackpot");
+                StartCoroutine(ShowWinPanel("Jackpot"));
+
+                break;
+            case Winner.BUST:
+                Debug.LogError("Busted");
+                StartCoroutine(ShowWinPanel("Bust"));
+
+                break;
+            case Winner.WON:
+                Debug.LogError("Won");
+                StartCoroutine(ShowWinPanel("won"));
+
+                break;
+        }
+    }
+
+
+    IEnumerator ShowWinPanel(string winStatusMessage)
+    {
+
+        WinLoosepanel.SetActive(true);
+        winLooseStatusTxt.text = winStatusMessage;
+        yield return new WaitForSeconds(1.5f);
+        WinLoosepanel.SetActive(false);
+    }
 }

@@ -1,5 +1,5 @@
 
-namespace com.mani.muzamil.amjad
+namespace com.muzamil
 {
     public static class CardState
     {

@@ -2,6 +2,17 @@ using UnityEngine;
 
 public class Rm : MonoBehaviour
 {
+    public GameManager gameManager;
+    public GameStateManager gameStateManager;
+    public BetBarHandler betBarHandler;
+    public PotHandler potHandler;
+    public CardsManager cardsManager;
+    public TableDealer tableDealer;
+    public ScoreManager scoreManager;
+    public HitStandBarHandler hitStandBarHandler;
+    public DealerAIPlay dealerAIPlay;
+
+
     #region Creating Instance
     private static Rm _instance;
     public static Rm Instance
@@ -19,12 +30,4 @@ public class Rm : MonoBehaviour
             _instance = this;
     }
     #endregion
-
-    public GameManager gameManager;
-    public GameStateManager gameStateManager;
-    public BetBarHandler betBarHandler;
-    public PotHandler potHandler;
-    public CardsManager cardsManager;
-    public TableDealer tableDealer;
-    public ScoreManager scoreManager;
 }

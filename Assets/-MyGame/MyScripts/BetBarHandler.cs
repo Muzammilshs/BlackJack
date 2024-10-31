@@ -30,7 +30,7 @@ public class BetBarHandler : MonoBehaviour
 
     public void CreateBetButtons()
     {
-        chipsObjects = ClearList(chipsObjects);
+        chipsObjects = refMgr.gameManager.ClearList(chipsObjects);
         for (int i = 0; i < betAmounts.Length; i++)
         {
             GameObject btn = Instantiate(betBtnPrefab);
@@ -75,6 +75,8 @@ public class BetBarHandler : MonoBehaviour
     #endregion
     void WhenBettedChipBtnClick()
     {
+        if (refMgr.gameStateManager.GetCurrentGameState() != GameState.State.CHOOSINGBET)
+            return;
         ShowBetbar(true);
         dealnClearBtnGroup.gameObject.SetActive(true);
 
@@ -84,27 +86,14 @@ public class BetBarHandler : MonoBehaviour
         ShowBetbar(false);
         dealnClearBtnGroup.gameObject.SetActive(false);
         refMgr.gameStateManager.UpDateGameState(GameState.State.CARDDROP);
+        refMgr.potHandler.BetAmountDeduction(refMgr.potHandler.GetPotAmount);
     }
 
     public void ClearBtnClick()
     {
         OnResettingBet();
     }
-    List<GameObject> ClearList(List<GameObject> list)
-    {
-        if (list == null)
-        {
-            list = new List<GameObject>();
-            return list;
-        }
-        if (list.Count > 0)
-        {
-            for (int i = list.Count - 1; i >= 0; i--)
-                Destroy(list[i]);
-            list.Clear();
-        }
-        return list;
-    }
+
 
     public void OnResettingBet()
     {
@@ -112,14 +101,14 @@ public class BetBarHandler : MonoBehaviour
         placeYourBetMsg.SetActive(true);
         dealnClearBtnGroup.SetActive(false);
         ShowBetbar(true);
-        betPlacedChips = ClearList(betPlacedChips);
+        betPlacedChips = refMgr.gameManager.ClearList(betPlacedChips);
     }
 
     void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj, bool isOffSetUse)
     {
         GameObject TgtObj = targetObj;
         GameObject chip = ObjectToAnimate;
-        chip.transform.parent = TgtObj.transform.parent.transform;
+        chip.transform.SetParent(TgtObj.transform.parent.transform);
         if (isOffSetUse)
         {
             Vector3 tgtPos = TgtObj.transform.position + new Vector3(UnityEngine.Random.Range(-10, 11), betPlacedChips.Count * 1.5f, 0);
@@ -129,6 +118,11 @@ public class BetBarHandler : MonoBehaviour
             ObjectToAnimate.transform.DOMove(TgtObj.transform.position, 0.25f);
         ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.25f);
 
+    }
+
+    public void ResetThings()
+    {
+        dealnClearBtnGroup.SetActive(true);
     }
 }
 [Serializable]

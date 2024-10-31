@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-namespace com.mani.muzamil.amjad
+namespace com.muzamil
 {
     public class CardProperty : MonoBehaviour
     {

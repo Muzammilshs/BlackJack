@@ -1,4 +1,6 @@
-using com.mani.muzamil.amjad;
+using com.muzamil;
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +13,7 @@ public class CardsManager : MonoBehaviour
     public List<int> cardsIndexes;
     [ShowOnly]
     public List<CardProperty> cardsStackList;
+    public List<GameObject> wasteCardsList;
     [SerializeField] RectTransform cardsStackPos, wasteCardsPos;
 
     void Start()
@@ -31,6 +34,11 @@ public class CardsManager : MonoBehaviour
                 cardsIndexes.Add(i);
         CreateLimitedCardsForStack();
     }
+    public void ReCreateLimitedCards()
+    {
+        if (cardsStackList.Count < (cardsLimit - 8))
+            CreateLimitedCardsForStack();
+    }
     void CreateLimitedCardsForStack()
     {
         if (cardsStackList.Count < cardsLimit)
@@ -38,14 +46,24 @@ public class CardsManager : MonoBehaviour
             int cardIndex = GetRandomCard();
             GameObject card = Instantiate(allCards.Card[GetRandomCard()].gameObject);
             LocalSetting.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
-            Vector2 cardPos = card.transform.position + (Vector3.up * (-cardsStackList.Count * 15));
-            card.transform.position = cardPos;
             cardsStackList.Add(card.GetComponent<CardProperty>());
             card.GetComponent<CardProperty>().ShowDummySkin();
             CreateLimitedCardsForStack();
         }
         else
+        {
+            RearrangeCardsStack();
             return;
+        }
+    }
+
+    public void RearrangeCardsStack()
+    {
+        for (int i = 0; i < cardsStackList.Count; i++)
+        {
+            Vector2 cardPos = cardsStackPos.transform.position + (Vector3.up * (-i * 10));
+            cardsStackList[i].transform.position = cardPos;
+        }
     }
     int GetRandomCard()
     {
@@ -78,5 +96,57 @@ public class CardsManager : MonoBehaviour
                 Destroy(card.gameObject);
         }
         cardsStackList.Clear();
+    }
+
+
+    public void SendCardsToWasteCardsPos()
+    {
+        StartCoroutine(CollectWasteCards());
+    }
+
+    IEnumerator CollectWasteCards()
+    {
+        yield return new WaitForSeconds(0.1f);
+        refMgr.scoreManager.ShowScoreObjects(false);
+        foreach (CardProperty card in refMgr.tableDealer.playerCards)
+        {
+            wasteCardsList.Add(card.gameObject);
+            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
+            yield return new WaitForSeconds(0.1f);
+        }
+        foreach (CardProperty card in refMgr.tableDealer.dealerCards)
+        {
+            wasteCardsList.Add(card.gameObject);
+            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
+            yield return new WaitForSeconds(0.1f);
+        }
+        refMgr.tableDealer.playerCards.Clear();
+        refMgr.tableDealer.dealerCards.Clear();
+        yield return new WaitForSeconds(1);
+        ClearCards();
+    }
+
+    void ClearCards()
+    {
+        for (int i = wasteCardsList.Count - 1; i > 0; i--)
+        {
+            GameObject obj = wasteCardsList[i];
+            wasteCardsList.RemoveAt(i);
+            Destroy(obj);
+        }
+    }
+    void playCardAnimation(GameObject ObjectToAnimate, GameObject targetObj)
+    {
+        GameObject card = ObjectToAnimate;
+        GameObject TgtObj = targetObj;
+        card.transform.SetParent(TgtObj.transform.parent.transform);
+        ObjectToAnimate.transform.DOMove(targetObj.transform.position, 0.2f)
+            .OnComplete(() => OnCompleteShowDummyCard(card));
+        ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.2f);
+    }
+
+    void OnCompleteShowDummyCard(GameObject obj)
+    {
+        obj.GetComponent<CardProperty>().ShowDummySkin();
     }
 }
