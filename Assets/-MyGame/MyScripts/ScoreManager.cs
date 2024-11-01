@@ -56,8 +56,8 @@ public class ScoreManager : MonoBehaviour
             }
             else
                 playerScores.text = playerTotalScores.ToString();
-            //if (rm.tableDealer.playerCards.Count > 1)
-            StartCoroutine(CheckForPlayerScoreLimit());
+            if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == targetScores)
+                StartCoroutine(CheckForPlayerScoreLimit());
         }
         else
         {
@@ -87,7 +87,7 @@ public class ScoreManager : MonoBehaviour
     }
     IEnumerator CheckForPlayerScoreLimit()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         if (playerTotalScores < targetScores)
         {
             if (!rm.dealerAIPlay.isDealerTurn)
@@ -114,7 +114,6 @@ public class ScoreManager : MonoBehaviour
                 rm.tableDealer.UpDateWinStatus(TableDealer.Winner.PUSH);
 
         }
-        //rm.hitStopBarHandler.CheckPlayerScoresLimit();
     }
     void CalculateCardsScores(List<CardProperty> cardsList, out int highScores, out int lowScores)
     {
@@ -188,5 +187,7 @@ public class ScoreManager : MonoBehaviour
         dealerTotalScores = 0;
         playerTotalScoresAce = 0;
         dealerTotalScoresAce = 0;
+        playerScores.text = string.Empty;
+        dealerScores.text = string.Empty;
     }
 }

@@ -60,7 +60,7 @@ public class TableDealer : MonoBehaviour
             RefMgr.cardsManager.RearrangeCardsStack();
             yield return new WaitForSeconds(1f);
         }
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(1.0f);
         RefMgr.gameStateManager.UpDateGameState(GameState.State.BETRAISE);
     }
     public void SendOneCard(bool isPlayer)
