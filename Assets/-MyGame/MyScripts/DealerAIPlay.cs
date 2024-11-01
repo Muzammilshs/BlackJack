@@ -21,7 +21,7 @@ public class DealerAIPlay : MonoBehaviour
 
     IEnumerator DropCards()
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.25f);
         while (isDropNextCard())
         {
             rm.tableDealer.SendOneCard(false);

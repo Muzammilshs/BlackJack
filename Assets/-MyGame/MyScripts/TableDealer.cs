@@ -15,7 +15,7 @@ public class TableDealer : MonoBehaviour
     [ShowOnly]
     public List<CardProperty> dealerCards;
 
-
+    [SerializeField] GameObject winParticles;
     ScoreManager scoreManager;
     public enum Winner
     {
@@ -178,7 +178,7 @@ public class TableDealer : MonoBehaviour
             case Winner.JACKPOT:
                 Debug.LogError("Jackpot");
                 StartCoroutine(ShowWinPanel("Jackpot"));
-
+                winParticles.SetActive(true);
                 break;
             case Winner.BUST:
                 Debug.LogError("Busted");
