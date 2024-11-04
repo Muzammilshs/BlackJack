@@ -8,7 +8,9 @@ public class PotHandler : MonoBehaviour
     [SerializeField] Rm refMgr;
     public TMP_Text totalAmountTxt;
     public TMP_Text totalbetPlacedTxt;
+    public TMP_Text doubleBetPlacedTxt;
     int totalBetPlaced;
+    int doubleBetPlaced;
     void Start()
     {
         totalAmountTxt.text = LocalSetting.GetTotalCash().ToString("N0");
@@ -29,7 +31,17 @@ public class PotHandler : MonoBehaviour
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
     }
 
+
+    public void PlaceDoubleBetAmount()
+    {
+        doubleBetPlaced = GetPotAmount;
+        doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
+    }
     public int GetPotAmount { get { return totalBetPlaced; } }
+    public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
+
+
+
     #region Total Cash update
 
     public void BetAmountDeduction(int amount)
@@ -40,6 +52,8 @@ public class PotHandler : MonoBehaviour
     {
         UpDateTotalCash(amount, true);
     }
+
+    #region Cash add/deduct animation 
     void UpDateTotalCash(int amount, bool isReward)
     {
         int prevAmount = 0;
@@ -63,5 +77,6 @@ public class PotHandler : MonoBehaviour
                 currentCash = targetAmount;
             });
     }
+    #endregion
     #endregion
 }

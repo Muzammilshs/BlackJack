@@ -56,6 +56,7 @@ public class HitStandBarHandler : MonoBehaviour
         {
             // when not won with first 2 cards
             ShowHitStandBar(true);
+            //if ()
         }
     }
     public void ShowHitStandBar(bool isShow)
@@ -76,7 +77,7 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void OnDoubleBtnClick()
     {
-
+        //sadfasdf
     }
 
     public void OnHitBtnClick()
@@ -89,5 +90,8 @@ public class HitStandBarHandler : MonoBehaviour
     {
 
     }
-
+    void CheckIfPlayerHaveEnoughChips()
+    {
+        //if ()
+    }
 }
