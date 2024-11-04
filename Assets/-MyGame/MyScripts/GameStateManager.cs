@@ -73,8 +73,8 @@ public class GameStateManager : MonoBehaviour
         refMgr.scoreManager.ResetTotalScore();
         refMgr.betBarHandler.ShowBetbar(false);
         yield return new WaitForSeconds(1);
-        //refMgr.hitStandBarHandler.ShowHitStandBar(true);
         refMgr.betBarHandler.ResetThings();
+        refMgr.hitStandBarHandler.ResetThings();
 
     }
 

@@ -140,12 +140,8 @@ public class TableDealer : MonoBehaviour
     {
 
         if (isJackpot)
-        {
             UpDateWinStatus(Winner.JACKPOT);
-            return;
-        }
-
-        if (scoreManager.playerTotalScores > scoreManager.targetScores)
+        else if (scoreManager.playerTotalScores > scoreManager.targetScores)
             UpDateWinStatus(Winner.BUST);
         else if (scoreManager.playerTotalScores > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > scoreManager.targetScores)
             UpDateWinStatus(Winner.WON);
@@ -153,12 +149,14 @@ public class TableDealer : MonoBehaviour
             UpDateWinStatus(Winner.DEALERWINS);
         else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
             UpDateWinStatus(Winner.PUSH);
+        Debug.LogError("Wineer is at pt 1");
     }
-
+    //sdf
     public void UpDateWinStatus(Winner status)
     {
         winStatus = status;
         RefMgr.gameStateManager.UpDateGameState(GameState.State.RESULT);
+        Debug.LogError("Wineer is at pt 2");
         ShowWinningDetail(winStatus);
     }
 

@@ -21,6 +21,7 @@ public class DealerAIPlay : MonoBehaviour
 
     IEnumerator DropCards()
     {
+        isJackPot = isDropNextCard();
         yield return new WaitForSeconds(1.25f);
         while (isDropNextCard())
         {

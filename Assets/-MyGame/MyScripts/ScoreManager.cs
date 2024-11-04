@@ -92,8 +92,17 @@ public class ScoreManager : MonoBehaviour
         {
             if (!rm.dealerAIPlay.isDealerTurn)
             {
-                Debug.LogError("activating bar       " + playerTotalScores);
-                rm.hitStandBarHandler.ShowHitStandBar(true);
+                if (!rm.hitStandBarHandler.isDoubleBet)
+                {
+                    Debug.LogError("activating bar       " + playerTotalScores);
+                    rm.hitStandBarHandler.ShowHitStandBar(true);
+                }
+                else
+                {
+
+                    rm.hitStandBarHandler.OnStandBtnClick();
+                    rm.dealerAIPlay.isDealerTurn = false;
+                }
             }
         }
         else if (playerTotalScores > targetScores)

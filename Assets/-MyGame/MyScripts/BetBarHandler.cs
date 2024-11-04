@@ -23,6 +23,7 @@ public class BetBarHandler : MonoBehaviour
 
     List<GameObject> chipsObjects;
     List<GameObject> betPlacedChips;
+    List<GameObject> doubleBetPlacedChips;
     void Start()
     {
         OnResettingBet();
@@ -71,7 +72,20 @@ public class BetBarHandler : MonoBehaviour
         chipBtn.transform.position = chip.transform.position;
         playChipAnimation(chipBtn, bettedChipsPos.gameObject, true);
     }
+    public void DoubleBetChipsCreation()
+    {
+        int totalChipsToCreate = betPlacedChips.Count;
+        foreach (GameObject chip in betPlacedChips)
+            chip.transform.position += new Vector3(-100, 0, 0);
+        for (int i = 0; i < totalChipsToCreate; i++)
+        {
+            GameObject chipBtn = Instantiate(betPlacedChips[i]);
+            doubleBetPlacedChips.Add(chipBtn);
+            LocalSetting.SetPosAndRect(chipBtn, betPlacedChips[i].GetComponent<RectTransform>(), bettedChipsPos.transform.parent);
+            chipBtn.transform.position += new Vector3(100 * 2, 0, 0);
+        }
 
+    }
     #endregion
     void WhenBettedChipBtnClick()
     {
@@ -102,6 +116,13 @@ public class BetBarHandler : MonoBehaviour
         dealnClearBtnGroup.SetActive(false);
         ShowBetbar(true);
         betPlacedChips = refMgr.gameManager.ClearList(betPlacedChips);
+        if (doubleBetPlacedChips != null)
+        {
+            if (doubleBetPlacedChips.Count > 0)
+                foreach (GameObject chip in betPlacedChips)
+                    chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
+        }
+        doubleBetPlacedChips = refMgr.gameManager.ClearList(doubleBetPlacedChips);
     }
 
     void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj, bool isOffSetUse)

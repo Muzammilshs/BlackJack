@@ -8,6 +8,9 @@ public class HitStandBarHandler : MonoBehaviour
     public GameObject splitBtn;
     public GameObject doubleBtn;
 
+    [ShowOnly]
+    public bool isDoubleBet;
+
     private void Start()
     {
         hitStandBar.SetActive(false);
@@ -35,19 +38,19 @@ public class HitStandBarHandler : MonoBehaviour
         // When win with first 2 cards
         if (playerScores == sm.targetScores || dealrScores == sm.targetScores)
         {
-            td.FlipCard(td.dealerCards[1].gameObject, true, false);
+            //td.FlipCard(td.dealerCards[1].gameObject, true, false);
+            ShowHitStandBar(false);
             if (playerScores > dealrScores)
             {
-                //td.UpDateWinStatus(TableDealer.Winner.JACKPOT);
                 rm.dealerAIPlay.isJackPot = true;
                 rm.dealerAIPlay.isDealerTurn = true;
-                ShowHitStandBar(false);
                 rm.dealerAIPlay.DropDealerCard();
             }
             else if (playerScores < dealrScores)
             {
                 rm.dealerAIPlay.isJackPot = false;
                 rm.dealerAIPlay.DropDealerCard();
+
             }
             else
                 rm.dealerAIPlay.DropDealerCard();
@@ -56,7 +59,10 @@ public class HitStandBarHandler : MonoBehaviour
         {
             // when not won with first 2 cards
             ShowHitStandBar(true);
-            //if ()
+            if (CheckIfPlayerHaveEnoughChips)
+                doubleBtn.SetActive(true);
+            else
+                doubleBtn.SetActive(false);
         }
     }
     public void ShowHitStandBar(bool isShow)
@@ -77,7 +83,9 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void OnDoubleBtnClick()
     {
-        //sadfasdf
+        isDoubleBet = true;
+        rm.potHandler.PlaceDoubleBetAmount();
+        Invoke(nameof(OnHitBtnClick), 0.5f);
     }
 
     public void OnHitBtnClick()
@@ -90,8 +98,16 @@ public class HitStandBarHandler : MonoBehaviour
     {
 
     }
-    void CheckIfPlayerHaveEnoughChips()
+    bool CheckIfPlayerHaveEnoughChips
     {
-        //if ()
+        get { return rm.potHandler.GetPotAmount * 2 <= LocalSetting.GetTotalCash(); }
+    }
+
+
+    public void ResetThings()
+    {
+
+        isDoubleBet = false;
+        doubleBtn.SetActive(false);
     }
 }

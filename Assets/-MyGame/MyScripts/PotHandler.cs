@@ -11,8 +11,10 @@ public class PotHandler : MonoBehaviour
     public TMP_Text doubleBetPlacedTxt;
     int totalBetPlaced;
     int doubleBetPlaced;
+    [ShowOnly] public Vector2 totalBetPlacedTxtPos;
     void Start()
     {
+        totalBetPlacedTxtPos = totalbetPlacedTxt.transform.position;
         totalAmountTxt.text = LocalSetting.GetTotalCash().ToString("N0");
         totalbetPlacedTxt.gameObject.SetActive(false);
     }
@@ -22,6 +24,8 @@ public class PotHandler : MonoBehaviour
         totalbetPlacedTxt.gameObject.SetActive(false);
         totalBetPlaced = 0;
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
+        totalbetPlacedTxt.transform.position = totalBetPlacedTxtPos;
+        doubleBetPlacedTxt.gameObject.SetActive(false);
     }
 
     public void PlaceBetAmount(int amount)
@@ -36,6 +40,11 @@ public class PotHandler : MonoBehaviour
     {
         doubleBetPlaced = GetPotAmount;
         doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
+        doubleBetPlacedTxt.gameObject.SetActive(true);
+        BetAmountDeduction(doubleBetPlaced);
+        totalbetPlacedTxt.transform.position = totalBetPlacedTxtPos + new Vector2(-100, 0);
+        doubleBetPlacedTxt.transform.position = totalBetPlacedTxtPos + new Vector2(100, 0);
+        refMgr.betBarHandler.DoubleBetChipsCreation();
     }
     public int GetPotAmount { get { return totalBetPlaced; } }
     public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
