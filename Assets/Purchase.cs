@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class Purchase : MonoBehaviour
 {
-    public Button[] buttons;
+    public Button[] buttons; 
       
     void Start()
     {
         for (int i = 0; i < buttons.Length; i++)
         {
             int index = i;
-            buttons[i].onClick.AddListener(() =>OnButtonClick(index));
+            buttons[i].onClick.AddListener(() => OnButtonClick(index));
         }
 
         
