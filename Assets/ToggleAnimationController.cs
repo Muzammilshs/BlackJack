@@ -1,73 +1,57 @@
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening; 
+using DG.Tweening;
 using System.Collections.Generic;
 
 public class ToggleAnimationController : MonoBehaviour
 {
-    public Toggle onToggle; 
-    public Toggle offToggle; 
-    public List<GameObject> animatedObjects; 
+    [SerializeField] private Toggle[] animationToggles;     
+    [SerializeField] private GameObject[] animatedObjects;  
 
-    private List<DOTweenAnimation> dotweenAnimations = new List<DOTweenAnimation>();
+    private List<Tween> tweens = new List<Tween>();  
 
     private void Start()
     {
         
-        foreach (GameObject obj in animatedObjects)
+        if (animationToggles.Length != animatedObjects.Length)
         {
-            DOTweenAnimation anim = obj.GetComponent<DOTweenAnimation>();
-            if (anim != null)
-            {
-                dotweenAnimations.Add(anim);
-            }
-            else
-            {
-                Debug.LogWarning("DOTweenAnimation component missing on " + obj.name);
-            }
+            Debug.LogError("Toggles and animatedObjects arrays must have the same length!");
+            return;
         }
 
         
-        onToggle.onValueChanged.AddListener(OnToggleChanged);
-        offToggle.onValueChanged.AddListener(OffToggleChanged);
+        for (int i = 0; i < animatedObjects.Length; i++)
+        {
+            int index = i;
+            
+            tweens.Add(SetupAnimation(animatedObjects[i])); 
 
+          
+            animationToggles[i].onValueChanged.AddListener((isOn) => ToggleAnimation(index, isOn));
+
+            
+            ToggleAnimation(index, animationToggles[i].isOn);
+        }
+    }
+
+    
+    private Tween SetupAnimation(GameObject obj)
+    {
         
-        onToggle.isOn = true;
-        offToggle.isOn = false;
-    }
-
-    private void OnToggleChanged(bool isOn)
-    {
-        if (isOn)
-        {
-            offToggle.isOn = false; 
-
-            
-            foreach (DOTweenAnimation anim in dotweenAnimations)
-            {
-                anim.DOPlay();
-            }
-        }
-    }
-
-    private void OffToggleChanged(bool isOn)
-    {
-        if (isOn)
-        {
-            onToggle.isOn = false; 
-
-            
-            foreach (DOTweenAnimation anim in dotweenAnimations)
-            {
-                anim.DOPause();
-            }
-        }
-    }
-
-    private void OnDestroy()
-    {
        
-        onToggle.onValueChanged.RemoveListener(OnToggleChanged);
-        offToggle.onValueChanged.RemoveListener(OffToggleChanged);
+        return obj.transform.DOMove(new Vector3(0, 5, 0), 2f).SetLoops(-1, LoopType.Yoyo); 
+    }
+
+   
+    private void ToggleAnimation(int index, bool isOn)
+    {
+        if (isOn)
+        {
+            tweens[index].Play();  
+        }
+        else
+        {
+            tweens[index].Pause();  
+        }
     }
 }

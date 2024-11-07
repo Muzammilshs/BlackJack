@@ -5450,53 +5450,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424697735}
   m_CullTransparentMesh: 1
---- !u!1 &435160967
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 435160969}
-  - component: {fileID: 435160968}
-  m_Layer: 0
-  m_Name: Toggle Animation control
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &435160968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435160967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbcd0315077325f48b0f65ef86b2381e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onToggle: {fileID: 0}
-  offToggle: {fileID: 0}
-  animatedObjects: []
---- !u!4 &435160969
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435160967}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 611.62335, y: 1120.9978, z: 8.52337}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &458423012
 GameObject:
   m_ObjectHideFlags: 0
@@ -7878,7 +7831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 1
+  m_AllowSwitchOff: 0
 --- !u!1 &698853654
 GameObject:
   m_ObjectHideFlags: 0
@@ -11338,9 +11291,7 @@ MonoBehaviour:
   - {fileID: 966715364}
   - {fileID: 145474942}
   - {fileID: 470699689}
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
+  buttons: []
   closeButton: {fileID: 602234612}
   totalChipsTxt: {fileID: 1635814195}
 --- !u!4 &985408152
@@ -13914,7 +13865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.15964445, y: 0.20348234}
   m_AnchorMax: {x: 0.8403555, y: 0.7975593}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1216397567
@@ -24890,4 +24841,3 @@ SceneRoots:
   - {fileID: 1600831238}
   - {fileID: 1260199312}
   - {fileID: 899724134}
-  - {fileID: 435160969}

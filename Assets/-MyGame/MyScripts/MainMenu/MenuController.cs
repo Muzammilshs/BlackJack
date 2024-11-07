@@ -22,7 +22,7 @@ public class MenuController : MonoBehaviour
         menuController[settingButtonIndex].SetActive(false);
 
 
-        //settingButton.onClick.AddListener(OpenSettingMenu);
+        closeButton.onClick.AddListener(OpenSettingMenu);
         closeButton.onClick.AddListener(CloseSettingMenu);
 
         UpDateTotalChipsTxts();
