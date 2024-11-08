@@ -6,12 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/-MyGame/Scenes/MainMenu.unity
+    path: Assets/-MyGame/MyScenes/MainMenu.unity
     guid: f2a66b36f3d1bcc4594634908d796949
   - enabled: 1
-    path: Assets/-MyGame/Scenes/BlackJackGamePlay.unity
+    path: Assets/-MyGame/MyScenes/BlackJackGamePlay.unity
     guid: 580dd4e21c0ce98499e32c9b073b5b4e
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 65d6b98b04b6ce84fa8f95bee6b64734, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 12ea4f24551e47e4b9555b0057684921, type: 2}
   m_UseUCBPForAssetBundles: 0
