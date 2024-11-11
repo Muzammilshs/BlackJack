@@ -21,7 +21,7 @@ public class HitStandBarHandler : MonoBehaviour
         ScoreManager sm = rm.scoreManager;
 
         int playerScores = 0;
-        int dealrScores = 0;
+        int dealerScores = 0;
 
         // getting player score
         if (td.playerCards[0].Card == CardState.CARDVALUE.ACE && td.playerCards[1].Card == CardState.CARDVALUE.ACE)
@@ -31,24 +31,25 @@ public class HitStandBarHandler : MonoBehaviour
 
         // getting dealer scores
         if (td.dealerCards[0].Card == CardState.CARDVALUE.ACE && td.dealerCards[1].Card == CardState.CARDVALUE.ACE)
-            dealrScores = td.dealerCards[0].Power + td.dealerCards[1].SecondPower;
+            dealerScores = td.dealerCards[0].Power + td.dealerCards[1].SecondPower;
         else
-            dealrScores = td.dealerCards[0].Power + td.dealerCards[1].Power;
+            dealerScores = td.dealerCards[0].Power + td.dealerCards[1].Power;
 
+        Debug.LogError("Player scores after 4 card: " + playerScores + "     Dealer Scores: " + dealerScores);
         // When win with first 2 cards
-        if (playerScores == sm.targetScores || dealrScores == sm.targetScores)
+        if (playerScores == sm.targetScores || dealerScores == sm.targetScores)
         {
-            //td.FlipCard(td.dealerCards[1].gameObject, true, false);
             ShowHitStandBar(false);
-            if (playerScores > dealrScores)
+            if (playerScores > dealerScores)
             {
                 rm.dealerAIPlay.isJackPot = true;
                 rm.dealerAIPlay.isDealerTurn = true;
                 rm.dealerAIPlay.DropDealerCard();
             }
-            else if (playerScores < dealrScores)
+            else if (playerScores < dealerScores)
             {
                 rm.dealerAIPlay.isJackPot = false;
+                rm.dealerAIPlay.isDealerTurn = true;
                 rm.dealerAIPlay.DropDealerCard();
 
             }

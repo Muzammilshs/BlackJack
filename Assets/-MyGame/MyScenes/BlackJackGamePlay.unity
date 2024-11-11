@@ -2863,7 +2863,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardsLimit: 20
   refMgr: {fileID: 744545730}
-  allCards: {fileID: 11400000, guid: 83d765fc121b69b47a3283887028fc80, type: 2}
+  allCards: {fileID: 11400000, guid: 2a19b0f7dfd87f047889d890b20726d2, type: 2}
   cardsIndexes: 
   cardsStackList: []
   wasteCardsList: []

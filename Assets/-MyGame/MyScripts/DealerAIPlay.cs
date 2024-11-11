@@ -21,14 +21,18 @@ public class DealerAIPlay : MonoBehaviour
 
     IEnumerator DropCards()
     {
-        isJackPot = isDropNextCard();
+        //isJackPot = isDropNextCard();
         yield return new WaitForSeconds(1.25f);
-        while (isDropNextCard())
+        while (isDropNextCard() && !isJackPot)
         {
             rm.tableDealer.SendOneCard(false);
             yield return new WaitForSeconds(1.5f);
         }
+        //asdf
         rm.tableDealer.DeclearWinner(isJackPot);
+        //int totalCards = rm.tableDealer.dealerCards.Count + rm.tableDealer.playerCards.Count;
+        //if (totalCards != 4)
+        //    rm.tableDealer.DeclearWinner(false);
     }
 
     bool isDropNextCard()

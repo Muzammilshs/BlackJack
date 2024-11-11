@@ -117,10 +117,19 @@ public class ScoreManager : MonoBehaviour
             // show dealer cards and win declear 
             rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
             yield return new WaitForSeconds(0.75f);
-            if (playerTotalScores > dealerTotalScores)
-                rm.tableDealer.UpDateWinStatus(TableDealer.Winner.WON);
-            else
-                rm.tableDealer.UpDateWinStatus(TableDealer.Winner.PUSH);
+            if (rm.tableDealer.dealerCards.Count + rm.tableDealer.playerCards.Count != 4)
+            {
+                if (playerTotalScores > dealerTotalScores)
+                {
+                    if (rm.tableDealer.dealerCards.Count + rm.tableDealer.playerCards.Count != 4)
+                        rm.tableDealer.UpDateWinStatus(TableDealer.Winner.WON);
+                    else
+                        rm.tableDealer.UpDateWinStatus(TableDealer.Winner.JACKPOT);
+
+                }
+                else
+                    rm.tableDealer.UpDateWinStatus(TableDealer.Winner.PUSH);
+            }
 
         }
     }
