@@ -11,15 +11,7 @@ public class ToggleAnimationController : MonoBehaviour
     private List<Tween> tweens = new List<Tween>();  
 
     private void Start()
-    {
-        
-        if (animationToggles.Length != animatedObjects.Length)
-        {
-            Debug.LogError("Toggles and animatedObjects arrays must have the same length!");
-            return;
-        }
-
-        
+    {   
         for (int i = 0; i < animatedObjects.Length; i++)
         {
             int index = i;
