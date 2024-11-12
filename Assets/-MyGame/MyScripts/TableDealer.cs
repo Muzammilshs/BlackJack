@@ -31,6 +31,7 @@ public class TableDealer : MonoBehaviour
     [Header("Win and loose ")]
     [SerializeField] GameObject WinLoosepanel;
     [SerializeField] TMP_Text winLooseStatusTxt;
+    [SerializeField] TMP_Text winAmountTxt;
 
     void Start()
     {
@@ -159,34 +160,44 @@ public class TableDealer : MonoBehaviour
         Debug.LogError("Wineer is at pt 2");
         ShowWinningDetail(winStatus);
     }
-
+    int winAmount = 0;
     void ShowWinningDetail(Winner status)
     {
         switch (status)
         {
             case Winner.DEALERWINS:
                 Debug.LogError("Dealer Winner");
+                winAmount = 0;
+                winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Dealer win"));
                 break;
             case Winner.PUSH:
                 Debug.LogError("Match tie");
+                winAmount = RefMgr.potHandler.GetPotAmount;
+                winAmountTxt.text = "+" + winAmount;
+                winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Push"));
-
                 break;
             case Winner.JACKPOT:
                 Debug.LogError("Jackpot");
-                StartCoroutine(ShowWinPanel("Jackpot"));
                 winParticles.SetActive(true);
+                winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
+                winAmountTxt.text = "+" + winAmount;
+                winAmountTxt.gameObject.SetActive(true);
+                StartCoroutine(ShowWinPanel("Jackpot"));
                 break;
             case Winner.BUST:
                 Debug.LogError("Busted");
+                winAmount = 0;
+                winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Bust"));
-
                 break;
             case Winner.WON:
                 Debug.LogError("Won");
+                winAmount = RefMgr.potHandler.GetPotAmount * 2;
+                winAmountTxt.text = "+" + winAmount;
+                winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("won"));
-
                 break;
         }
     }
@@ -194,7 +205,8 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator ShowWinPanel(string winStatusMessage)
     {
-
+        Debug.LogError("Amount won: " + winAmount);
+        RefMgr.potHandler.CollectReward(winAmount);
         WinLoosepanel.SetActive(true);
         winLooseStatusTxt.text = winStatusMessage;
         yield return new WaitForSeconds(1.5f);
