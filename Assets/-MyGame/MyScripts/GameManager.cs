@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Rm refMgr;
 
     public Sprite dummyCardSprite;
+    public GameObject shopPanel;
     void Start()
     {
 
@@ -28,6 +29,11 @@ public class GameManager : MonoBehaviour
         return list;
     }
 
+
+    public void ShowShopPanel()
+    {
+        shopPanel.SetActive(true);
+    }
 
     #region Button functions
     public void OnHomeBtnClick()
