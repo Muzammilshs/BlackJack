@@ -60,7 +60,8 @@ public class HitStandBarHandler : MonoBehaviour
         {
             // when not won with first 2 cards
             ShowHitStandBar(true);
-            if (CheckIfPlayerHaveEnoughChips)
+            //if (CheckIfPlayerHaveEnoughChips)
+            if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
                 doubleBtn.SetActive(true);
             else
                 doubleBtn.SetActive(false);
@@ -69,6 +70,7 @@ public class HitStandBarHandler : MonoBehaviour
     public void ShowHitStandBar(bool isShow)
     {
         hitStandBar.SetActive(isShow);
+        doubleBtn.SetActive(false);
     }
 
     public void OnStandBtnClick()
@@ -84,6 +86,11 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void OnDoubleBtnClick()
     {
+        if (!rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
+        {
+            rm.gameManager.shopPanel.SetActive(true);
+            return;
+        }
         isDoubleBet = true;
         rm.potHandler.PlaceDoubleBetAmount();
         Invoke(nameof(OnHitBtnClick), 0.5f);
@@ -99,10 +106,10 @@ public class HitStandBarHandler : MonoBehaviour
     {
 
     }
-    bool CheckIfPlayerHaveEnoughChips
-    {
-        get { return rm.potHandler.GetPotAmount * 2 <= LocalSetting.GetTotalCash(); }
-    }
+    //bool CheckIfPlayerHaveEnoughChips
+    //{
+    //    get { return rm.potHandler.GetPotAmount <= LocalSetting.GetTotalCash(); }
+    //}
 
 
     public void ResetThings()

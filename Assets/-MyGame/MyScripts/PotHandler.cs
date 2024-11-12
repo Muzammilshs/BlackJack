@@ -30,6 +30,11 @@ public class PotHandler : MonoBehaviour
 
     public void PlaceBetAmount(int amount)
     {
+        if (!IsHaveAmount(amount))
+        {
+            refMgr.gameManager.shopPanel.SetActive(true);
+            return;
+        }
         totalbetPlacedTxt.gameObject.SetActive(true);
         totalBetPlaced += amount;
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
@@ -38,6 +43,11 @@ public class PotHandler : MonoBehaviour
 
     public void PlaceDoubleBetAmount()
     {
+        if (!IsHaveAmount(GetPotAmount))
+        {
+            refMgr.gameManager.shopPanel.SetActive(true);
+            return;
+        }
         doubleBetPlaced = GetPotAmount;
         doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
         doubleBetPlacedTxt.gameObject.SetActive(true);
@@ -45,6 +55,11 @@ public class PotHandler : MonoBehaviour
         totalbetPlacedTxt.transform.position = totalBetPlacedTxtPos + new Vector2(-100, 0);
         doubleBetPlacedTxt.transform.position = totalBetPlacedTxtPos + new Vector2(100, 0);
         refMgr.betBarHandler.DoubleBetChipsCreation();
+    }
+
+    public bool IsHaveAmount(int amount)
+    {
+        return amount <= LocalSetting.GetTotalCash() ? true : false;
     }
     public int GetPotAmount { get { return totalBetPlaced; } }
     public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
@@ -87,5 +102,6 @@ public class PotHandler : MonoBehaviour
             });
     }
     #endregion
+
     #endregion
 }

@@ -55,6 +55,11 @@ public class BetBarHandler : MonoBehaviour
     #region Bet place button click
     public void PlaceBetBtnClick(int betAmount)
     {
+        if (!refMgr.potHandler.IsHaveAmount(betAmount))
+        {
+            refMgr.gameManager.shopPanel.SetActive(true);
+            return;
+        }
         refMgr.potHandler.PlaceBetAmount(betAmount);
         dealnClearBtnGroup.SetActive(true);
         placeYourBetMsg.SetActive(false);
@@ -97,6 +102,12 @@ public class BetBarHandler : MonoBehaviour
     }
     public void DealBtnClick()
     {
+        if (!refMgr.potHandler.IsHaveAmount(refMgr.potHandler.GetPotAmount))
+        {
+            refMgr.gameManager.shopPanel.SetActive(true);
+            ClearBtnClick();
+            return;
+        }
         ShowBetbar(false);
         dealnClearBtnGroup.gameObject.SetActive(false);
         refMgr.gameStateManager.UpDateGameState(GameState.State.CARDDROP);
