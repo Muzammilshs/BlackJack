@@ -39,16 +39,12 @@ public class CardSettingManager : MonoBehaviour
                 {
                     
                     selectedDesignIndex = i;
-
-                    
                     PlayerPrefs.SetInt("CardBackDesign", selectedDesignIndex);
                     PlayerPrefs.Save();
-
-                    
                     UpdateCheckmarks();
                     Debug.Log($"Saved Design: {selectedDesignIndex} to PlayerPrefs");
-
                     break;  
+
                 }
                 
             }

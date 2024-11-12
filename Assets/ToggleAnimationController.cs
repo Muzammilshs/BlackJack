@@ -10,7 +10,7 @@ public class ToggleAnimationController : MonoBehaviour
 
     private List<Tween> tweens = new List<Tween>();  
 
-    private void Start()
+    public void Start()
     {   
         for (int i = 0; i < animatedObjects.Length; i++)
         {
@@ -27,7 +27,7 @@ public class ToggleAnimationController : MonoBehaviour
     }
 
     
-    private Tween SetupAnimation(GameObject obj)
+    public Tween SetupAnimation(GameObject obj)
     {
         
        
@@ -35,7 +35,7 @@ public class ToggleAnimationController : MonoBehaviour
     }
 
    
-    private void ToggleAnimation(int index, bool isOn)
+    public void ToggleAnimation(int index, bool isOn)
     {
         if (isOn)
         {
