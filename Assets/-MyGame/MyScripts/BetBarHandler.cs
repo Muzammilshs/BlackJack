@@ -155,6 +155,21 @@ public class BetBarHandler : MonoBehaviour
     public void ResetThings()
     {
         dealnClearBtnGroup.SetActive(true);
+        if (doubleBetPlacedChips.Count > 0)
+        {
+            foreach (GameObject obj in doubleBetPlacedChips)
+            {
+                Destroy(obj);
+            }
+            doubleBetPlacedChips.Clear();
+            refMgr.potHandler.doubleBetPlacedTxt.gameObject.SetActive(false);
+            foreach (GameObject chip in betPlacedChips)
+            {
+                chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
+            }
+            Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
+            txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
+        }
     }
 }
 [Serializable]

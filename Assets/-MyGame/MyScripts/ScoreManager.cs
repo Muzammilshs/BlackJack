@@ -30,6 +30,11 @@ public class ScoreManager : MonoBehaviour
         playerScoresParent.SetActive(isShow);
         dealerScoresParent.SetActive(isShow);
     }
+
+    public void RoundPlayerScores()
+    {
+        playerScores.text = playerTotalScores.ToString();
+    }
     public void SetScores(bool isPlayer)
     {
         ShowScoreObjects(true);

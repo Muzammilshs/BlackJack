@@ -57,6 +57,7 @@ public class GameStateManager : MonoBehaviour
         refMgr.dealerAIPlay.isDealerTurn = true;
         refMgr.hitStandBarHandler.ShowHitStandBar(false);
         refMgr.dealerAIPlay.DropDealerCard();
+        refMgr.scoreManager.RoundPlayerScores();
     }
     void OnResult()
     {
