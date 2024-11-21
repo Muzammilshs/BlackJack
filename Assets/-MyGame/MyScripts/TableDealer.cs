@@ -13,6 +13,8 @@ public class TableDealer : MonoBehaviour
     [ShowOnly]
     public List<CardProperty> playerCards;
     [ShowOnly]
+    public List<CardProperty> playerCardsSplitSet;
+    [ShowOnly]
     public List<CardProperty> dealerCards;
 
     [SerializeField] GameObject winParticles;
@@ -150,14 +152,13 @@ public class TableDealer : MonoBehaviour
             UpDateWinStatus(Winner.DEALERWINS);
         else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
             UpDateWinStatus(Winner.PUSH);
-        Debug.LogError("Wineer is at pt 1");
+        //Debug.LogError("Wineer is at pt 1");
     }
-    //sdf
     public void UpDateWinStatus(Winner status)
     {
         winStatus = status;
         RefMgr.gameStateManager.UpDateGameState(GameState.State.RESULT);
-        Debug.LogError("Wineer is at pt 2");
+        //Debug.LogError("Wineer is at pt 2");
         ShowWinningDetail(winStatus);
     }
     int winAmount = 0;

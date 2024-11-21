@@ -60,12 +60,26 @@ public class HitStandBarHandler : MonoBehaviour
         {
             // when not won with first 2 cards
             ShowHitStandBar(true);
-            //if (CheckIfPlayerHaveEnoughChips)
             if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
                 doubleBtn.SetActive(true);
             else
                 doubleBtn.SetActive(false);
+            if (isPlayerHaveSamePowerCards())
+            {
+                if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
+                    splitBtn.SetActive(false);
+                else
+                    splitBtn.SetActive(false);
+            }
+            else
+                splitBtn.SetActive(false);
         }
+    }
+
+    bool isPlayerHaveSamePowerCards()
+    {
+        return rm.tableDealer.playerCards[0].Power == rm.tableDealer.playerCards[1].Power;
+        //return false;
     }
     public void ShowHitStandBar(bool isShow)
     {
