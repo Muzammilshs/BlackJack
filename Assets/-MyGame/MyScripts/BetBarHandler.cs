@@ -34,17 +34,23 @@ public class BetBarHandler : MonoBehaviour
         chipsObjects = refMgr.gameManager.ClearList(chipsObjects);
         for (int i = 0; i < betAmounts.Length; i++)
         {
-            GameObject btn = Instantiate(betBtnPrefab);
-            btn.SetActive(true);
-            chipsObjects.Add(btn);
-            btn.GetComponent<Image>().sprite = betAmounts[i].coinIcon;
-            LocalSetting.SetPosAndRect(btn, betBtnPrefab.GetComponent<RectTransform>(), betBtnPrefab.transform.parent);
-            Button betBtn = btn.GetComponent<Button>();
-            int amt = betAmounts[i].amount;
-            btn.name = amt.ToString();
-            betBtn.onClick.AddListener(() => PlaceBetBtnClick(amt));
-            btn.transform.GetChild(0).GetComponent<TMP_Text>().text = amt.ToString();
+            if (refMgr.potHandler.IsHaveAmount(betAmounts[i].amount * 10) || i == 0)
+            {
+                GameObject btn = Instantiate(betBtnPrefab);
+                btn.SetActive(true);
+                chipsObjects.Add(btn);
+                btn.GetComponent<Image>().sprite = betAmounts[i].coinIcon;
+                LocalSetting.SetPosAndRect(btn, betBtnPrefab.GetComponent<RectTransform>(), betBtnPrefab.transform.parent);
+                Button betBtn = btn.GetComponent<Button>();
+                int amt = betAmounts[i].amount;
+                btn.name = amt.ToString();
+                betBtn.onClick.AddListener(() => PlaceBetBtnClick(amt));
+                btn.transform.GetChild(0).GetComponent<TMP_Text>().text = amt.ToString();
+            }
+            else break;
         }
+        if (chipsObjects.Count <= 0)
+            refMgr.gameManager.ShowShopPanel();
     }
     public void ShowBetbar(bool isShow)
     {
@@ -56,6 +62,11 @@ public class BetBarHandler : MonoBehaviour
     public void PlaceBetBtnClick(int betAmount)
     {
         if (!refMgr.potHandler.IsHaveAmount(betAmount))
+        {
+            refMgr.gameManager.shopPanel.SetActive(true);
+            return;
+        }
+        if (!refMgr.potHandler.IsHaveAmount(refMgr.potHandler.GetPotAmount + betAmount))
         {
             refMgr.gameManager.shopPanel.SetActive(true);
             return;
