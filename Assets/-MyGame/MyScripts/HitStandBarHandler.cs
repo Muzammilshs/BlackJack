@@ -11,6 +11,8 @@ public class HitStandBarHandler : MonoBehaviour
     [ShowOnly]
     public bool isDoubleBet;
 
+    [ShowOnly] public bool isSplitting;
+
     private void Start()
     {
         hitStandBar.SetActive(false);
@@ -67,7 +69,9 @@ public class HitStandBarHandler : MonoBehaviour
             if (isPlayerHaveSamePowerCards())
             {
                 if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
-                    splitBtn.SetActive(false);
+                {
+                    splitBtn.SetActive(true);
+                }
                 else
                     splitBtn.SetActive(false);
             }
@@ -95,7 +99,7 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void OnSplitBtnClick()
     {
-
+        isSplitting = true;
     }
 
     public void OnDoubleBtnClick()
@@ -128,7 +132,7 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void ResetThings()
     {
-
+        isSplitting = false;
         isDoubleBet = false;
         doubleBtn.SetActive(false);
     }
