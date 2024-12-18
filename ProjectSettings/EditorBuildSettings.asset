@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/-MyGame/MyScenes/BlackJackGamePlay.unity
     guid: 580dd4e21c0ce98499e32c9b073b5b4e
   m_configObjects:
-    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 4187aaeddc4da6343989e2e012f75782, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 1b66a1e737c59114f9e4d429386c6458, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 56188707418340d499e326c77571eb14, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 65d6b98b04b6ce84fa8f95bee6b64734, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
