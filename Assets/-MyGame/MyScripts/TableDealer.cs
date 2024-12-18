@@ -164,6 +164,7 @@ public class TableDealer : MonoBehaviour
     int winAmount = 0;
     void ShowWinningDetail(Winner status)
     {
+        float delayTime = 0.5f;
         switch (status)
         {
             case Winner.DEALERWINS:
@@ -171,6 +172,8 @@ public class TableDealer : MonoBehaviour
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Dealer win"));
+                StartCoroutine(CloneAndSendChips(delayTime, false, false));
+
                 break;
             case Winner.PUSH:
                 Debug.LogError("Match tie");
@@ -178,6 +181,8 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.text = "+" + winAmount;
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Push"));
+                StartCoroutine(CloneAndSendChips(delayTime, true, true));
+
                 break;
             case Winner.JACKPOT:
                 Debug.LogError("Jackpot");
@@ -186,12 +191,16 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.text = "+" + winAmount;
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Jackpot"));
+                StartCoroutine(CloneAndSendChips(delayTime, true, false));
+
                 break;
             case Winner.BUST:
                 Debug.LogError("Busted");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Bust"));
+                StartCoroutine(CloneAndSendChips(delayTime, false, false));
+
                 break;
             case Winner.WON:
                 Debug.LogError("Won");
@@ -199,9 +208,11 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.text = "+" + winAmount;
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("won"));
+                StartCoroutine(CloneAndSendChips(delayTime, true, false));
                 break;
         }
     }
+
 
 
     IEnumerator ShowWinPanel(string winStatusMessage)
@@ -213,4 +224,41 @@ public class TableDealer : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         WinLoosepanel.SetActive(false);
     }
+
+    IEnumerator CloneAndSendChips(float delay, bool isSendToPlayer, bool isPush)
+    {
+        yield return new WaitForSeconds(delay);
+        RectTransform playerPos = null;
+        RectTransform dealerPos = null;
+        RefMgr.betBarHandler.BettedPos(out playerPos, out dealerPos);
+
+        // clone chips and then send to respective player
+        RectTransform InitialPos = isSendToPlayer ? dealerPos : playerPos;
+        if (isPush)
+            InitialPos = playerPos;
+        RectTransform targetPos = isSendToPlayer ? playerPos : dealerPos;
+
+        BetBarHandler bbh = RefMgr.betBarHandler;
+
+        for (int i = 0; i < bbh.betPlacedChips.Count; i++)
+        {
+            GameObject chip = Instantiate(bbh.betPlacedChips[i]);
+            LocalSetting.SetPosAndRect(chip, InitialPos, InitialPos.transform.parent);
+            playChipAnimation(chip, targetPos.gameObject);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+    }
+    void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj)
+    {
+        GameObject TgtObj = targetObj;
+        GameObject chip = ObjectToAnimate;
+        chip.transform.SetParent(TgtObj.transform.parent.transform);
+
+        ObjectToAnimate.transform.DOMove(TgtObj.transform.position, 1.5f)
+            .OnComplete(() => Destroy(chip));
+        //ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.25f);
+
+    }
+
 }

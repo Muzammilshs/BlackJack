@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75bd8a0d4592d8b4aa158ec940c89794, type: 3}
+  m_Name: AllSounds
+  m_EditorClassIdentifier: 
+  AudioSourcePrefab: {fileID: 6822817296328791536, guid: 79de97127fa0cce418230dd40e0e490a, type: 3}
+  BGMusic: {fileID: 0}
+  ButtonSound: {fileID: 8300000, guid: cee566d735b109b4b982f621bd22d7f1, type: 3}
+  CardFlip: {fileID: 0}
+  Notification: {fileID: 0}
+  WinFinal: {fileID: 0}

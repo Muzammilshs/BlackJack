@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class Purchase : MonoBehaviour
 {
-    public Button[] buttons; 
-      
+    public Button[] buttons;
+
     void Start()
     {
         for (int i = 0; i < buttons.Length; i++)
@@ -13,19 +13,20 @@ public class Purchase : MonoBehaviour
             buttons[i].onClick.AddListener(() => OnButtonClick(index));
         }
 
-        
+
     }
 
     void Update()
     {
-        
-        
+
+
     }
-    
+
 
     public void OnButtonClick(int buttonIndex)
     {
-        Debug.Log("Button"  + buttonIndex + "This item has been purchased");
+        SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.ButtonSound);
+        Debug.Log("Button" + buttonIndex + "This item has been purchased");
     }
 
 }

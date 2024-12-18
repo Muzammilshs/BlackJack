@@ -20,9 +20,11 @@ public class BetBarHandler : MonoBehaviour
     [SerializeField] GameObject betBarPos1;
     [SerializeField] GameObject betBarPos2;
     [SerializeField] RectTransform bettedChipsPos;
+    [SerializeField] RectTransform dealerBettedChipsPos;
+    [SerializeField] RectTransform playerBettedChipsPos;
 
     List<GameObject> chipsObjects;
-    List<GameObject> betPlacedChips;
+    [HideInInspector] public List<GameObject> betPlacedChips;
     List<GameObject> doubleBetPlacedChips;
     void Start()
     {
@@ -181,6 +183,12 @@ public class BetBarHandler : MonoBehaviour
             Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
             txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
         }
+    }
+
+    public void BettedPos(out RectTransform playerChipsPos, out RectTransform dealerChipsPos)
+    {
+        playerChipsPos = playerBettedChipsPos;
+        dealerChipsPos = dealerBettedChipsPos;
     }
 }
 [Serializable]

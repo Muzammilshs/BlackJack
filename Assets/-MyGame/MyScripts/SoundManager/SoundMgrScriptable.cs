@@ -6,20 +6,7 @@ public class SoundMgrScriptable : ScriptableObject
     public AudioClip BGMusic,
         ButtonSound,
         CardFlip,
-        //ChipAdding,
         Notification,
-        //Reward,
         WinFinal;
-    //ToonSound,
-    //WingoLotteryRotate,
-    //DragonSound,
-    //CameraShutterSound,
-    //TigerSound,
-    //DailyReward,
-    //ChipsCollect,
-    //GoldCollectFromSenderTick,
-    //MainMenuGoldWin,
-    //MainMenuGoldLoose,
-    //ClockTikSound;
 
 }

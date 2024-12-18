@@ -52,6 +52,21 @@ public class SoundManager : MonoBehaviour
             ASource.PlayOneShot(audioClip);
         ASource.name = "AS: " + audioClip.name;
     }
+    public void PlayAudioClip(AudioClip audioClip)
+    {
+        if (audioClip == null)
+        {
+            Debug.LogError("Audio clip is missing, Assign audio Clip");
+            return;
+        }
+        Vector3 position = Vector3.zero;
+        getAudioSource(position);
+        ASource.loop = false;
+        ASource.clip = audioClip;
+        ASource.playOnAwake = true;
+        ASource.PlayOneShot(audioClip);
+        ASource.name = "AS: " + audioClip.name;
+    }
     int soundNumber;
     public AudioSource PlayAudioClip(AudioClip audioClip, bool isLoop, bool isReturntype)
     {
