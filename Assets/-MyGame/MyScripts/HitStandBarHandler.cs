@@ -69,9 +69,7 @@ public class HitStandBarHandler : MonoBehaviour
             if (isPlayerHaveSamePowerCards())
             {
                 if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
-                {
                     splitBtn.SetActive(true);
-                }
                 else
                     splitBtn.SetActive(false);
             }
@@ -100,6 +98,10 @@ public class HitStandBarHandler : MonoBehaviour
     public void OnSplitBtnClick()
     {
         isSplitting = true;
+        if (!rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
+        {
+            return;
+        }
     }
 
     public void OnDoubleBtnClick()
@@ -119,15 +121,6 @@ public class HitStandBarHandler : MonoBehaviour
         ShowHitStandBar(false);
         rm.tableDealer.SendOneCard(true);
     }
-
-    public void CheckPlayerScoresLimit()
-    {
-
-    }
-    //bool CheckIfPlayerHaveEnoughChips
-    //{
-    //    get { return rm.potHandler.GetPotAmount <= LocalSetting.GetTotalCash(); }
-    //}
 
 
     public void ResetThings()
