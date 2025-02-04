@@ -114,6 +114,18 @@ public class CardsManager : MonoBehaviour
             playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
             yield return new WaitForSeconds(0.1f);
         }
+        foreach (CardProperty card in refMgr.tableDealer.playerCards_1_Split)
+        {
+            wasteCardsList.Add(card.gameObject);
+            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
+            yield return new WaitForSeconds(0.1f);
+        }
+        foreach (CardProperty card in refMgr.tableDealer.playerCards_2_Split)
+        {
+            wasteCardsList.Add(card.gameObject);
+            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
+            yield return new WaitForSeconds(0.1f);
+        }
         foreach (CardProperty card in refMgr.tableDealer.dealerCards)
         {
             wasteCardsList.Add(card.gameObject);
@@ -121,6 +133,8 @@ public class CardsManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         refMgr.tableDealer.playerCards.Clear();
+        refMgr.tableDealer.playerCards_1_Split.Clear();
+        refMgr.tableDealer.playerCards_2_Split.Clear();
         refMgr.tableDealer.dealerCards.Clear();
         yield return new WaitForSeconds(1);
         ClearCards();

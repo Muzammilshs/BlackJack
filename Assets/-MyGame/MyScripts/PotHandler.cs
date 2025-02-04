@@ -14,13 +14,16 @@ public class PotHandler : MonoBehaviour
     public TMP_Text totalbetPlacedTxt_P1_split;
     public TMP_Text totalbetPlacedTxt_P2_split;
     int totalBetPlaced;
+    int totalBetPlaced_1_Split;
+    int totalBetPlaced_2_Split;
+
     int doubleBetPlaced;
-    //[ShowOnly] public Vector2 totalBetPlacedTxtPos;
     void Start()
     {
-        //totalBetPlacedTxtPos = totalbetPlacedTxt.transform.position;
         totalAmountTxt.text = LocalSetting.GetTotalCash().ToString("N0");
         totalbetPlacedTxt.gameObject.SetActive(false);
+        totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
+        totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
     }
 
     public void ResetTotalBet()
@@ -41,6 +44,8 @@ public class PotHandler : MonoBehaviour
             return;
         }
         totalbetPlacedTxt.gameObject.SetActive(true);
+        totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
+        totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
         totalBetPlaced += amount;
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
     }
@@ -69,7 +74,19 @@ public class PotHandler : MonoBehaviour
     public int GetPotAmount { get { return totalBetPlaced; } }
     public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
 
+    public void SetBetAmountForSplit()
+    {
+        totalBetPlaced_1_Split = totalBetPlaced;
+        totalBetPlaced_2_Split = totalBetPlaced;
 
+        totalbetPlacedTxt_P1_split.text = totalBetPlaced.ToString();
+        totalbetPlacedTxt_P2_split.text = totalBetPlaced.ToString();
+
+        totalbetPlacedTxt_P1_split.gameObject.SetActive(true);
+        totalbetPlacedTxt_P2_split.gameObject.SetActive(true);
+
+        totalbetPlacedTxt.gameObject.SetActive(false);
+    }
 
     #region Total Cash update
 

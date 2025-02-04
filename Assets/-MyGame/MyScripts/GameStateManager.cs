@@ -78,6 +78,7 @@ public class GameStateManager : MonoBehaviour
         refMgr.betBarHandler.ResetThings();
         refMgr.hitStandBarHandler.ResetThings();
         refMgr.betBarHandler.CreateBetButtons();
+
     }
 
 

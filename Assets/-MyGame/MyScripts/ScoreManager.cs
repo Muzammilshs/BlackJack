@@ -8,15 +8,17 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] Rm rm;
     [ShowOnly]
-    public int targetScores = 21;
+    public int playerTotalScores, playerTotalScores_P1_Split, playerTotalScores_P2_Split, dealerTotalScores;
     [ShowOnly]
-    public int playerTotalScores, dealerTotalScores;
-    [ShowOnly]
-    public int playerTotalScoresAce, dealerTotalScoresAce;
+    public int playerTotalScoresAce, playerTotalScoresAce_P1_Split, playerTotalScoresAce_P2_Split, dealerTotalScoresAce;
     [SerializeField] TMP_Text playerScores;
+    [SerializeField] TMP_Text playerScoresTxt_P1_Split;
+    [SerializeField] TMP_Text playerScoresTxt_P2_Split;
     [SerializeField] TMP_Text dealerScores;
 
     [SerializeField] GameObject playerScoresParent;
+    [SerializeField] GameObject playerScoresParent_P1_Split;
+    [SerializeField] GameObject playerScoresParent_P2_Split;
     [SerializeField] GameObject dealerScoresParent;
 
 
@@ -26,15 +28,48 @@ public class ScoreManager : MonoBehaviour
         {
             playerTotalScores = 0;
             dealerTotalScores = 0;
+
+            playerTotalScores_P1_Split = 0;
+            playerTotalScores_P2_Split = 0;
         }
-        playerScoresParent.SetActive(isShow);
+        if (!rm.hitStandBarHandler.isSplitting)
+        {
+            playerScoresParent.SetActive(isShow);
+            playerScoresParent_P1_Split.SetActive(false);
+            playerScoresParent_P2_Split.SetActive(false);
+        }
+        else
+        {
+            playerScoresParent.SetActive(false);
+            playerScoresParent_P1_Split.SetActive(isShow);
+            playerScoresParent_P2_Split.SetActive(isShow);
+        }
         dealerScoresParent.SetActive(isShow);
     }
 
     public void RoundPlayerScores()
     {
-        playerScores.text = playerTotalScores.ToString();
+        if (!rm.hitStandBarHandler.isSplitting)
+            playerScores.text = playerTotalScores.ToString();
+        else
+        {
+
+        }
     }
+
+    public void SplitPlayerScores()
+    {
+        CalculateCardsScores(rm.tableDealer.playerCards_1_Split, out playerTotalScores_P1_Split, out playerTotalScoresAce_P1_Split);
+        CalculateCardsScores(rm.tableDealer.playerCards_2_Split, out playerTotalScores_P2_Split, out playerTotalScoresAce_P2_Split);
+
+        playerScoresTxt_P1_Split.text = playerTotalScores_P1_Split.ToString();
+        playerScoresTxt_P2_Split.text = playerTotalScores_P2_Split.ToString();
+
+        playerScoresParent.SetActive(false);
+        playerScoresParent_P1_Split.SetActive(true);
+        playerScoresParent_P2_Split.SetActive(true);
+    }
+
     public void SetScores(bool isPlayer)
     {
         ShowScoreObjects(true);
@@ -47,21 +82,21 @@ public class ScoreManager : MonoBehaviour
             {
                 playerScores.text = playerTotalScores.ToString();
             }
-            else if (playerTotalScoresAce > 0 && playerTotalScores <= targetScores)
+            else if (playerTotalScoresAce > 0 && playerTotalScores <= LocalSetting.ScoresLimit)
             {
                 playerScores.text = playerTotalScoresAce + "/" + playerTotalScores;
-                if (playerTotalScores == targetScores)
+                if (playerTotalScores == LocalSetting.ScoresLimit)
                     playerScores.text = playerTotalScores.ToString();
 
             }
-            else if (playerTotalScoresAce > 0 && playerTotalScores > targetScores)
+            else if (playerTotalScoresAce > 0 && playerTotalScores > LocalSetting.ScoresLimit)
             {
                 playerTotalScores = playerTotalScoresAce;
                 playerScores.text = playerTotalScores.ToString();
             }
             else
                 playerScores.text = playerTotalScores.ToString();
-            if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == targetScores)
+            if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == LocalSetting.ScoresLimit)
                 StartCoroutine(CheckForPlayerScoreLimit());
         }
         else
@@ -73,13 +108,13 @@ public class ScoreManager : MonoBehaviour
             {
                 dealerScores.text = dealerTotalScores.ToString();
             }
-            else if (dealerTotalScoresAce > 0 && dealerTotalScores <= targetScores)
+            else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSetting.ScoresLimit)
             {
                 dealerScores.text = dealerTotalScoresAce + "/" + dealerTotalScores;
-                if (dealerTotalScores == targetScores)
+                if (dealerTotalScores == LocalSetting.ScoresLimit)
                     dealerScores.text = dealerTotalScores.ToString();
             }
-            else if (dealerTotalScoresAce > 0 && dealerTotalScores > targetScores)
+            else if (dealerTotalScoresAce > 0 && dealerTotalScores > LocalSetting.ScoresLimit)
             {
                 dealerTotalScores = dealerTotalScoresAce;
                 dealerScores.text = dealerTotalScores.ToString();
@@ -93,7 +128,7 @@ public class ScoreManager : MonoBehaviour
     IEnumerator CheckForPlayerScoreLimit()
     {
         yield return new WaitForSeconds(0.5f);
-        if (playerTotalScores < targetScores)
+        if (playerTotalScores < LocalSetting.ScoresLimit)
         {
             if (!rm.dealerAIPlay.isDealerTurn)
             {
@@ -110,7 +145,7 @@ public class ScoreManager : MonoBehaviour
                 }
             }
         }
-        else if (playerTotalScores > targetScores)
+        else if (playerTotalScores > LocalSetting.ScoresLimit)
         {
             // 
             rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
@@ -184,9 +219,9 @@ public class ScoreManager : MonoBehaviour
                         int tempScore = highScores;
                         tempScore += card.Power;
                         index++;
-                        if (tempScore >= targetScores && index == 1)
+                        if (tempScore >= LocalSetting.ScoresLimit && index == 1)
                             highScores = card.SecondPower;
-                        else if (tempScore < targetScores && index == 1)
+                        else if (tempScore < LocalSetting.ScoresLimit && index == 1)
                             highScores = tempScore;
                         else
                             highScores += card.SecondPower;
@@ -212,5 +247,10 @@ public class ScoreManager : MonoBehaviour
         dealerTotalScoresAce = 0;
         playerScores.text = string.Empty;
         dealerScores.text = string.Empty;
+    }
+
+    void ResetSplitCardsAndTxt()
+    {
+        //playerTotalScores_P2_Split
     }
 }

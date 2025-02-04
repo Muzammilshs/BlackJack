@@ -3,8 +3,8 @@ using UnityEngine;
 public static class LocalSetting
 {
     const string totalCash = "total_cash";
-    const int firstTimeAmount = 3000;
-
+    const int firstTimeAmount = 300000;
+    public const int ScoresLimit = 21;
 
     public static bool IsCashAvailAble(int amount)
     {

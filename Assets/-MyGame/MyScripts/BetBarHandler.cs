@@ -20,12 +20,24 @@ public class BetBarHandler : MonoBehaviour
     [SerializeField] GameObject betBarPos1;
     [SerializeField] GameObject betBarPos2;
     [SerializeField] RectTransform bettedChipsPos;
+    public RectTransform bettedChipsPos_1_Split;
+    public RectTransform bettedChipsPos_2_Split;
     [SerializeField] RectTransform dealerBettedChipsPos;
+    [SerializeField] RectTransform dealerBettedChipsPos_P1_Split;
+    [SerializeField] RectTransform dealerBettedChipsPos_P2_Split;
     [SerializeField] RectTransform playerBettedChipsPos;
+    [SerializeField] RectTransform playerBettedChipsPos_P1_Split;
+    [SerializeField] RectTransform playerBettedChipsPos_P2_Split;
 
-    List<GameObject> chipsObjects;
-    [HideInInspector] public List<GameObject> betPlacedChips;
+    public List<GameObject> chipsObjects;
+    /*[HideInInspector] */
+    public List<GameObject> betPlacedChips;
+    /*[HideInInspector] */
+    public List<GameObject> betPlacedChips_1_Split;
+    /*[HideInInspector] */
+    public List<GameObject> betPlacedChips_2_Split;
     List<GameObject> doubleBetPlacedChips;
+
     void Start()
     {
         OnResettingBet();
@@ -63,6 +75,7 @@ public class BetBarHandler : MonoBehaviour
     #region Bet place button click
     public void PlaceBetBtnClick(int betAmount)
     {
+        Debug.LogError("bet amount: " + betAmount);
         if (!refMgr.potHandler.IsHaveAmount(betAmount))
         {
             refMgr.gameManager.shopPanel.SetActive(true);
@@ -147,6 +160,7 @@ public class BetBarHandler : MonoBehaviour
                     chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
         }
         doubleBetPlacedChips = refMgr.gameManager.ClearList(doubleBetPlacedChips);
+
     }
 
     void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj, bool isOffSetUse)
@@ -183,6 +197,18 @@ public class BetBarHandler : MonoBehaviour
             Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
             txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
         }
+
+        for (int i = 0; i < betPlacedChips_2_Split.Count; i++)
+            if (betPlacedChips_2_Split[i] != null)
+                Destroy(betPlacedChips_2_Split[i]);
+        for (int i = 0; i < betPlacedChips_1_Split.Count; i++)
+        {
+            betPlacedChips.Add(betPlacedChips_1_Split[i]);
+            LocalSetting.SetPosAndRect(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
+        }
+        betPlacedChips_1_Split.Clear();
+        betPlacedChips_2_Split.Clear();
+        refMgr.potHandler.PlaceBetAmount(0);
     }
 
     public void BettedPos(out RectTransform playerChipsPos, out RectTransform dealerChipsPos)
@@ -190,6 +216,39 @@ public class BetBarHandler : MonoBehaviour
         playerChipsPos = playerBettedChipsPos;
         dealerChipsPos = dealerBettedChipsPos;
     }
+    public void BettedPosSplit(out RectTransform playerChipsPos, out RectTransform dealerChipsPos, int splitPart)
+    {
+        if (splitPart == 0)
+        {
+            playerChipsPos = playerBettedChipsPos_P1_Split;
+            dealerChipsPos = dealerBettedChipsPos_P1_Split;
+        }
+        else
+        {
+            playerChipsPos = playerBettedChipsPos_P2_Split;
+            dealerChipsPos = dealerBettedChipsPos_P2_Split;
+        }
+    }
+
+    public void DuplicateBettedChipsAndAmountOnSplit()
+    {
+        float rndRange = 3f;
+        for (int i = 0; i < betPlacedChips.Count; i++)
+        {
+            betPlacedChips_1_Split.Add(betPlacedChips[i]);
+            float yPos = betPlacedChips_1_Split[i].GetComponent<RectTransform>().position.y;
+            betPlacedChips_1_Split[i].GetComponent<RectTransform>().position = new Vector2(bettedChipsPos_1_Split.position.x + UnityEngine.Random.Range(-rndRange, rndRange), yPos + UnityEngine.Random.Range(-rndRange, rndRange));
+
+            // for second
+            GameObject chip = Instantiate(betPlacedChips_1_Split[i]);
+            betPlacedChips_2_Split.Add(chip);
+            LocalSetting.SetPosAndRect(chip, bettedChipsPos_2_Split, bettedChipsPos_2_Split.parent);
+            chip.GetComponent<RectTransform>().position = new Vector2(bettedChipsPos_2_Split.position.x + UnityEngine.Random.Range(-rndRange, rndRange), yPos + UnityEngine.Random.Range(-rndRange, rndRange));
+        }
+        betPlacedChips.Clear();
+        refMgr.potHandler.SetBetAmountForSplit();
+    }
+
 }
 [Serializable]
 public class BetAmounts

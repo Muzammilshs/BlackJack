@@ -9945,10 +9945,9 @@ MonoBehaviour:
   menuController:
   - {fileID: 966715364}
   - {fileID: 470699689}
-  buttons: []
-  settingButton: {fileID: 0}
+  settingButton: {fileID: 796730784}
   closeButton: {fileID: 602234612}
-  totalChipsTxt: {fileID: 0}
+  totalChipsTxt: {fileID: 1139297484}
 --- !u!4 &985408152
 Transform:
   m_ObjectHideFlags: 0
@@ -11027,8 +11026,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 34264892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.03729745, y: 0.11646685}
-  m_AnchorMax: {x: 0.872393, y: 0.8645522}
+  m_AnchorMin: {x: 0.21841861, y: 0.11646685}
+  m_AnchorMax: {x: 0.87239426, y: 0.8645522}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11079,7 +11078,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58.9
+  m_fontSize: 48.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -8,10 +8,11 @@ public class HitStandBarHandler : MonoBehaviour
     public GameObject splitBtn;
     public GameObject doubleBtn;
 
-    [ShowOnly]
-    public bool isDoubleBet;
+    [ShowOnly] public bool isDoubleBet;
 
     [ShowOnly] public bool isSplitting;
+
+    [ShowOnly] public int splitingTurnNumber;
 
     private void Start()
     {
@@ -37,9 +38,9 @@ public class HitStandBarHandler : MonoBehaviour
         else
             dealerScores = td.dealerCards[0].Power + td.dealerCards[1].Power;
 
-        Debug.LogError("Player scores after 4 card: " + playerScores + "     Dealer Scores: " + dealerScores);
+        //Debug.LogError("Player scores after 4 card: " + playerScores + "     Dealer Scores: " + dealerScores);
         // When win with first 2 cards
-        if (playerScores == sm.targetScores || dealerScores == sm.targetScores)
+        if (playerScores == LocalSetting.ScoresLimit || dealerScores == LocalSetting.ScoresLimit)
         {
             ShowHitStandBar(false);
             if (playerScores > dealerScores)
@@ -71,10 +72,14 @@ public class HitStandBarHandler : MonoBehaviour
                 if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
                     splitBtn.SetActive(true);
                 else
-                    splitBtn.SetActive(false);
+                    //        splitBtn.SetActive(false);
+                    //}
+                    //else
+                    //    splitBtn.SetActive(false);
+                    splitBtn.SetActive(true);
             }
             else
-                splitBtn.SetActive(false);
+                splitBtn.SetActive(true);
         }
     }
 
@@ -91,17 +96,28 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void OnStandBtnClick()
     {
-        rm.gameStateManager.UpDateGameState(GameState.State.STAND);
-
+        if (!isSplitting)
+            rm.gameStateManager.UpDateGameState(GameState.State.STAND);
+        else
+            rm.tableDealer.OnSplitCheckNextTurn(true);
     }
 
     public void OnSplitBtnClick()
     {
-        isSplitting = true;
         if (!rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
         {
+            rm.gameManager.shopPanel.SetActive(true);
             return;
         }
+        rm.potHandler.BetAmountDeduction(rm.potHandler.GetPotAmount);
+        isSplitting = true;
+        splitingTurnNumber = 0;
+        rm.tableDealer.SplitCardsOnSplit();
+        rm.betBarHandler.DuplicateBettedChipsAndAmountOnSplit();
+        hitStandBar.SetActive(true);
+        splitBtn.SetActive(false);
+        doubleBtn.SetActive(false);
+        rm.tableDealer.SendOneCardOnSplit();
     }
 
     public void OnDoubleBtnClick()
@@ -119,7 +135,15 @@ public class HitStandBarHandler : MonoBehaviour
     public void OnHitBtnClick()
     {
         ShowHitStandBar(false);
-        rm.tableDealer.SendOneCard(true);
+        if (!isSplitting)
+        {
+            rm.tableDealer.SendOneCard(true);
+        }
+        else
+        {
+            if (splitingTurnNumber < 2)
+                rm.tableDealer.SendOneCardOnSplit();
+        }
     }
 
 
@@ -128,5 +152,6 @@ public class HitStandBarHandler : MonoBehaviour
         isSplitting = false;
         isDoubleBet = false;
         doubleBtn.SetActive(false);
+        splitingTurnNumber = 0;
     }
 }

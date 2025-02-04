@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     public GameObject[] menuController;
-    public Button[] buttons;
+    //public Button[] buttons;
     public Button settingButton;
     public Button closeButton;
 
@@ -14,7 +14,7 @@ public class MenuController : MonoBehaviour
 
     private int mainMenuIndex = 0;
     // private int settingButtonIndex = 1;
-    private int loadingpPanelIndex = 2;
+    private int loadingpPanelIndex = 1;
 
     void Start()
     {

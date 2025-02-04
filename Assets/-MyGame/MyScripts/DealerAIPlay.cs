@@ -23,21 +23,32 @@ public class DealerAIPlay : MonoBehaviour
     {
         //isJackPot = isDropNextCard();
         yield return new WaitForSeconds(1.25f);
-        while (isDropNextCard() && !isJackPot)
+        if (!rm.hitStandBarHandler.isSplitting)
         {
-            rm.tableDealer.SendOneCard(false);
-            yield return new WaitForSeconds(1.5f);
+            while (isDropNextCard() && !isJackPot)
+            {
+                rm.tableDealer.SendOneCard(false);
+                yield return new WaitForSeconds(1.5f);
+            }
+        }
+        else
+        {
+            while (isDropNextCard() && (rm.scoreManager.playerTotalScores_P1_Split <= 21 || rm.scoreManager.playerTotalScores_P2_Split <= 21))
+            {
+                rm.tableDealer.SendOneCard(false);
+                yield return new WaitForSeconds(1.5f);
+            }
         }
         //asdf
-        rm.tableDealer.DeclearWinner(isJackPot);
-        //int totalCards = rm.tableDealer.dealerCards.Count + rm.tableDealer.playerCards.Count;
-        //if (totalCards != 4)
-        //    rm.tableDealer.DeclearWinner(false);
+        if (!rm.hitStandBarHandler.isSplitting)
+            rm.tableDealer.DeclearWinner(isJackPot);
+        else
+            rm.tableDealer.DeclearWinnerWithSplit();
     }
 
     bool isDropNextCard()
     {
-        if (rm.scoreManager.dealerTotalScores >= rm.scoreManager.targetScores - 3)
+        if (rm.scoreManager.dealerTotalScores >= LocalSetting.ScoresLimit - 3)
             return false;
         else if (isJackPot)
             return false;
