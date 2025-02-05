@@ -18,6 +18,7 @@ public class CardsManager : MonoBehaviour
 
     void Start()
     {
+        refMgr.gameManager.SetCardDesign();
         CardsCreation();
     }
 

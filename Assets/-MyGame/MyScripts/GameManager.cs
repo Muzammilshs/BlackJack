@@ -8,11 +8,14 @@ public class GameManager : MonoBehaviour
 
     public Sprite dummyCardSprite;
     public GameObject shopPanel;
-    void Start()
+    [SerializeField] Sprite[] cardDesigns;
+
+
+    public void SetCardDesign()
     {
-
+        if (LocalSetting.SelectedDesignIndex < cardDesigns.Length)
+            dummyCardSprite = cardDesigns[LocalSetting.SelectedDesignIndex];
     }
-
     public List<GameObject> ClearList(List<GameObject> list)
     {
         if (list == null)

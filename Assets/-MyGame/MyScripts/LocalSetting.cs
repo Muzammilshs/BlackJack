@@ -2,9 +2,25 @@ using UnityEngine;
 
 public static class LocalSetting
 {
-    const string totalCash = "total_cash";
+    const string TOTALCASHKEY = "total_cash";
     const int firstTimeAmount = 300000;
     public const int ScoresLimit = 21;
+
+    const string CARDBACKDESIGNKEY = "CardBackDesign";
+
+    public static int SelectedDesignIndex
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(CARDBACKDESIGNKEY, 0);
+        }
+        set
+        {
+            PlayerPrefs.SetInt(CARDBACKDESIGNKEY, value);
+            PlayerPrefs.Save();
+        }
+    }
+
 
     public static bool IsCashAvailAble(int amount)
     {
@@ -14,14 +30,14 @@ public static class LocalSetting
     {
         int cash = GetTotalCash();
         cash += amount;
-        PlayerPrefs.SetString(totalCash, cash.ToString());
+        PlayerPrefs.SetString(TOTALCASHKEY, cash.ToString());
     }
 
     public static int GetTotalCash()
     {
-        if (!PlayerPrefs.HasKey(totalCash))
-            PlayerPrefs.SetString(totalCash, firstTimeAmount.ToString());
-        string cash = PlayerPrefs.GetString(totalCash);
+        if (!PlayerPrefs.HasKey(TOTALCASHKEY))
+            PlayerPrefs.SetString(TOTALCASHKEY, firstTimeAmount.ToString());
+        string cash = PlayerPrefs.GetString(TOTALCASHKEY);
         return StringToInt(cash);
     }
     public static int StringToInt(string stg)
