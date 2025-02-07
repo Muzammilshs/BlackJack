@@ -5,22 +5,19 @@ using UnityEngine.UI;
 public class Purchase : MonoBehaviour
 {
     public Button[] buttons;
-    public IAPManager iapManager;
     public ProductIDs[] productIDs;
 
+    //public IAPManager iapManager;
     [SerializeField] MenuController menuController;
 
     void Start()
     {
-        //for (int i = 0; i < buttons.Length; i++)
+        //for (int i = 0; i < productIDs.Length; i++)
         //{
         //    int index = i;
-        //    buttons[i].onClick.AddListener(() => OnButtonClick(index));
+        //    productIDs[i].purchaseBtn.onClick.AddListener(() => OnButtonClick(index));
+        //    //iapManager.InitializePurchasing(productIDs[i].productID);
         //}
-        for (int i = 0; i < productIDs.Length; i++)
-        {
-            productIDs[i].purchaseBtn.onClick.AddListener(() => OnButtonClick(i));
-        }
     }
 
 
@@ -29,19 +26,18 @@ public class Purchase : MonoBehaviour
     {
         SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.ButtonSound);
 
-        Debug.Log("Product: " + productIDs[buttonIndex].rewardAmount + "    This item has been purchased");
-
         currentIndex = buttonIndex;
-        iapManager.OnPurchaseSuccess = AddAmount;
-        iapManager.BuyMyProduct(productIDs[currentIndex].productID);
+        //iapManager.OnPurchaseSuccess = AddAmount;
+        //iapManager.BuyMyProduct(productIDs[currentIndex].productID);
 
     }
 
-    public void AddAmount()
+    public void AddAmount(int index)
     {
-        LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + productIDs[currentIndex].rewardAmount);
+        LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + productIDs[index].rewardAmount);
         menuController.UpDateTotalChipsTxts();
-        iapManager.OnPurchaseSuccess = null;
+        Debug.LogError("Added Amount: " + productIDs[index].rewardAmount + "      Index is: " + index);
+        //iapManager.OnPurchaseSuccess = null;
 
         // Purchase success message show here
     }
@@ -54,4 +50,5 @@ public class ProductIDs
     public string productID;
     public int rewardAmount;
     public Button purchaseBtn;
+    public TMPro.TMP_Text priceTxt;
 }
