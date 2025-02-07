@@ -19,26 +19,8 @@ public class MenuController : MonoBehaviour
     void Start()
     {
         menuController[mainMenuIndex].SetActive(true);
-        // menuController[settingButtonIndex].SetActive(false);
-
-
-        // closeButton.onClick.AddListener(OpenSettingMenu);
-        // closeButton.onClick.AddListener(CloseSettingMenu);
-
         UpDateTotalChipsTxts();
     }
-
-    //  public void OpenSettingMenu()
-    // {
-    //     menuController[mainMenuIndex].SetActive(true);
-    //     menuController[settingButtonIndex].SetActive(true);
-    // }
-
-    // public void CloseSettingMenu()
-    // {
-    //     menuController[mainMenuIndex].SetActive(true);
-    //     menuController[settingButtonIndex].SetActive(false);
-    // }
 
     public void OnPlayBtnClick()
     {

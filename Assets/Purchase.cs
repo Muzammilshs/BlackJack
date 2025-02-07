@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Purchase : MonoBehaviour
 {
@@ -34,8 +35,13 @@ public class Purchase : MonoBehaviour
 
     public void AddAmount(int index)
     {
-        LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + productIDs[index].rewardAmount);
-        menuController.UpDateTotalChipsTxts();
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + productIDs[index].rewardAmount);
+            menuController.UpDateTotalChipsTxts();
+        }
+        else
+            Rm.Instance.potHandler.CollectReward(productIDs[index].rewardAmount);
         Debug.LogError("Added Amount: " + productIDs[index].rewardAmount + "      Index is: " + index);
         //iapManager.OnPurchaseSuccess = null;
 

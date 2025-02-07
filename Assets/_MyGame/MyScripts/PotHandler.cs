@@ -6,7 +6,7 @@ public class PotHandler : MonoBehaviour
 {
 
     [SerializeField] Rm refMgr;
-    public TMP_Text totalAmountTxt;
+    public TMP_Text[] totalAmountTxt;
     public TMP_Text totalbetPlacedTxt;
     public TMP_Text doubleBetPlacedTxt;
 
@@ -20,7 +20,7 @@ public class PotHandler : MonoBehaviour
     int doubleBetPlaced;
     void Start()
     {
-        totalAmountTxt.text = LocalSetting.GetTotalCash().ToString("N0");
+        UpDateCashTxt(LocalSetting.GetTotalCash());
         totalbetPlacedTxt.gameObject.SetActive(false);
         totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
         totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
@@ -116,12 +116,19 @@ public class PotHandler : MonoBehaviour
         DOTween.To(() => startAmount, x => startAmount = x, targetAmount, duration)
             .OnUpdate(() =>
             {
-                totalAmountTxt.text = startAmount.ToString("N0");
+                //foreach (var amountTxt in totalAmountTxt)
+                //    amountTxt.text = startAmount.ToString("N0");
+                UpDateCashTxt(startAmount);
             })
             .OnComplete(() =>
             {
                 currentCash = targetAmount;
             });
+    }
+    void UpDateCashTxt(int amount)
+    {
+        foreach (var amountTxt in totalAmountTxt)
+            amountTxt.text = amount.ToString("N0");
     }
     #endregion
 
