@@ -69,33 +69,33 @@ public class ScoreManager : MonoBehaviour
         playerScoresParent_P1_Split.SetActive(true);
         playerScoresParent_P2_Split.SetActive(true);
     }
-
     public void SetScores(bool isPlayer)
     {
         ShowScoreObjects(true);
+
         if (isPlayer)
         {
             playerTotalScores = 0;
             playerTotalScoresAce = 0;
             CalculateCardsScores(rm.tableDealer.playerCards, out playerTotalScores, out playerTotalScoresAce);
-            if (playerTotalScoresAce == 0)
+
+            if (playerTotalScoresAce == playerTotalScores)
             {
-                playerScores.text = playerTotalScores.ToString();
+                playerScores.text = playerTotalScores.ToString(); // Avoid showing duplicate scores
             }
             else if (playerTotalScoresAce > 0 && playerTotalScores <= LocalSetting.ScoresLimit)
             {
                 playerScores.text = playerTotalScoresAce + "/" + playerTotalScores;
-                if (playerTotalScores == LocalSetting.ScoresLimit)
-                    playerScores.text = playerTotalScores.ToString();
-
             }
             else if (playerTotalScoresAce > 0 && playerTotalScores > LocalSetting.ScoresLimit)
             {
-                playerTotalScores = playerTotalScoresAce;
-                playerScores.text = playerTotalScores.ToString();
+                playerScores.text = playerTotalScoresAce.ToString();
             }
             else
+            {
                 playerScores.text = playerTotalScores.ToString();
+            }
+
             if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == LocalSetting.ScoresLimit)
                 StartCoroutine(CheckForPlayerScoreLimit());
         }
@@ -104,27 +104,81 @@ public class ScoreManager : MonoBehaviour
             dealerTotalScores = 0;
             dealerTotalScoresAce = 0;
             CalculateCardsScores(rm.tableDealer.dealerCards, out dealerTotalScores, out dealerTotalScoresAce);
-            if (dealerTotalScoresAce == 0)
+
+            if (dealerTotalScoresAce == dealerTotalScores)
             {
-                dealerScores.text = dealerTotalScores.ToString();
+                dealerScores.text = dealerTotalScores.ToString(); // Avoid showing duplicate scores
             }
             else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSetting.ScoresLimit)
             {
                 dealerScores.text = dealerTotalScoresAce + "/" + dealerTotalScores;
-                if (dealerTotalScores == LocalSetting.ScoresLimit)
-                    dealerScores.text = dealerTotalScores.ToString();
             }
             else if (dealerTotalScoresAce > 0 && dealerTotalScores > LocalSetting.ScoresLimit)
             {
-                dealerTotalScores = dealerTotalScoresAce;
-                dealerScores.text = dealerTotalScores.ToString();
+                dealerScores.text = dealerTotalScoresAce.ToString();
             }
             else
+            {
                 dealerScores.text = dealerTotalScores.ToString();
-
+            }
         }
-
     }
+
+    //public void SetScores(bool isPlayer)
+    //{
+    //    ShowScoreObjects(true);
+    //    if (isPlayer)
+    //    {
+    //        playerTotalScores = 0;
+    //        playerTotalScoresAce = 0;
+    //        CalculateCardsScores(rm.tableDealer.playerCards, out playerTotalScores, out playerTotalScoresAce);
+    //        if (playerTotalScoresAce == 0)
+    //        {
+    //            playerScores.text = playerTotalScores.ToString();
+    //        }
+    //        else if (playerTotalScoresAce > 0 && playerTotalScores <= LocalSetting.ScoresLimit)
+    //        {
+    //            playerScores.text = playerTotalScoresAce + "/" + playerTotalScores;
+    //            if (playerTotalScores == LocalSetting.ScoresLimit)
+    //                playerScores.text = playerTotalScores.ToString();
+
+    //        }
+    //        else if (playerTotalScoresAce > 0 && playerTotalScores > LocalSetting.ScoresLimit)
+    //        {
+    //            playerTotalScores = playerTotalScoresAce;
+    //            playerScores.text = playerTotalScores.ToString();
+    //        }
+    //        else
+    //            playerScores.text = playerTotalScores.ToString();
+    //        if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == LocalSetting.ScoresLimit)
+    //            StartCoroutine(CheckForPlayerScoreLimit());
+    //    }
+    //    else
+    //    {
+    //        dealerTotalScores = 0;
+    //        dealerTotalScoresAce = 0;
+    //        CalculateCardsScores(rm.tableDealer.dealerCards, out dealerTotalScores, out dealerTotalScoresAce);
+    //        if (dealerTotalScoresAce == 0)
+    //        {
+    //            dealerScores.text = dealerTotalScores.ToString();
+    //        }
+    //        else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSetting.ScoresLimit)
+    //        {
+    //            dealerScores.text = dealerTotalScoresAce + "/" + dealerTotalScores;
+    //            if (dealerTotalScores == LocalSetting.ScoresLimit)
+    //                dealerScores.text = dealerTotalScores.ToString();
+    //        }
+    //        else if (dealerTotalScoresAce > 0 && dealerTotalScores > LocalSetting.ScoresLimit)
+    //        {
+    //            dealerTotalScores = dealerTotalScoresAce;
+    //            dealerScores.text = dealerTotalScores.ToString();
+    //        }
+    //        else
+    //            dealerScores.text = dealerTotalScores.ToString();
+
+    //    }
+
+    //}
     IEnumerator CheckForPlayerScoreLimit()
     {
         yield return new WaitForSeconds(0.5f);
@@ -173,71 +227,102 @@ public class ScoreManager : MonoBehaviour
 
         }
     }
+
     void CalculateCardsScores(List<CardProperty> cardsList, out int highScores, out int lowScores)
     {
-        bool isHaveAce = isContainAce(cardsList);
         highScores = 0;
         lowScores = 0;
-        if (!isHaveAce)
-        {
-            foreach (CardProperty card in cardsList)
-                highScores += card.Power;
-        }
-        else
-        {
-            // scores with ace low power
-            foreach (CardProperty card in cardsList)
-            {
-                if (card.Card == CardState.CARDVALUE.ACE)
-                    lowScores += card.SecondPower;
-                else
-                    lowScores += card.Power;
-            }
+        int aceCount = 0;
 
-            // set scores with high power
-            int totalAceCards = 0;
-            foreach (CardProperty card in cardsList)
-            {
-                if (card.Card == CardState.CARDVALUE.ACE)
-                    totalAceCards++;
-            }
-
-            foreach (CardProperty card in cardsList)
-                highScores += card.Power;
-            if (totalAceCards > 1)
-            {
-                highScores = 0;
-                // calculate non ace cards
-                foreach (CardProperty card in cardsList)
-                    if (card.Card != CardState.CARDVALUE.ACE)
-                        highScores += card.Power;
-                int index = 0;
-                foreach (CardProperty card in cardsList)
-                {
-                    if (card.Card == CardState.CARDVALUE.ACE)
-                    {
-                        int tempScore = highScores;
-                        tempScore += card.Power;
-                        index++;
-                        if (tempScore >= LocalSetting.ScoresLimit && index == 1)
-                            highScores = card.SecondPower;
-                        else if (tempScore < LocalSetting.ScoresLimit && index == 1)
-                            highScores = tempScore;
-                        else
-                            highScores += card.SecondPower;
-                    }
-                }
-            }
-        }
-    }
-    bool isContainAce(List<CardProperty> cardsList)
-    {
-        bool isAce = false;
+        // Calculate initial lowScores, treating Aces as 1
         foreach (CardProperty card in cardsList)
+        {
             if (card.Card == CardState.CARDVALUE.ACE)
-                isAce = true;
-        return isAce;
+            {
+                aceCount++;
+                lowScores += card.SecondPower; // Assume Ace is 1 initially
+            }
+            else
+            {
+                lowScores += card.Power;
+            }
+        }
+
+        // High score calculation: Try to upgrade one Ace to 11 if it doesn't bust
+        highScores = lowScores;
+        if (aceCount > 0 && highScores + 10 <= LocalSetting.ScoresLimit)
+        {
+            highScores += 10; // Upgrade one Ace from 1 to 11
+        }
     }
+
+
+
+    //void CalculateCardsScores(List<CardProperty> cardsList, out int highScores, out int lowScores)
+    //{
+    //    bool isHaveAce = isContainAce(cardsList);
+    //    highScores = 0;
+    //    lowScores = 0;
+    //    if (!isHaveAce)
+    //    {
+    //        foreach (CardProperty card in cardsList)
+    //            highScores += card.Power;
+    //    }
+    //    else
+    //    {
+    //        // scores with ace low power
+    //        foreach (CardProperty card in cardsList)
+    //        {
+    //            if (card.Card == CardState.CARDVALUE.ACE)
+    //                lowScores += card.SecondPower;
+    //            else
+    //                lowScores += card.Power;
+    //        }
+
+    //        // set scores with high power
+    //        int totalAceCards = 0;
+    //        foreach (CardProperty card in cardsList)
+    //        {
+    //            if (card.Card == CardState.CARDVALUE.ACE)
+    //                totalAceCards++;
+    //        }
+
+    //        foreach (CardProperty card in cardsList)
+    //            highScores += card.Power;
+    //        if (totalAceCards > 1)
+    //        {
+    //            highScores = 0;
+    //            // calculate non ace cards
+    //            foreach (CardProperty card in cardsList)
+    //                if (card.Card != CardState.CARDVALUE.ACE)
+    //                    highScores += card.Power;
+    //            int index = 0;
+    //            foreach (CardProperty card in cardsList)
+    //            {
+    //                if (card.Card == CardState.CARDVALUE.ACE)
+    //                {
+    //                    int tempScore = highScores;
+    //                    tempScore += card.Power;
+    //                    index++;
+    //                    if (tempScore >= LocalSetting.ScoresLimit && index == 1)
+    //                        highScores = card.SecondPower;
+    //                    else if (tempScore < LocalSetting.ScoresLimit && index == 1)
+    //                        highScores = tempScore;
+    //                    else
+    //                        highScores += card.SecondPower;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+    //bool isContainAce(List<CardProperty> cardsList)
+    //{
+    //    bool isAce = false;
+    //    foreach (CardProperty card in cardsList)
+    //        if (card.Card == CardState.CARDVALUE.ACE)
+    //            isAce = true;
+    //    return isAce;
+    //}
 
     public void ResetTotalScore()
     {

@@ -72,14 +72,10 @@ public class HitStandBarHandler : MonoBehaviour
                 if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
                     splitBtn.SetActive(true);
                 else
-                    //        splitBtn.SetActive(false);
-                    //}
-                    //else
-                    //    splitBtn.SetActive(false);
-                    splitBtn.SetActive(true);
+                    splitBtn.SetActive(false);
             }
             else
-                splitBtn.SetActive(true);
+                splitBtn.SetActive(false);
         }
     }
 

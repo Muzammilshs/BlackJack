@@ -61,6 +61,7 @@ public class PotHandler : MonoBehaviour
         doubleBetPlaced = GetPotAmount;
         doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
         doubleBetPlacedTxt.gameObject.SetActive(true);
+        totalBetPlaced *= 2;
         BetAmountDeduction(doubleBetPlaced);
         totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(-100, 0, 0);
         doubleBetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(100, 0, 0);
