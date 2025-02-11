@@ -264,6 +264,8 @@ public class TableDealer : MonoBehaviour
             case Winner.PUSH:
                 Debug.LogError("Match tie");
                 winAmount = RefMgr.potHandler.GetPotAmount;
+                if (RefMgr.hitStandBarHandler.isDoubleBet)
+                    winAmount = winAmount * 2;
                 winAmountTxt.text = "+" + winAmount;
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Push"));
@@ -300,6 +302,8 @@ public class TableDealer : MonoBehaviour
             case Winner.WON:
                 Debug.LogError("Won");
                 winAmount = RefMgr.potHandler.GetPotAmount * 2;
+                if (RefMgr.hitStandBarHandler.isDoubleBet)
+                    winAmount = winAmount * 2;
                 winAmountTxt.text = "+" + winAmount;
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("won"));
