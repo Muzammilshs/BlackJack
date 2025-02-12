@@ -107,7 +107,7 @@ public class ScoreManager : MonoBehaviour
 
             if (dealerTotalScoresAce == dealerTotalScores)
             {
-                dealerScores.text = dealerTotalScores.ToString(); // Avoid showing duplicate scores
+                dealerScores.text = dealerTotalScores.ToString();
             }
             else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSetting.ScoresLimit)
             {

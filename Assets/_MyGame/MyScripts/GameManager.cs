@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -10,7 +11,12 @@ public class GameManager : MonoBehaviour
     public GameObject shopPanel;
     [SerializeField] Sprite[] cardDesigns;
 
+    [SerializeField] GameObject exitPanel;
 
+    private void Start()
+    {
+        exitPanel.SetActive(false);
+    }
     public void SetCardDesign()
     {
         if (LocalSetting.SelectedDesignIndex < cardDesigns.Length)
@@ -38,11 +44,26 @@ public class GameManager : MonoBehaviour
         shopPanel.SetActive(true);
     }
 
+    private void Update()
+    {
+        if (Keyboard.current.escapeKey.wasReleasedThisFrame)
+        {
+            if (exitPanel.activeInHierarchy)
+                exitPanel.SetActive(false);
+            else
+                exitPanel.SetActive(true);
+        }
+    }
+
     #region Button functions
     public void OnHomeBtnClick()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
+    public void OnExitButtonClick()
+    {
+        Application.Quit();
+    }
     #endregion
 }

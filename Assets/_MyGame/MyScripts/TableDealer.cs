@@ -251,7 +251,7 @@ public class TableDealer : MonoBehaviour
         switch (status)
         {
             case Winner.DEALERWINS:
-                Debug.LogError("Dealer Winner");
+                Debug.Log("Dealer Winner");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Dealer win"));
@@ -259,10 +259,10 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, false, false));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, false, false, resultIndex));
-
+                LocalSetting.TotalGamesLost++;
                 break;
             case Winner.PUSH:
-                Debug.LogError("Match tie");
+                Debug.Log("Match tie");
                 winAmount = RefMgr.potHandler.GetPotAmount;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
@@ -273,10 +273,10 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, true, true));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, true, resultIndex));
-
+                LocalSetting.TotalTieGames++;
                 break;
             case Winner.JACKPOT:
-                Debug.LogError("Jackpot");
+                Debug.Log("Jackpot");
                 winParticles.SetActive(true);
                 winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
                 winAmountTxt.text = "+" + winAmount;
@@ -286,10 +286,10 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, true, false));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, false, resultIndex));
-
+                LocalSetting.TotalJackPOT++;
                 break;
             case Winner.BUST:
-                Debug.LogError("Busted");
+                Debug.Log("Busted");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Bust"));
@@ -297,10 +297,10 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, false, false));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, false, false, resultIndex));
-
+                LocalSetting.TotalGamesLost++;
                 break;
             case Winner.WON:
-                Debug.LogError("Won");
+                Debug.Log("Won");
                 winAmount = RefMgr.potHandler.GetPotAmount * 2;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
@@ -311,6 +311,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, true, false));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, false, resultIndex));
+                LocalSetting.TotalGamesWon++;
                 break;
         }
     }
@@ -319,7 +320,7 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator ShowWinPanel(string winStatusMessage)
     {
-        Debug.LogError("Amount won: " + winAmount);
+        Debug.Log("Amount won: " + winAmount);
         RefMgr.potHandler.CollectReward(winAmount);
         WinLoosepanel.SetActive(true);
         winLooseStatusTxt.text = winStatusMessage;
@@ -372,7 +373,6 @@ public class TableDealer : MonoBehaviour
         RefMgr.betBarHandler.BettedPosSplit(out playerPos, out dealerPos, splitPart);
 
         // clone chips and then send to respective player
-        //RectTransform InitialPos = isSendToPlayer ? dealerPos : playerPos;
         RectTransform InitialPos = isSendToPlayer ? dealerPos : splitPart == 0 ? RefMgr.betBarHandler.bettedChipsPos_1_Split : RefMgr.betBarHandler.bettedChipsPos_2_Split;
         if (isPush)
             InitialPos = splitPart == 1 ? RefMgr.betBarHandler.bettedChipsPos_1_Split : RefMgr.betBarHandler.bettedChipsPos_2_Split;
@@ -409,8 +409,6 @@ public class TableDealer : MonoBehaviour
 
         ObjectToAnimate.transform.DOMove(TgtObj.transform.position, 1.5f)
             .OnComplete(() => Destroy(chip));
-        //ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.25f);
-
     }
     public void SplitCardsOnSplit()
     {

@@ -138,6 +138,7 @@ public class BetBarHandler : MonoBehaviour
         dealnClearBtnGroup.gameObject.SetActive(false);
         refMgr.gameStateManager.UpDateGameState(GameState.State.CARDDROP);
         refMgr.potHandler.BetAmountDeduction(refMgr.potHandler.GetPotAmount);
+        LocalSetting.TotalGamesPlayed++;
     }
 
     public void ClearBtnClick()
