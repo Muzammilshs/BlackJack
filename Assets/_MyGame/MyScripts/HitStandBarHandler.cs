@@ -140,6 +140,7 @@ public class HitStandBarHandler : MonoBehaviour
             if (splitingTurnNumber < 2)
                 rm.tableDealer.SendOneCardOnSplit();
         }
+        splitBtn.SetActive(false);
     }
 
 

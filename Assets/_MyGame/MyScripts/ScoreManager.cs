@@ -56,6 +56,10 @@ public class ScoreManager : MonoBehaviour
 
         }
     }
+    public void RoundDealerScores()
+    {
+        dealerScores.text = dealerTotalScores.ToString();
+    }
 
     public void SplitPlayerScores()
     {

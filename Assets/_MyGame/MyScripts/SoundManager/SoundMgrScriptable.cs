@@ -6,7 +6,13 @@ public class SoundMgrScriptable : ScriptableObject
     public AudioClip BGMusic,
         ButtonSound,
         CardFlip,
-        Notification,
-        WinFinal;
+        CardDrop,
+        CardCollect,
+        ChipBeting,
+        ChipCollect,
+        coinAdding,
+        coinRemoving,
+
+        Win;
 
 }

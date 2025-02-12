@@ -40,6 +40,7 @@ public class DealerAIPlay : MonoBehaviour
             }
         }
         //asdf
+        rm.scoreManager.RoundDealerScores();
         if (!rm.hitStandBarHandler.isSplitting)
             rm.tableDealer.DeclearWinner(isJackPot);
         else

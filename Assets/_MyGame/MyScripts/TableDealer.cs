@@ -53,6 +53,7 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator FirstTimeDealCardsCrt()
     {
+        RefMgr.cardsManager.ReCreateLimitedCards();
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < 4; i++)
         {
