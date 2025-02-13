@@ -250,16 +250,19 @@ public class TableDealer : MonoBehaviour
     {
         float delayTime = 0.5f;
         switch (status)
-        {
+        {  // 0 => Player win
+           // 1 => Dealer win
+           // 2 => Push
+
             case Winner.DEALERWINS:
                 Debug.Log("Dealer Winner");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Dealer win"));
                 if (!hitStandBar.isSplitting)
-                    StartCoroutine(CloneAndSendChips(delayTime, false, false));
+                    StartCoroutine(CloneAndSendChips(delayTime, 1));
                 else
-                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, false, false, resultIndex));
+                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
                 LocalSetting.TotalGamesLost++;
                 break;
             case Winner.PUSH:
@@ -271,9 +274,9 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Push"));
                 if (!hitStandBar.isSplitting)
-                    StartCoroutine(CloneAndSendChips(delayTime, true, true));
+                    StartCoroutine(CloneAndSendChips(delayTime, 2));
                 else
-                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, true, resultIndex));
+                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 2));
                 LocalSetting.TotalTieGames++;
                 break;
             case Winner.JACKPOT:
@@ -284,9 +287,9 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("Jackpot"));
                 if (!hitStandBar.isSplitting)
-                    StartCoroutine(CloneAndSendChips(delayTime, true, false));
+                    StartCoroutine(CloneAndSendChips(delayTime, 0));
                 else
-                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, false, resultIndex));
+                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
                 LocalSetting.TotalJackPOT++;
                 break;
             case Winner.BUST:
@@ -295,9 +298,9 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Bust"));
                 if (!hitStandBar.isSplitting)
-                    StartCoroutine(CloneAndSendChips(delayTime, false, false));
+                    StartCoroutine(CloneAndSendChips(delayTime, 1));
                 else
-                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, false, false, resultIndex));
+                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
                 LocalSetting.TotalGamesLost++;
                 break;
             case Winner.WON:
@@ -309,9 +312,9 @@ public class TableDealer : MonoBehaviour
                 winAmountTxt.gameObject.SetActive(true);
                 StartCoroutine(ShowWinPanel("won"));
                 if (!hitStandBar.isSplitting)
-                    StartCoroutine(CloneAndSendChips(delayTime, true, false));
+                    StartCoroutine(CloneAndSendChips(delayTime, 0));
                 else
-                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, true, false, resultIndex));
+                    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
                 LocalSetting.TotalGamesWon++;
                 break;
         }
@@ -342,43 +345,45 @@ public class TableDealer : MonoBehaviour
         }
     }
 
-    IEnumerator CloneAndSendChips(float delay, bool isSendToPlayer, bool isPush)
+    IEnumerator CloneAndSendChips(float delay, int winLoose)
     {
+        // 0 => Player win
+        // 1 => Dealer win
+        // 2 => Push
         yield return new WaitForSeconds(delay);
-        RectTransform playerPos = null;
-        RectTransform dealerPos = null;
-        RefMgr.betBarHandler.BettedPos(out playerPos, out dealerPos);
-
-        // clone chips and then send to respective player
-        RectTransform InitialPos = isSendToPlayer ? dealerPos : playerPos;
-        if (isPush)
-            InitialPos = playerPos;
-        RectTransform targetPos = isSendToPlayer ? playerPos : dealerPos;
+        RectTransform initialPos = null;
+        RectTransform finalPos = null;
+        RefMgr.betBarHandler.BettedPos(out initialPos, out finalPos, winLoose);
 
         BetBarHandler bbh = RefMgr.betBarHandler;
 
         for (int i = 0; i < bbh.betPlacedChips.Count; i++)
         {
             GameObject chip = Instantiate(bbh.betPlacedChips[i]);
-            LocalSetting.SetPosAndRect(chip, InitialPos, InitialPos.transform.parent);
-            playChipAnimation(chip, targetPos.gameObject);
+            LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+            bbh.betPlacedChips[i].SetActive(false);
+            playChipAnimation(chip, finalPos.gameObject);
             yield return new WaitForSeconds(0.01f);
         }
     }
-    IEnumerator CloneAndSendChipsOnSplit(float delay, bool isSendToPlayer, bool isPush, int splitPart)
+    public void ToggleChipsStatus(bool isActive)
     {
+        BetBarHandler bbh = RefMgr.betBarHandler;
+        for (int i = 0; i < bbh.betPlacedChips.Count; i++)
+        {
+            bbh.betPlacedChips[i].SetActive(isActive);
+        }
+    }
+    IEnumerator CloneAndSendChipsOnSplit(float delay, int splitPart, int winLoose)
+    {
+        // 0 => Player win
+        // 1 => Dealer win
+        // 2 => Push
         yield return new WaitForSeconds(delay);
-        RectTransform playerPos = null;
-        RectTransform dealerPos = null;
+        RectTransform initialPos = null;
+        RectTransform finalPos = null;
 
-        RefMgr.betBarHandler.BettedPosSplit(out playerPos, out dealerPos, splitPart);
-
-        // clone chips and then send to respective player
-        RectTransform InitialPos = isSendToPlayer ? dealerPos : splitPart == 0 ? RefMgr.betBarHandler.bettedChipsPos_1_Split : RefMgr.betBarHandler.bettedChipsPos_2_Split;
-        if (isPush)
-            InitialPos = splitPart == 1 ? RefMgr.betBarHandler.bettedChipsPos_1_Split : RefMgr.betBarHandler.bettedChipsPos_2_Split;
-        RectTransform targetPos = isSendToPlayer ? playerPos : dealerPos;
-
+        RefMgr.betBarHandler.BettedPosSplit(out initialPos, out finalPos, splitPart, winLoose);
 
         BetBarHandler bbh = RefMgr.betBarHandler;
         if (splitPart == 0)
@@ -386,8 +391,9 @@ public class TableDealer : MonoBehaviour
             for (int i = 0; i < bbh.betPlacedChips_1_Split.Count; i++)
             {
                 GameObject chip = Instantiate(bbh.betPlacedChips_1_Split[i]);
-                LocalSetting.SetPosAndRect(chip, InitialPos, InitialPos.transform.parent);
-                playChipAnimation(chip, targetPos.gameObject);
+                LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+                bbh.betPlacedChips_1_Split[i].SetActive(false);
+                playChipAnimation(chip, finalPos.gameObject);
                 yield return new WaitForSeconds(0.01f);
             }
         }
@@ -396,8 +402,9 @@ public class TableDealer : MonoBehaviour
             for (int i = 0; i < bbh.betPlacedChips_2_Split.Count; i++)
             {
                 GameObject chip = Instantiate(bbh.betPlacedChips_2_Split[i]);
-                LocalSetting.SetPosAndRect(chip, InitialPos, InitialPos.transform.parent);
-                playChipAnimation(chip, targetPos.gameObject);
+                LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+                bbh.betPlacedChips_2_Split[i].SetActive(false);
+                playChipAnimation(chip, finalPos.gameObject);
                 yield return new WaitForSeconds(0.01f);
             }
         }

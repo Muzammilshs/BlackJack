@@ -212,22 +212,40 @@ public class BetBarHandler : MonoBehaviour
         refMgr.potHandler.PlaceBetAmount(0);
     }
 
-    public void BettedPos(out RectTransform playerChipsPos, out RectTransform dealerChipsPos)
+    public void BettedPos(out RectTransform initialPos, out RectTransform finalPos, int winLoose)
     {
-        playerChipsPos = playerBettedChipsPos;
-        dealerChipsPos = dealerBettedChipsPos;
-    }
-    public void BettedPosSplit(out RectTransform playerChipsPos, out RectTransform dealerChipsPos, int splitPart)
-    {
-        if (splitPart == 0)
+        if (winLoose == 0)
         {
-            playerChipsPos = playerBettedChipsPos_P1_Split;
-            dealerChipsPos = dealerBettedChipsPos_P1_Split;
+            initialPos = dealerBettedChipsPos;
+            finalPos = playerBettedChipsPos;
+        }
+        else if (winLoose == 1)
+        {
+            initialPos = bettedChipsPos;
+            finalPos = dealerBettedChipsPos;
         }
         else
         {
-            playerChipsPos = playerBettedChipsPos_P2_Split;
-            dealerChipsPos = dealerBettedChipsPos_P2_Split;
+            initialPos = bettedChipsPos;
+            finalPos = playerBettedChipsPos;
+        }
+    }
+    public void BettedPosSplit(out RectTransform initialPos, out RectTransform finalPos, int splitPart, int winLoose)
+    {
+        // 0 => Player win
+        // 1 => Dealer win
+        // 2 => Push
+        if (splitPart == 0)
+        {
+            if (winLoose == 0) { initialPos = dealerBettedChipsPos_P1_Split; finalPos = playerBettedChipsPos_P1_Split; }
+            else if (winLoose == 1) { initialPos = bettedChipsPos_1_Split; finalPos = dealerBettedChipsPos_P1_Split; }
+            else { initialPos = bettedChipsPos_1_Split; finalPos = playerBettedChipsPos_P1_Split; }
+        }
+        else
+        {
+            if (winLoose == 0) { initialPos = dealerBettedChipsPos_P2_Split; finalPos = playerBettedChipsPos_P2_Split; }
+            else if (winLoose == 1) { initialPos = bettedChipsPos_2_Split; finalPos = dealerBettedChipsPos_P2_Split; }
+            else { initialPos = bettedChipsPos_2_Split; finalPos = playerBettedChipsPos_P2_Split; }
         }
     }
 

@@ -8,14 +8,12 @@ public class MenuController : MonoBehaviour
 {
     public GameObject[] menuController;
     public GameObject exitPanel;
-    //public Button[] buttons;
     public Button settingButton;
     public Button closeButton;
 
     [SerializeField] TMP_Text[] totalChipsTxt;
 
     private int mainMenuIndex = 0;
-    // private int settingButtonIndex = 1;
     private int loadingpPanelIndex = 1;
 
 
@@ -45,16 +43,6 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Escape))
-    //    {
-    //        if (exitPanel.activeInHierarchy)
-    //            exitPanel.SetActive(false);
-    //        else
-    //            exitPanel.SetActive(true);
-    //    }
-    //}
 
     public void OnExitButtonClick()
     {
@@ -70,7 +58,7 @@ public class MenuController : MonoBehaviour
     public void UpDateTotalChipsTxts()
     {
         foreach (var txt in totalChipsTxt)
-            txt.text = LocalSetting.GetTotalCash().ToString();
+            txt.text = LocalSetting.GetTotalCash().ToString("N0");
     }
 
     void UpdateGameStats()
