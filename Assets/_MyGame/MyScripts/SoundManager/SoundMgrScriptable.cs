@@ -4,6 +4,7 @@ public class SoundMgrScriptable : ScriptableObject
 {
     public GameObject AudioSourcePrefab;
     public AudioClip BGMusic,
+        BridSound,
         ButtonSound,
         CardFlip,
         CardDrop,

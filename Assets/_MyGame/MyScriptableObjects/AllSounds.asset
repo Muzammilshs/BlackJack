@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: AllSounds
   m_EditorClassIdentifier: 
   AudioSourcePrefab: {fileID: 6822817296328791536, guid: 79de97127fa0cce418230dd40e0e490a, type: 3}
-  BGMusic: {fileID: 0}
+  BGMusic: {fileID: 8300000, guid: d9c71772b2964b742961da319558831a, type: 3}
+  BridSound: {fileID: 8300000, guid: c405fbd12b2b6564aa775d75087f7044, type: 3}
   ButtonSound: {fileID: 8300000, guid: cee566d735b109b4b982f621bd22d7f1, type: 3}
   CardFlip: {fileID: 0}
-  Notification: {fileID: 0}
-  WinFinal: {fileID: 0}
+  CardDrop: {fileID: 0}
+  CardCollect: {fileID: 0}
+  ChipBeting: {fileID: 0}
+  ChipCollect: {fileID: 0}
+  coinAdding: {fileID: 0}
+  coinRemoving: {fileID: 0}
+  Win: {fileID: 0}
