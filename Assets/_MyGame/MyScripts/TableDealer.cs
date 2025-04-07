@@ -5,6 +5,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 public class TableDealer : MonoBehaviour
 {
     [SerializeField] Rm RefMgr;
@@ -39,6 +40,7 @@ public class TableDealer : MonoBehaviour
     [SerializeField] GameObject WinLoosepanel;
     [SerializeField] TMP_Text winLooseStatusTxt;
     [SerializeField] TMP_Text winAmountTxt;
+    [SerializeField] Image image;
     HitStandBarHandler hitStandBar;
     void Start()
     {
@@ -327,6 +329,35 @@ public class TableDealer : MonoBehaviour
         Debug.Log("Amount won: " + winAmount);
         RefMgr.potHandler.CollectReward(winAmount);
         WinLoosepanel.SetActive(true);
+        Debug.Log("Current winStatus: " + winStatus);
+        Debug.Log("Image reference: " + (image != null ? "Assigned" : "Not Assigned"));
+
+        if (winStatus == Winner.DEALERWINS)
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+            Debug.Log("Color is " + image.color);
+        }
+        else if (winStatus == Winner.WON)
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+            Debug.Log("Color is " + image.color);
+        }
+        else if (winStatus == Winner.PUSH)
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+            Debug.Log("Color is " + image.color);
+        }
+        else if (winStatus == Winner.JACKPOT)
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+            Debug.Log("Color is " + image.color);
+        }
+        else
+        {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+            Debug.Log("Color is " + image.color);
+        }
+
         winLooseStatusTxt.text = winStatusMessage;
         yield return new WaitForSeconds(1.5f);
         WinLoosepanel.SetActive(false);
