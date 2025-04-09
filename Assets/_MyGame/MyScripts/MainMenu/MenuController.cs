@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    public GameObject[] menuController;
+    //public GameObject[] menuController;
     public GameObject exitPanel;
     public Button settingButton;
     public Button closeButton;
@@ -30,7 +30,7 @@ public class MenuController : MonoBehaviour
         SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.BGMusic, true);
         SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.BridSound, true);
         exitPanel.SetActive(false);
-        menuController[mainMenuIndex].SetActive(true);
+        //menuController[mainMenuIndex].SetActive(true);
         UpDateTotalChipsTxts();
         UpdateGameStats();
     }
@@ -52,7 +52,7 @@ public class MenuController : MonoBehaviour
     }
     public void OnPlayBtnClick()
     {
-        menuController[loadingpPanelIndex].SetActive(true);
+        //menuController[loadingpPanelIndex].SetActive(true);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -65,10 +65,10 @@ public class MenuController : MonoBehaviour
 
     void UpdateGameStats()
     {
-        totalGamesPlayedTxt.text = LocalSetting.TotalGamesPlayed.ToString();
-        totalGamesWonTxt.text = LocalSetting.TotalGamesWon.ToString();
-        totalGamesLostTxt.text = LocalSetting.TotalGamesLost.ToString();
-        totalTieGamesTxt.text = LocalSetting.TotalTieGames.ToString();
-        totalJackpotsTxt.text = LocalSetting.TotalJackPOT.ToString();
+        totalGamesPlayedTxt.text = $"PLAYED : {LocalSetting.TotalGamesPlayed}";
+        totalGamesWonTxt.text = $"WON : {LocalSetting.TotalGamesWon}";
+        totalGamesLostTxt.text = $"LOST : {LocalSetting.TotalGamesLost}";
+        totalTieGamesTxt.text = $"TIE : {LocalSetting.TotalTieGames}";
+        totalJackpotsTxt.text = $"JACKPOT : {LocalSetting.TotalJackPOT}";
     }
 }
