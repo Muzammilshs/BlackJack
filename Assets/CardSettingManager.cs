@@ -1,52 +1,42 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CardSettingManager : MonoBehaviour
 {
-    public Sprite[] cardBackDesigns;
-    public Toggle[] designToggles;
-    public Image[] checkmarks;
-
-    private int selectedDesignIndex;
-
+    public CardsContainer cardsContainer;
+    public CardDesigns[] cardDesigns;
     void Start()
     {
-
-        selectedDesignIndex = LocalSetting.SelectedDesignIndex;
-        SetInitialToggle();
-        UpdateCheckmarks();
-        //Debug.Log($"Loaded Design: {selectedDesignIndex} from PlayerPrefs");
+        FirstTimeCardsSet();
     }
-
-    private void SetInitialToggle()
+    void FirstTimeCardsSet()
     {
-        if (selectedDesignIndex < designToggles.Length)
+        for (int i = 0; i < cardsContainer.CardBackDesigns.Length; i++)
         {
-            designToggles[selectedDesignIndex].isOn = true;
+            cardDesigns[LocalSetting.SelectedDesignIndex].cardCardDesign.GetComponent<Image>().sprite = cardsContainer.CardBackDesigns[i];
+            cardDesigns[i].checkMark.SetActive(false);
         }
+        cardDesigns[LocalSetting.SelectedDesignIndex].checkMark.SetActive(true);
     }
-
 
     public void OnToggleChanged()
     {
-        for (int i = 0; i < designToggles.Length; i++)
+        GameObject clickedObject = EventSystem.current.currentSelectedGameObject;
+        for (int i = 0; i < cardDesigns.Length; i++)
         {
-            if (designToggles[i].isOn && i != selectedDesignIndex)
-            {
-                selectedDesignIndex = i;
-                LocalSetting.SelectedDesignIndex = selectedDesignIndex;
-                UpdateCheckmarks();
-                Debug.LogError($"Saved Design: {selectedDesignIndex} to PlayerPrefs");
-                break;
-            }
+            bool isToggleOn = clickedObject == cardDesigns[i].cardCardDesign.gameObject;
+            if (isToggleOn) LocalSetting.SelectedDesignIndex = i;
+            cardDesigns[i].checkMark.SetActive(isToggleOn);
         }
     }
 
-    private void UpdateCheckmarks()
-    {
-        for (int i = 0; i < checkmarks.Length; i++)
-        {
-            checkmarks[i].gameObject.SetActive(i == selectedDesignIndex);
-        }
-    }
+}
+
+[Serializable]
+public class CardDesigns
+{
+    public Button cardCardDesign;
+    public GameObject checkMark;
 }

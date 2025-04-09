@@ -6,4 +6,5 @@ using UnityEngine;
 public class CardsContainer : ScriptableObject
 {
     public CardProperty[] Card;
+    public Sprite[] CardBackDesigns;
 }

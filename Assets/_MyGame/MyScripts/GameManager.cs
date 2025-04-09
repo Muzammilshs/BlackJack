@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     public Sprite dummyCardSprite;
     public GameObject shopPanel;
-    [SerializeField] Sprite[] cardDesigns;
 
     [SerializeField] GameObject exitPanel;
 
@@ -19,8 +18,7 @@ public class GameManager : MonoBehaviour
     }
     public void SetCardDesign()
     {
-        if (LocalSetting.SelectedDesignIndex < cardDesigns.Length)
-            dummyCardSprite = cardDesigns[LocalSetting.SelectedDesignIndex];
+        dummyCardSprite = Rm.Instance.cardsManager.allCards.CardBackDesigns[LocalSetting.SelectedDesignIndex];
     }
     public List<GameObject> ClearList(List<GameObject> list)
     {

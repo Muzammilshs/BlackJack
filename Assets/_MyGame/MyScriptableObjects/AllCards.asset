@@ -65,3 +65,10 @@ MonoBehaviour:
   - {fileID: 1832633070973811647, guid: 39d99623acf41d04cb4e109940214bf0, type: 3}
   - {fileID: 3972971017493214278, guid: 2b73573ca11d2414fbb8ade13bbef595, type: 3}
   - {fileID: 2832795674484764430, guid: adc66aaaacb6fc04099001c10c6bb63d, type: 3}
+  CardBackDesigns:
+  - {fileID: 2140741183, guid: 15a62f634ff181740abac57c741803fa, type: 3}
+  - {fileID: 3343697747613827197, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
+  - {fileID: -521149358376217919, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
+  - {fileID: -8335606122864907939, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
+  - {fileID: -7425872587037328868, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
+  - {fileID: 7339319802674598229, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
