@@ -75,7 +75,7 @@ public class BetBarHandler : MonoBehaviour
     #region Bet place button click
     public void PlaceBetBtnClick(int betAmount)
     {
-        Debug.LogError("bet amount: " + betAmount);
+        //Debug.LogError("bet amount: " + betAmount);
         if (!refMgr.potHandler.IsHaveAmount(betAmount))
         {
             refMgr.gameManager.shopPanel.SetActive(true);

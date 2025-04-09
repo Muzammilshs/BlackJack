@@ -50,7 +50,7 @@ public class CardsManager : MonoBehaviour
         if (cardsStackList.Count < (cardsLimit - 8))
         {
             CreateLimitedCardsForStack();
-            Debug.LogError("Re CreateLimited Cards");
+            //Debug.LogError("Re CreateLimited Cards");
         }
     }
 

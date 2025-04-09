@@ -238,7 +238,7 @@ public class TableDealer : MonoBehaviour
         else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
             UpDateWinStatus(Winner.PUSH);
         //Debug.LogError("Wineer is at pt 1");
-        Debug.LogError("Winner exe");
+        //Debug.LogError("Winner exe");
     }
     public void UpDateWinStatus(Winner status)
     {
@@ -257,7 +257,7 @@ public class TableDealer : MonoBehaviour
            // 2 => Push
 
             case Winner.DEALERWINS:
-                Debug.Log("Dealer Winner");
+                //Debug.Log("Dealer Winner");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Dealer win"));
@@ -268,7 +268,7 @@ public class TableDealer : MonoBehaviour
                 LocalSetting.TotalGamesLost++;
                 break;
             case Winner.PUSH:
-                Debug.Log("Match tie");
+                //Debug.Log("Match tie");
                 winAmount = RefMgr.potHandler.GetPotAmount;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
@@ -282,7 +282,7 @@ public class TableDealer : MonoBehaviour
                 LocalSetting.TotalTieGames++;
                 break;
             case Winner.JACKPOT:
-                Debug.Log("Jackpot");
+                //Debug.Log("Jackpot");
                 winParticles.SetActive(true);
                 winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
                 winAmountTxt.text = "+" + winAmount;
@@ -295,7 +295,7 @@ public class TableDealer : MonoBehaviour
                 LocalSetting.TotalJackPOT++;
                 break;
             case Winner.BUST:
-                Debug.Log("Busted");
+                //Debug.Log("Busted");
                 winAmount = 0;
                 winAmountTxt.gameObject.SetActive(false);
                 StartCoroutine(ShowWinPanel("Bust"));
@@ -306,7 +306,7 @@ public class TableDealer : MonoBehaviour
                 LocalSetting.TotalGamesLost++;
                 break;
             case Winner.WON:
-                Debug.Log("Won");
+                //Debug.Log("Won");
                 winAmount = RefMgr.potHandler.GetPotAmount * 2;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
@@ -326,36 +326,36 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator ShowWinPanel(string winStatusMessage)
     {
-        Debug.Log("Amount won: " + winAmount);
+        //Debug.Log("Amount won: " + winAmount);
         RefMgr.potHandler.CollectReward(winAmount);
         WinLoosepanel.SetActive(true);
-        Debug.Log("Current winStatus: " + winStatus);
-        Debug.Log("Image reference: " + (image != null ? "Assigned" : "Not Assigned"));
+        //Debug.Log("Current winStatus: " + winStatus);
+        //Debug.Log("Image reference: " + (image != null ? "Assigned" : "Not Assigned"));
 
         if (winStatus == Winner.DEALERWINS)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            Debug.Log("Color is " + image.color);
+            //Debug.Log("Color is " + image.color);
         }
         else if (winStatus == Winner.WON)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            Debug.Log("Color is " + image.color);
+            //Debug.Log("Color is " + image.color);
         }
         else if (winStatus == Winner.PUSH)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            Debug.Log("Color is " + image.color);
+            //Debug.Log("Color is " + image.color);
         }
         else if (winStatus == Winner.JACKPOT)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            Debug.Log("Color is " + image.color);
+            //Debug.Log("Color is " + image.color);
         }
         else
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            Debug.Log("Color is " + image.color);
+            //Debug.Log("Color is " + image.color);
         }
 
         winLooseStatusTxt.text = winStatusMessage;

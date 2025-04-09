@@ -28,7 +28,7 @@ public class PotHandler : MonoBehaviour
 
     public void ResetTotalBet()
     {
-        Debug.LogError("Resetting double bet items");
+        //Debug.LogError("Resetting double bet items");
         totalbetPlacedTxt.gameObject.SetActive(false);
         totalBetPlaced = 0;
         totalbetPlacedTxt.text = totalBetPlaced.ToString();
