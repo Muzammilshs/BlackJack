@@ -32,7 +32,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3524591, y: 0.19968572}
   m_AnchorMax: {x: 0.54777163, y: 0.68116724}
@@ -67,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0efc2c37868589e4da74de66c28432d2, type: 3}
+  m_Sprite: {fileID: 486877063, guid: 15a62f634ff181740abac57c741803fa, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -92,6 +91,5 @@ MonoBehaviour:
   Suit: 1
   Card: 8
   Power: 8
+  SecondPower: 0
   CardIndexInArray: 6
-  CardPowerHeartsGame: 1
-  cardOwnerViewID: 0

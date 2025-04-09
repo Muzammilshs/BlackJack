@@ -8,8 +8,8 @@ public class MenuController : MonoBehaviour
 {
     //public GameObject[] menuController;
     public GameObject exitPanel;
-    public Button settingButton;
-    public Button closeButton;
+    //public Button settingButton;
+    //public Button closeButton;
 
     [SerializeField] TMP_Text[] totalChipsTxt;
 
