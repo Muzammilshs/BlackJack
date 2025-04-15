@@ -38,7 +38,7 @@ public class SoundManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
     }
-    AudioSource ASource;
+    public AudioSource ASource;
     public void PlayAudioClip(AudioClip audioClip, bool isLoop)
     {
         Vector3 position = Vector3.zero;
@@ -86,28 +86,31 @@ public class SoundManager : MonoBehaviour
     void getAudioSource(Vector3 position)
     {
         ASource = null;
+
         if (!AudioSourcePoolParent)
         {
-            AudioSourcePoolParent = (new GameObject("AudioSourcesPoolParent")).transform;
+            GameObject poolObj = new GameObject("AudioSourcesPoolParent");
+            AudioSourcePoolParent = poolObj.transform;
+            DontDestroyOnLoad(poolObj); // <-- This line ensures persistence between scenes
         }
-        if (AudioSourcePoolParent.childCount > 0)
+
+        for (int i = 0; i < AudioSourcePoolParent.childCount; i++)
         {
-            for (int i = 0; i < AudioSourcePoolParent.childCount; i++)
+            AudioSource source = AudioSourcePoolParent.GetChild(i).GetComponent<AudioSource>();
+            if (!source.isPlaying)
             {
-                if (!AudioSourcePoolParent.GetChild(i).gameObject.GetComponent<AudioSource>().isPlaying)
-                {
-                    ASource = AudioSourcePoolParent.GetChild(i).gameObject.GetComponent<AudioSource>();
-                    ASource.gameObject.transform.position = position;
-                    break;
-                }
+                ASource = source;
+                ASource.transform.position = position;
+                break;
             }
         }
+
         if (!ASource)
         {
-            GameObject Audiosource = Instantiate(AllSounds.AudioSourcePrefab, position, Quaternion.identity);
-            Audiosource.transform.parent = AudioSourcePoolParent;
-            ASource = Audiosource.GetComponent<AudioSource>();
+            GameObject newAudioSource = Instantiate(AllSounds.AudioSourcePrefab, position, Quaternion.identity);
+            newAudioSource.transform.parent = AudioSourcePoolParent;
+            ASource = newAudioSource.GetComponent<AudioSource>();
         }
-        //Debug.LogError("playing: " + soundNumber++);
     }
+
 }
