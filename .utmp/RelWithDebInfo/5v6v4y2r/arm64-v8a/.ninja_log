@@ -1,0 +1,12 @@
+# ninja log v5
+153	1532	7663315465676920	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	25e59f3a4ebe4abd
+1560	2204	7663315471583975	C:/Users/PC/Desktop/BlackJack/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5v6v4y2r/obj/arm64-v8a/libswappywrapper.so	19307821e34f1d05
+43	2413	7663315474879723	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	b7e78784235f4730
+29	2515	7663315476013515	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	49dfdd3c30899744
+58	2522	7663315476013515	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	712ead86d0411acb
+133	2559	7663315476395951	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	7bdfd072b5320917
+111	2636	7663315477108105	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	d1c7de2d5efcd998
+17	2692	7663315477940454	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	fa3bdbd22b5ffd79
+77	3089	7663315481838569	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	80465a610f1b208a
+2	3434	7663315485198706	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	ac5c5e0b21bf31e7
+3434	3777	7663315488919831	C:/Users/PC/Desktop/BlackJack/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5v6v4y2r/obj/arm64-v8a/libgame.so	6a455887e62fbe
