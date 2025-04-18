@@ -8,6 +8,8 @@ using TMPro;
 using Firebase.Auth;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using Firebase;
+using Firebase.Database;
 
 public class LoginWithGoogle : MonoBehaviour
 {
@@ -24,6 +26,24 @@ public class LoginWithGoogle : MonoBehaviour
     private bool isGoogleSignInInitialized = false;
 
     [SerializeField] private GoogleAuth googleAuth;
+   public DatabaseReference databaseReference;
+
+    public string userId;
+
+    public static LoginWithGoogle instance;
+    public int totalCash;
+
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+
+            instance = this;
+        }
+        
+        DontDestroyOnLoad(gameObject);
+    }
     private void Start()
     {
         InitFirebase();
@@ -31,22 +51,104 @@ public class LoginWithGoogle : MonoBehaviour
 
     void InitFirebase()
     {
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+       
+            Debug.Log("Testing Firebase Initialization...");
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError($"Firebase initialization failed: {task.Exception}");
+                    return;
+                }
+
+                var dependencyStatus = task.Result;
+                Debug.Log($"Dependency Status: {dependencyStatus}");
+                if (dependencyStatus == Firebase.DependencyStatus.Available)
+                {
+                    StartCoroutine(Assign());
+                }
+                else
+                {
+                    Debug.LogError($"Firebase dependencies not resolved: {dependencyStatus}");
+                }
+            });
+        
+    }
+
+    public IEnumerator Assign()
+    {
+      
+        FirebaseApp app = FirebaseApp.DefaultInstance;
+        if (app == null)
         {
-            var dependencyStatus = task.Result;
-            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            app = FirebaseApp.Create();
+        }
+        Debug.Log("Firebase Initialized Successfully!");
+        yield return new WaitForSeconds(1);
+        Debug.Log("Firebase Initialized Successfully!2");
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        yield return new WaitForSeconds(1);
+        //AddCoins(0);
+
+
+
+    }
+    // Inside your LoginWithGoogle or similar script
+
+    public void AddCoins(int newCoins)
+    {
+        if (databaseReference == null)
+        {
+            Debug.LogError("Database reference is null. Ensure Firebase is initialized.");
+            return;
+        }
+
+       
+        databaseReference.Child("users").Child(userId).Child("totalCash").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            int currentCash = 0;
+            if (task.IsCompletedSuccessfully)
             {
-                auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-                Debug.Log("Firebase Auth Initialized Successfully");
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Exists && int.TryParse(snapshot.Value.ToString(), out currentCash))
+                {
+                    Debug.Log($"Fetched total cash: {currentCash} for user {userId}");
+                    totalCash = currentCash;
+                    if(MenuController.instance != null)
+                    MenuController.instance.UpdateInStartTxts();
+                }
+                else
+                {
+                    Debug.LogWarning($"No total cash value found for user {userId}. Starting with 0.");
+                }
             }
-            else
+            else if (task.IsFaulted)
             {
-                Debug.LogError(System.String.Format(
-                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                Username.text = "Could not resolve all Firebase";
+                Debug.LogError($"Failed to fetch total cash: {task.Exception}");
+                return; 
             }
+
+            int updatedCash = currentCash + newCoins;
+            totalCash = updatedCash; 
+
+           
+            databaseReference.Child("users").Child(userId).Child("totalCash").SetValueAsync(updatedCash).ContinueWithOnMainThread(saveTask =>
+            {
+                if (saveTask.IsCompletedSuccessfully)
+                {
+                    Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
+                    Username.text = $"Coins: {updatedCash}";
+                }
+                else if (saveTask.IsFaulted)
+                {
+                    Debug.LogError($"Failed to save total cash: {saveTask.Exception}");
+                    Username.text = "Failed to update coins";
+                }
+            });
         });
     }
+
+
 
     public void Login()
     {
@@ -119,7 +221,8 @@ public class LoginWithGoogle : MonoBehaviour
                         user = auth.CurrentUser;
                         Username.text = user.DisplayName;
                         UserEmail.text = user.Email;
-
+                        userId = user.UserId;
+                        AddCoins(0);
                         StartCoroutine(LoadImage(CheckImageUrl(user.PhotoUrl.ToString())));
                     }
                 });

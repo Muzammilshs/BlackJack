@@ -1,13 +1,21 @@
+using Firebase.Database;
+using Firebase.Extensions;
+using Google;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class LocalSetting
 {
     const string TOTALCASHKEY = "total_cash";
-    const int firstTimeAmount = 3000000;
+    public static int firstTimeAmount = 3000;
     public const int ScoresLimit = 21;
 
     const string CARDBACKDESIGNKEY = "CardBackDesign";
-
+    private static int cachedCash = firstTimeAmount;
+    private static bool isCashFetched = false;
+    private static Task<int> cashFetchTask = null;
     public static int SelectedDesignIndex
     {
         get
@@ -69,18 +77,78 @@ public static class LocalSetting
         return amount <= GetTotalCash() ? true : false;
     }
     public static void SetTotalCash(int amount)
-    {
-        int cash = GetTotalCash();
-        cash += amount;
-        PlayerPrefs.SetString(TOTALCASHKEY, cash.ToString());
+    {      
+        LoginWithGoogle.instance.AddCoins(amount);
     }
 
+
+    public static async Task<int> GetTotalCashAsync()
+    {
+        if (LoginWithGoogle.instance == null || LoginWithGoogle.instance.databaseReference == null)
+        {
+            Debug.LogError("LoginWithGoogle instance or database reference is null. Returning default value.");
+            LoginWithGoogle.instance.totalCash = firstTimeAmount;
+            return firstTimeAmount;
+        }
+        Debug.Log("GETTING CASH");
+        try
+        {
+            var snapshot = await LoginWithGoogle.instance.databaseReference
+                .Child("users")
+                .Child(LoginWithGoogle.instance.userId)
+                .Child("totalCash")
+                .GetValueAsync();
+
+            if (snapshot.Exists && int.TryParse(snapshot.Value.ToString(), out int cash))
+            {
+                Debug.Log($"Fetched total cash: {cash} for user {LoginWithGoogle.instance.userId}");
+                LoginWithGoogle.instance.totalCash = cash;
+                return cash;
+            }
+            else
+            {
+                Debug.LogWarning($"No total cash value found for user {LoginWithGoogle.instance.userId}. Using default: {firstTimeAmount}.");
+                LoginWithGoogle.instance.totalCash = firstTimeAmount;
+
+                return firstTimeAmount;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to fetch total cash: {ex}");
+            LoginWithGoogle.instance.totalCash = firstTimeAmount;
+            return firstTimeAmount;
+        }
+    }
+
+  
     public static int GetTotalCash()
     {
-        if (!PlayerPrefs.HasKey(TOTALCASHKEY))
-            PlayerPrefs.SetString(TOTALCASHKEY, firstTimeAmount.ToString());
-        string cash = PlayerPrefs.GetString(TOTALCASHKEY);
-        return StringToInt(cash);
+        Debug.Log("GET CASH!");
+        if (cashFetchTask == null)
+        {
+            // Start fetching if not already started
+            Debug.Log("GET CASH!2");
+
+            cashFetchTask = GetTotalCashAsync();
+        }
+
+        if (!cashFetchTask.IsCompleted)
+        {
+            // Unity-friendly: wait without freezing
+            var asyncOperation = WaitForTaskCompletion(cashFetchTask);
+            while (!asyncOperation.MoveNext()) { } 
+        }
+
+        return LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : firstTimeAmount;
+    }
+
+    private static IEnumerator<object> WaitForTaskCompletion(Task task)
+    {
+        while (!task.IsCompleted)
+        {
+            yield return null;
+        }
     }
     public static int StringToInt(string stg)
     {

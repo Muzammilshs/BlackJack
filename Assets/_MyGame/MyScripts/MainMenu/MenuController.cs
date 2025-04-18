@@ -25,6 +25,15 @@ public class MenuController : MonoBehaviour
     public TMP_Text totalJackpotsTxt;
 
 
+    public static MenuController instance;
+
+    private void Awake()
+    {
+        if(instance == null)
+            instance = this;
+    }
+
+
     void Start()
     {
         SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.BGMusic, true);
@@ -61,6 +70,14 @@ public class MenuController : MonoBehaviour
     {
         foreach (var txt in totalChipsTxt)
             txt.text = LocalSetting.GetTotalCash().ToString("N0");
+    }
+
+    public void UpdateInStartTxts()
+    {
+        foreach (var txt in totalChipsTxt)
+            txt.text = LoginWithGoogle.instance.totalCash.ToString("N0");
+
+        Debug.Log("Updating");
     }
 
     void UpdateGameStats()

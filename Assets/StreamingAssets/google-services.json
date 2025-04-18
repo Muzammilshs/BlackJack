@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "382515883778",
+    "firebase_url": "https://blackjack-79eec-default-rtdb.firebaseio.com",
+    "project_id": "blackjack-79eec",
+    "storage_bucket": "blackjack-79eec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382515883778:android:91bda23808f4247a0d9c1b",
+        "android_client_info": {
+          "package_name": "com.skyhisoft.black.jack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382515883778-2b2uvjndss5056338ulbgc58qce7nolu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skyhisoft.black.jack",
+            "certificate_hash": "0be580a19a9c81ab756683310e7d8d02e78384c2"
+          }
+        },
+        {
+          "client_id": "382515883778-um96eqqrtp23j6sme0t0kgspheqskrg7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNoFx8gtHADNgA1Q-SLX1w1NFLDx69aqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382515883778-um96eqqrtp23j6sme0t0kgspheqskrg7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
