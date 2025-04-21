@@ -1,23 +1,23 @@
 # ninja log v5
-146	5056	7666845491190252	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	1b15b89b97ad5c2d
-169	1384	7666845452365769	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	f6ecc0104fa87ac0
-1384	5981	7666845500764663	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libswappywrapper.so	4285a169a0941bd2
-135	4992	7666845490668243	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	8fac496725fe3e07
-151	4615	7666845486886708	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	79faa611e068cb86
-156	4656	7666845487289283	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2f2e5937128f5c1f
-142	5057	7666845491180198	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	12a214dfa689e11a
-139	4631	7666845487143259	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	7e53cc8ad6b9eadc
-164	4709	7666845487815614	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	2c17cc4cc9da2b6
-160	5017	7666845490918912	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	8afc275180e480f4
-5057	6171	7666845502600346	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libgame.so	823f3a927ed38b2f
+12	1661	7666874194472035	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	1b15b89b97ad5c2d
 61	250	7666874180381908	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	f6ecc0104fa87ac0
-251	442	7666874182283099	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libswappywrapper.so	4285a169a0941bd2
 8	1129	7666874189153227	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	8fac496725fe3e07
+251	442	7666874182283099	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libswappywrapper.so	4285a169a0941bd2
 42	1157	7666874189454351	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	79faa611e068cb86
-4	1196	7666874189851658	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	7e53cc8ad6b9eadc
+37	1348	7666874191403539	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	12a214dfa689e11a
 47	1224	7666874190133095	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2f2e5937128f5c1f
 56	1302	7666874190916228	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	2c17cc4cc9da2b6
-37	1348	7666874191403539	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	12a214dfa689e11a
+4	1196	7666874189851658	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	7e53cc8ad6b9eadc
 51	1519	7666874193098068	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	8afc275180e480f4
-12	1661	7666874194472035	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	1b15b89b97ad5c2d
 1661	1752	7666874195450149	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libgame.so	823f3a927ed38b2f
+1860	16562	7669271743469634	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	f6ecc0104fa87ac0
+1854	18987	7669271767700927	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	79faa611e068cb86
+1848	19294	7669271770767753	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2f2e5937128f5c1f
+1826	19322	7669271771014994	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	7e53cc8ad6b9eadc
+1857	19506	7669271772896916	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	2c17cc4cc9da2b6
+1823	19560	7669271773376487	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	12a214dfa689e11a
+1851	19666	7669271774505437	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	8afc275180e480f4
+1820	19696	7669271774788287	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	1b15b89b97ad5c2d
+779	19743	7669271775191741	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	8fac496725fe3e07
+16563	20254	7669271780427327	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libswappywrapper.so	4285a169a0941bd2
+19743	20269	7669271780507384	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/arm64-v8a/libgame.so	823f3a927ed38b2f
