@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_android_client_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://blackjack-79eec-default-rtdb.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">382515883778</string>
+  <string name="google_storage_bucket" translatable="false">blackjack-79eec.firebasestorage.app</string>
+  <string name="project_id" translatable="false">blackjack-79eec</string>
+  <string name="google_api_key" translatable="false">AIzaSyDNoFx8gtHADNgA1Q-SLX1w1NFLDx69aqI</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDNoFx8gtHADNgA1Q-SLX1w1NFLDx69aqI</string>
+  <string name="google_app_id" translatable="false">1:382515883778:android:91bda23808f4247a0d9c1b</string>
+  <string name="default_android_client_id" translatable="false">382515883778-askmr09otdkkdmkoov4ou9pbbh3ouu39.apps.googleusercontent.com</string>
+  <string name="default_web_client_id" translatable="false">382515883778-um96eqqrtp23j6sme0t0kgspheqskrg7.apps.googleusercontent.com</string>
+</resources>

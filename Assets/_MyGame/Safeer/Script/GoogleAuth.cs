@@ -30,6 +30,9 @@ public class GoogleAuth : MonoBehaviour
             loginPanel.SetActive(false);
             if (mainPanel != null)
                 mainPanel.SetActive(true);
+
+            string id = PlayerPrefs.GetString("UserName");
+            LoginWithGoogle.instance.userId = id;
         }
     }
 

@@ -20603,8 +20603,9 @@ MonoBehaviour:
   UserEmail: {fileID: 64590971}
   UserProfilePic: {fileID: 492465500}
   googleAuth: {fileID: 660612675}
-  userId: 
-  totalCash: 0
+  userId: fd
+  totalCash: 14
+  googleLoginPanel: {fileID: 23216903}
 --- !u!4 &757512694
 Transform:
   m_ObjectHideFlags: 0
@@ -22044,6 +22045,10 @@ PrefabInstance:
     - target: {fileID: 183544, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
       propertyPath: m_Name
       value: LunarConsole
+      objectReference: {fileID: 0}
+    - target: {fileID: 183544, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,0 +1,23 @@
+# ninja log v5
+51	430	7669567863135831	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	cff072964b0a34b
+4	1897	7669567877725329	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	a207e27b8f1c87ea
+431	2144	7669567880058188	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/armeabi-v7a/libswappywrapper.so	a5cb74b27db8de4e
+8	1696	7669567875771511	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	fefbd2d448f62c0c
+24	1688	7669567875693140	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	dffd1f21218d8052
+32	1780	7669567876668552	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5fe4165184fa0475
+15	1686	7669567875698208	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	e3196f20be5d0895
+12	1846	7669567877078421	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	dd9854ed798bd203
+19	1716	7669567875982690	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	b09202178bf5c359
+28	1895	7669567877705073	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	563fb128505770a1
+1898	2315	7669567882000672	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/armeabi-v7a/libgame.so	e166f48993f50cae
+36	325	7669703059087692	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	cff072964b0a34b
+326	769	7669703063276836	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/armeabi-v7a/libswappywrapper.so	a5cb74b27db8de4e
+19	1052	7669703066197005	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	dffd1f21218d8052
+11	1082	7669703066558183	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	e3196f20be5d0895
+14	1082	7669703066558183	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	fefbd2d448f62c0c
+27	1142	7669703067131847	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	b09202178bf5c359
+32	1228	7669703067895422	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5fe4165184fa0475
+6	1337	7669703068982904	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	dd9854ed798bd203
+23	1475	7669703070498723	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	563fb128505770a1
+3	1538	7669703071109850	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	a207e27b8f1c87ea
+1538	1639	7669703072191535	D:/New Accend Games/Blackjack New/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/y1c2d2p1/obj/armeabi-v7a/libgame.so	e166f48993f50cae

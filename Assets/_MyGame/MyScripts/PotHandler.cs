@@ -109,6 +109,8 @@ public class PotHandler : MonoBehaviour
             amount = -amount;
         LocalSetting.SetTotalCash(amount);
         UpdateCashAmount(prevAmount, LocalSetting.GetTotalCash());
+
+        Debug.Log("Setting Local Cash " + amount);
     }
     void UpdateCashAmount(int currentCash, int targetAmount, float duration = 1f)
     {

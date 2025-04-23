@@ -71,14 +71,31 @@ public class MenuController : MonoBehaviour
         foreach (var txt in totalChipsTxt)
             txt.text = LocalSetting.GetTotalCash().ToString("N0");
     }
-
     public void UpdateInStartTxts()
     {
-        foreach (var txt in totalChipsTxt)
-            txt.text = LoginWithGoogle.instance.totalCash.ToString("N0");
+        if (totalChipsTxt == null || totalChipsTxt.Length == 0)
+        {
+            Debug.LogWarning("TotalChipsTxt array is empty or not assigned!");
+            return;
+        }
 
-        Debug.Log("Updating");
+        int cash = LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : 0;
+        foreach (var txt in totalChipsTxt)
+        {
+            if (txt != null)
+                txt.text = cash.ToString("N0");
+        }
+
+        Debug.Log($"Updating total chips display: {cash}");
     }
+
+    //public void UpdateInStartTxts()
+    //{
+    //    foreach (var txt in totalChipsTxt)
+    //        txt.text = LoginWithGoogle.instance.totalCash.ToString("N0");
+
+    //    Debug.Log("Updating");
+    //}
 
     void UpdateGameStats()
     {

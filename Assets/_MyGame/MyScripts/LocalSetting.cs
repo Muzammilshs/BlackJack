@@ -86,7 +86,10 @@ public static class LocalSetting
     {
         if (LoginWithGoogle.instance == null || LoginWithGoogle.instance.databaseReference == null)
         {
-            Debug.LogError("LoginWithGoogle instance or database reference is null. Returning default value.");
+            Debug.Log("LoginWithGoogle instance or database reference is null. Returning default value.");
+            if (LoginWithGoogle.instance == null)
+                return firstTimeAmount;
+
             LoginWithGoogle.instance.totalCash = firstTimeAmount;
             return firstTimeAmount;
         }
