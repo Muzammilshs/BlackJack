@@ -56,7 +56,7 @@ public class Purchase : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-            LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + productIDs[index].rewardAmount);
+            LocalSetting.SetTotalCash(/*LocalSetting.GetTotalCash() +*/ productIDs[index].rewardAmount);
             menuController.UpDateTotalChipsTxts();
         }
         else
@@ -69,14 +69,7 @@ public class Purchase : MonoBehaviour
 
     public void AddIAPAmount(int coins)
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            LocalSetting.SetTotalCash(LocalSetting.GetTotalCash() + coins);
-            menuController.UpDateTotalChipsTxts();
-        }
-        else
-            Rm.Instance.potHandler.CollectReward(coins);
-        Debug.LogError("Added Amount: " + coins + "      Index is: " + coins);
+        LocalSetting.SetTotalCash(coins);
         //iapManager.OnPurchaseSuccess = null;
 
         // Purchase success message show here

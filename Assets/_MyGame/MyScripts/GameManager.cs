@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
     #region Button functions
     public void OnHomeBtnClick()
     {
+        if (LoginWithGoogle.instance != null)
+            DestroyImmediate(LoginWithGoogle.instance.gameObject);        
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

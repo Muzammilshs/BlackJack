@@ -128,10 +128,11 @@ public class PotHandler : MonoBehaviour
                 currentCash = targetAmount;
             });
     }
-    void UpDateCashTxt(int amount)
+    public void UpDateCashTxt(int amount)
     {
         foreach (var amountTxt in totalAmountTxt)
             amountTxt.text = amount.ToString("N0");
+        Debug.Log(amount);
     }
     #endregion
 

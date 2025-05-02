@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 using Firebase;
 using Firebase.Database;
 using System;
+using UnityEngine.SceneManagement;
 
 public class LoginWithGoogle : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class LoginWithGoogle : MonoBehaviour
 
 
     public GameObject googleLoginPanel;
-
+    public MenuController menuController;
 
     private void Awake()
     {
@@ -185,6 +186,7 @@ public class LoginWithGoogle : MonoBehaviour
             }
 
             int updatedCash = currentCash + newCoins;
+          
             totalCash = updatedCash;
 
             databaseReference.Child("users").Child(userId).Child("totalCash").SetValueAsync(updatedCash).ContinueWithOnMainThread(saveTask =>
@@ -194,6 +196,14 @@ public class LoginWithGoogle : MonoBehaviour
                     Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
                     Username.text = $"Coins: {updatedCash}";
                     LocalSetting.GetTotalCash();
+                    if (SceneManager.GetActiveScene().buildIndex == 0)
+                    {
+                        menuController.UpDateTotalChipsTxts();
+                    }
+                    else
+                    {
+                        Rm.Instance.potHandler.UpDateCashTxt(updatedCash);
+                    }
                 }
                 else if (saveTask.IsFaulted)
                 {
