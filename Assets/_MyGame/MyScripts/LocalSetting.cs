@@ -9,13 +9,15 @@ using UnityEngine;
 public static class LocalSetting
 {
     const string TOTALCASHKEY = "total_cash";
-    public static int firstTimeAmount = 3000;
+    public static int firstTimeAmount = 300;
     public const int ScoresLimit = 21;
-
+    public const string coins = "coins_";
     const string CARDBACKDESIGNKEY = "CardBackDesign";
     private static int cachedCash = firstTimeAmount;
     private static bool isCashFetched = false;
     private static Task<int> cashFetchTask = null;
+
+    public static Dictionary<float, float> dict = new Dictionary<float, float> { { 100, 1f }, { 500, 5f }, { 1000, 10f }, { 2000, 20f }, { 3000, 30f }, { 4000, 40f }, { 5000, 50f }, { 10000, 100f } };
     public static int SelectedDesignIndex
     {
         get
@@ -77,7 +79,7 @@ public static class LocalSetting
         return amount <= GetTotalCash() ? true : false;
     }
     public static void SetTotalCash(int amount)
-    {      
+    {
         LoginWithGoogle.instance.AddCoins(amount);
     }
 
@@ -124,7 +126,7 @@ public static class LocalSetting
         }
     }
 
-  
+
     public static int GetTotalCash()
     {
         Debug.Log("GET CASH!");
@@ -140,7 +142,7 @@ public static class LocalSetting
         {
             // Unity-friendly: wait without freezing
             var asyncOperation = WaitForTaskCompletion(cashFetchTask);
-            while (!asyncOperation.MoveNext()) { } 
+            while (!asyncOperation.MoveNext()) { }
         }
 
         return LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : firstTimeAmount;

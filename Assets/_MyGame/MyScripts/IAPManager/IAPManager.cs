@@ -1,130 +1,124 @@
-﻿using UnityEngine;
-using UnityEngine.Purchasing;
 using System;
+using System.Collections.Generic;
+using Unity.Services.Core;
+using UnityEngine;
+using UnityEngine.Purchasing;
+using System.Linq;
 
 public class IAPManager : MonoBehaviour, IStoreListener
 {
-    public Purchase purchaseScript;
-    private static IStoreController storeController;
+    private static IStoreController m_StoreController;
+    private static IExtensionProvider m_StoreExtensionProvider;
 
-    public Action OnPurchaseSuccess;
+    Purchase purchaseScript;
 
-    void Start()
+    //void Start()
+    //{
+    //    if (m_StoreController == null)
+    //    {
+    //        InitializePurchasing();
+    //    }
+    //}
+
+    async void Start()
     {
-        if (storeController == null)
+        purchaseScript = GetComponent<Purchase>();
+        await UnityServices.InitializeAsync();
+
+        if (m_StoreController == null)
         {
-            for (int i = 0; i < purchaseScript.productIDs.Length; i++)
-            {
-                InitializePurchasing(purchaseScript.productIDs[i].productID);
-                purchaseScript.productIDs[i].priceTxt.text = GetProductPrice(purchaseScript.productIDs[i].productID);
-            }
+            InitializePurchasing();
         }
     }
 
-    public void InitializePurchasing(string productID)
+    void InitializePurchasing()
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+        Dictionary<float, float> dict = LocalSetting.dict;
 
-        // Add product IDs (Replace "your_product_id" with actual product ID)
-        builder.AddProduct(productID, ProductType.Consumable);
+        for (int i = 0; i < dict.Count; i++)
+        {
+            builder.AddProduct(LocalSetting.coins + dict.Keys.ElementAt(i).ToString(), ProductType.Consumable);
+        }
+
+        //builder.AddProduct("stake_100", ProductType.Consumable);
+        //builder.AddProduct("stake_1000", ProductType.Consumable);
+        //builder.AddProduct("stake_10000", ProductType.Consumable);
+        //builder.AddProduct("remove_ad", ProductType.Consumable);
+
+        //builder.AddProduct("diamond_10000", ProductType.Consumable);
+        //builder.AddProduct("diamond_20000", ProductType.Consumable);
+        //builder.AddProduct("diamond_50000", ProductType.Consumable);
+        // Add more products as needed
 
         UnityPurchasing.Initialize(this, builder);
     }
 
-    // Called when Unity IAP is initialized
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        storeController = controller;
-        Debug.Log("Unity IAP Initialized");
-
-        // Fetch and display the price of a product
-        string price = GetProductPrice(PRODUCT_ID);
-        Debug.Log("Product Price: " + price);
+        m_StoreController = controller;
+        m_StoreExtensionProvider = extensions;
     }
-
-    public void OnInitializeFailed(InitializationFailureReason error)
-    {
-        Debug.LogError($"IAP Init Failed: {error}");
-    }
-
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        Debug.LogError($"IAP Init Failed: {error}, {message}");
+        Debug.Log("Billing failed to initialize! : " + error);
+        Debug.Log(message);
     }
-
-    // Define your product IDs (these must match with Play Store / App Store)
-    private const string PRODUCT_ID = "your_product_id"; // Replace with actual product ID
-
-    // Function to get price
-    public string GetProductPrice(string productId)
+    public void OnInitializeFailed(InitializationFailureReason error)
     {
-        if (storeController != null)
+        Debug.Log("Billing failed to initialize! : " + error);
+    }
+    public void BuyProductID(string productId)
+    {
+        if (m_StoreController != null && m_StoreExtensionProvider != null)
         {
-            Product product = storeController.products.WithID(productId);
-            if (product != null && product.hasReceipt)
+            Product product = m_StoreController.products.WithID(productId);
+
+            if (product != null && product.availableToPurchase)
             {
-                return product.metadata.localizedPriceString; // Returns localized price string (e.g., "$4.99")
-            }
-        }
-        return "Price Not Available";
-    }
 
-    // Purchase a product
-    public void BuyProduct()
-    {
-        if (storeController != null && storeController.products.WithID(PRODUCT_ID).availableToPurchase)
-        {
-            Debug.Log($"🛒 Purchasing: {PRODUCT_ID}");
-            storeController.InitiatePurchase(PRODUCT_ID);
-        }
-        else
-        {
-            Debug.Log("❌ Product not available for purchase.");
-        }
-    }
 
-    public void BuyMyProduct(string productID)
-    {
-        //if (storeController != null /*&& storeController.products.WithID(productID).availableToPurchase*/)
-        //{
-        //    Debug.Log($"🛒 Purchasing start: {productID}");
-        //    storeController.InitiatePurchase(productID);
-        //}
-        //else
-        //{
-        //    Debug.Log("❌ Product not available for purchase.");
-        //}
-        if (storeController != null)
-        {
-            Product product = storeController.products.WithID(productID);
-            if (product != null /*&& product.availableToPurchase*/)
-            {
-                Debug.Log($"🛒 Purchasing start: {productID}");
-                storeController.InitiatePurchase(productID);
+                m_StoreController.InitiatePurchase(product);
+                // Handle other product purchases
+
+
             }
             else
             {
-                Debug.Log($"❌ Product not available for purchase: {productID}");
+                // Product not found or not available for purchase
             }
         }
-        else
-        {
-            Debug.Log("❌ StoreController is not initialized.");
-        }
     }
-    // Called when a purchase is completed
+
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
-        Debug.LogError($"whoooo Purchase Successful  {args.purchasedProduct.definition.id}");
-        OnPurchaseSuccess?.Invoke();
+        if (!string.IsNullOrEmpty(args.purchasedProduct.definition.id))
+        {
+            //if (args.purchasedProduct.definition.id.Contains("diamond_"))
+            //{
+            //    int quantity;
+            //    quantity = int.Parse(args.purchasedProduct.definition.id.Split('_')[1]);
+
+            //    GameManager.Instance.BuyStake(quantity);
+            //}
+            if (args.purchasedProduct.definition.id.Contains(LocalSetting.coins))
+            {
+                int quantity;
+                quantity = int.Parse(args.purchasedProduct.definition.id.Split('_')[1]);
+                purchaseScript.AddIAPAmount(quantity);
+            }
+
+
+        }
+
         return PurchaseProcessingResult.Complete;
     }
 
-    // Called when a purchase fails
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
-        Debug.LogError($"Purchase failed: {product.definition.id}, Reason: {failureReason}");
+        Debug.Log("Purchase of product failed: " + product.definition.id);
     }
+    // Implement other IStoreListener methods here...
 
 }
