@@ -72,6 +72,9 @@ public class LoginWithGoogle : MonoBehaviour
             auth = FirebaseAuth.DefaultInstance;
             Debug.Log("Firebase Initialized");
 
+#if UNITY_EDITOR
+            AddCoins(0);
+#endif
         });
 
     }
@@ -172,7 +175,7 @@ public class LoginWithGoogle : MonoBehaviour
                 else
                 {
                     Debug.LogWarning($"No total cash value found for user {userId}. Starting with 30000.");
-                    currentCash = 30000;  // <<< Start new user with 3000
+                    currentCash = 300;  // <<< Start new user with 3000
                 }
             }
             else if (task.IsFaulted)
