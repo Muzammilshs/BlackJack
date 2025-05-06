@@ -12,13 +12,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
 
     Purchase purchaseScript;
 
-    //void Start()
-    //{
-    //    if (m_StoreController == null)
-    //    {
-    //        InitializePurchasing();
-    //    }
-    //}
+
 
     async void Start()
     {
@@ -40,16 +34,6 @@ public class IAPManager : MonoBehaviour, IStoreListener
         {
             builder.AddProduct(LocalSetting.coins + dict.Keys.ElementAt(i).ToString(), ProductType.Consumable);
         }
-
-        //builder.AddProduct("stake_100", ProductType.Consumable);
-        //builder.AddProduct("stake_1000", ProductType.Consumable);
-        //builder.AddProduct("stake_10000", ProductType.Consumable);
-        //builder.AddProduct("remove_ad", ProductType.Consumable);
-
-        //builder.AddProduct("diamond_10000", ProductType.Consumable);
-        //builder.AddProduct("diamond_20000", ProductType.Consumable);
-        //builder.AddProduct("diamond_50000", ProductType.Consumable);
-        // Add more products as needed
 
         UnityPurchasing.Initialize(this, builder);
     }
@@ -95,13 +79,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
     {
         if (!string.IsNullOrEmpty(args.purchasedProduct.definition.id))
         {
-            //if (args.purchasedProduct.definition.id.Contains("diamond_"))
-            //{
-            //    int quantity;
-            //    quantity = int.Parse(args.purchasedProduct.definition.id.Split('_')[1]);
-
-            //    GameManager.Instance.BuyStake(quantity);
-            //}
+            
             if (args.purchasedProduct.definition.id.Contains(LocalSetting.coins))
             {
                 int quantity;
