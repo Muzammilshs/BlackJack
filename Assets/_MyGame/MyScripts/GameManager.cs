@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     }
     public void SetCardDesign()
     {
-        dummyCardSprite = Rm.Instance.cardsManager.allCards.CardBackDesigns[LocalSetting.SelectedDesignIndex];
+        dummyCardSprite = Rm.Instance.cardsManager.allCards.CardBackDesigns[LocalSettingBlackJack.SelectedDesignIndex];
     }
     public List<GameObject> ClearList(List<GameObject> list)
     {

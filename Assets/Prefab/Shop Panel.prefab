@@ -7186,19 +7186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ddd0685fdc1dcb4cb5c818806e71419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 5398998328884514447}
-  - {fileID: 6410252933552585616}
-  - {fileID: 8889704459641680052}
-  - {fileID: 5731164677289223287}
-  - {fileID: 5059930377702507709}
-  - {fileID: 6166938982184167197}
-  - {fileID: 256461272168389275}
-  - {fileID: 1508647319529422285}
-  - {fileID: 6464221843145236066}
-  - {fileID: 7533101464019993606}
-  - {fileID: 6268944759837333293}
-  - {fileID: 8879227229481594616}
+  inAppBtn: {fileID: 0}
+  productIDs: []
+  menuController: {fileID: 0}
 --- !u!114 &2307620073827040701
 MonoBehaviour:
   m_ObjectHideFlags: 0

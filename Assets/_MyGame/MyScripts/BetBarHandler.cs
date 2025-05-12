@@ -54,7 +54,7 @@ public class BetBarHandler : MonoBehaviour
                 btn.SetActive(true);
                 chipsObjects.Add(btn);
                 btn.GetComponent<Image>().sprite = betAmounts[i].coinIcon;
-                LocalSetting.SetPosAndRect(btn, betBtnPrefab.GetComponent<RectTransform>(), betBtnPrefab.transform.parent);
+                LocalSettingBlackJack.SetPositionAndRectTransform(btn, betBtnPrefab.GetComponent<RectTransform>(), betBtnPrefab.transform.parent);
                 Button betBtn = btn.GetComponent<Button>();
                 int amt = betAmounts[i].amount;
                 btn.name = amt.ToString();
@@ -99,7 +99,7 @@ public class BetBarHandler : MonoBehaviour
         Button btn = chipBtn.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() => WhenBettedChipBtnClick());
-        LocalSetting.SetPosAndRect(chipBtn, bettedChipsPos, bettedChipsPos.transform.parent);
+        LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, bettedChipsPos, bettedChipsPos.transform.parent);
         chipBtn.transform.position = chip.transform.position;
         playChipAnimation(chipBtn, bettedChipsPos.gameObject, true);
     }
@@ -112,7 +112,7 @@ public class BetBarHandler : MonoBehaviour
         {
             GameObject chipBtn = Instantiate(betPlacedChips[i]);
             doubleBetPlacedChips.Add(chipBtn);
-            LocalSetting.SetPosAndRect(chipBtn, betPlacedChips[i].GetComponent<RectTransform>(), bettedChipsPos.transform.parent);
+            LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, betPlacedChips[i].GetComponent<RectTransform>(), bettedChipsPos.transform.parent);
             chipBtn.transform.position += new Vector3(100 * 2, 0, 0);
         }
 
@@ -138,7 +138,7 @@ public class BetBarHandler : MonoBehaviour
         dealnClearBtnGroup.gameObject.SetActive(false);
         refMgr.gameStateManager.UpDateGameState(GameState.State.CARDDROP);
         refMgr.potHandler.BetAmountDeduction(refMgr.potHandler.GetPotAmount);
-        LocalSetting.TotalGamesPlayed++;
+        LocalSettingBlackJack.TotalGamesPlayed++;
     }
 
     public void ClearBtnClick()
@@ -205,7 +205,7 @@ public class BetBarHandler : MonoBehaviour
         for (int i = 0; i < betPlacedChips_1_Split.Count; i++)
         {
             betPlacedChips.Add(betPlacedChips_1_Split[i]);
-            LocalSetting.SetPosAndRect(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
+            LocalSettingBlackJack.SetPositionAndRectTransform(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
         }
         betPlacedChips_1_Split.Clear();
         betPlacedChips_2_Split.Clear();
@@ -261,7 +261,7 @@ public class BetBarHandler : MonoBehaviour
             // for second
             GameObject chip = Instantiate(betPlacedChips_1_Split[i]);
             betPlacedChips_2_Split.Add(chip);
-            LocalSetting.SetPosAndRect(chip, bettedChipsPos_2_Split, bettedChipsPos_2_Split.parent);
+            LocalSettingBlackJack.SetPositionAndRectTransform(chip, bettedChipsPos_2_Split, bettedChipsPos_2_Split.parent);
             chip.GetComponent<RectTransform>().position = new Vector2(bettedChipsPos_2_Split.position.x + UnityEngine.Random.Range(-rndRange, rndRange), yPos + UnityEngine.Random.Range(-rndRange, rndRange));
         }
         betPlacedChips.Clear();

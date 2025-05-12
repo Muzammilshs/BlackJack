@@ -1,4 +1,4 @@
-using com.muzamil;
+using com.muzammil;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -87,11 +87,11 @@ public class ScoreManager : MonoBehaviour
             {
                 playerScores.text = playerTotalScores.ToString(); // Avoid showing duplicate scores
             }
-            else if (playerTotalScoresAce > 0 && playerTotalScores <= LocalSetting.ScoresLimit)
+            else if (playerTotalScoresAce > 0 && playerTotalScores <= LocalSettingBlackJack.ScoresLimit)
             {
                 playerScores.text = playerTotalScoresAce + "/" + playerTotalScores;
             }
-            else if (playerTotalScoresAce > 0 && playerTotalScores > LocalSetting.ScoresLimit)
+            else if (playerTotalScoresAce > 0 && playerTotalScores > LocalSettingBlackJack.ScoresLimit)
             {
                 playerScores.text = playerTotalScoresAce.ToString();
             }
@@ -100,7 +100,7 @@ public class ScoreManager : MonoBehaviour
                 playerScores.text = playerTotalScores.ToString();
             }
 
-            if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == LocalSetting.ScoresLimit)
+            if (rm.tableDealer.playerCards.Count > 2 || playerTotalScores == LocalSettingBlackJack.ScoresLimit)
                 StartCoroutine(CheckForPlayerScoreLimit());
         }
         else
@@ -113,11 +113,11 @@ public class ScoreManager : MonoBehaviour
             {
                 dealerScores.text = dealerTotalScores.ToString();
             }
-            else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSetting.ScoresLimit)
+            else if (dealerTotalScoresAce > 0 && dealerTotalScores <= LocalSettingBlackJack.ScoresLimit)
             {
                 dealerScores.text = dealerTotalScoresAce + "/" + dealerTotalScores;
             }
-            else if (dealerTotalScoresAce > 0 && dealerTotalScores > LocalSetting.ScoresLimit)
+            else if (dealerTotalScoresAce > 0 && dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
             {
                 dealerScores.text = dealerTotalScoresAce.ToString();
             }
@@ -131,7 +131,7 @@ public class ScoreManager : MonoBehaviour
     IEnumerator CheckForPlayerScoreLimit()
     {
         yield return new WaitForSeconds(0.5f);
-        if (playerTotalScores < LocalSetting.ScoresLimit)
+        if (playerTotalScores < LocalSettingBlackJack.ScoresLimit)
         {
             if (!rm.dealerAIPlay.isDealerTurn)
             {
@@ -148,7 +148,7 @@ public class ScoreManager : MonoBehaviour
                 }
             }
         }
-        else if (playerTotalScores > LocalSetting.ScoresLimit)
+        else if (playerTotalScores > LocalSettingBlackJack.ScoresLimit)
         {
             // 
             rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
@@ -199,7 +199,7 @@ public class ScoreManager : MonoBehaviour
 
         // High score calculation: Try to upgrade one Ace to 11 if it doesn't bust
         highScores = lowScores;
-        if (aceCount > 0 && highScores + 10 <= LocalSetting.ScoresLimit)
+        if (aceCount > 0 && highScores + 10 <= LocalSettingBlackJack.ScoresLimit)
         {
             highScores += 10; // Upgrade one Ace from 1 to 11
         }

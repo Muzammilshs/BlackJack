@@ -1,4 +1,4 @@
-using com.muzamil;
+using com.muzammil;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ public class CardsManager : MonoBehaviour
                 Debug.LogError("Failed to instantiate card.");
                 return;
             }
-            LocalSetting.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
+            LocalSettingBlackJack.SetPositionAndRectTransform(card, cardsStackPos, cardsStackPos.transform.parent);
             CardProperty cardProperty = card.GetComponent<CardProperty>();
             if (cardProperty == null)
             {
@@ -198,7 +198,7 @@ public class CardsManager : MonoBehaviour
 
 
 
-//using com.muzamil;
+//using com.muzammil;
 //using DG.Tweening;
 //using System.Collections;
 //using System.Collections.Generic;
@@ -247,7 +247,7 @@ public class CardsManager : MonoBehaviour
 //        {
 //            int cardIndex = GetRandomCard();
 //            GameObject card = Instantiate(allCards.Card[GetRandomCard()].gameObject);
-//            LocalSetting.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
+//            LocalSettingBlackJack.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
 //            cardsStackList.Add(card.GetComponent<CardProperty>());
 //            card.GetComponent<CardProperty>().ShowDummySkin();
 //            CreateLimitedCardsForStack();

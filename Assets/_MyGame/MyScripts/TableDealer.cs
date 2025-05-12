@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using com.muzamil;
+using com.muzammil;
 using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 public class TableDealer : MonoBehaviour
 {
@@ -128,7 +127,7 @@ public class TableDealer : MonoBehaviour
         int splitingNumber = hitStandBar.splitingTurnNumber;
         if (splitingNumber == 0)
         {
-            if (isStand || RefMgr.scoreManager.playerTotalScores_P1_Split >= LocalSetting.ScoresLimit)
+            if (isStand || RefMgr.scoreManager.playerTotalScores_P1_Split >= LocalSettingBlackJack.ScoresLimit)
             {
                 hitStandBar.splitingTurnNumber++;
                 hitStandBar.ShowHitStandBar(false);
@@ -137,7 +136,7 @@ public class TableDealer : MonoBehaviour
         }
         else if (splitingNumber == 1)
         {
-            if (isStand || RefMgr.scoreManager.playerTotalScores_P2_Split >= LocalSetting.ScoresLimit)
+            if (isStand || RefMgr.scoreManager.playerTotalScores_P2_Split >= LocalSettingBlackJack.ScoresLimit)
                 hitStandBar.splitingTurnNumber++;
         }
         splitingNumber = hitStandBar.splitingTurnNumber;
@@ -201,9 +200,9 @@ public class TableDealer : MonoBehaviour
     {
         if (resultIndex == 0)
         {
-            if (scoreManager.playerTotalScores_P1_Split > LocalSetting.ScoresLimit)
+            if (scoreManager.playerTotalScores_P1_Split > LocalSettingBlackJack.ScoresLimit)
                 UpDateWinStatus(Winner.BUST);
-            else if (scoreManager.playerTotalScores_P1_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSetting.ScoresLimit)
+            else if (scoreManager.playerTotalScores_P1_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
                 UpDateWinStatus(Winner.WON);
             else if (scoreManager.playerTotalScores_P1_Split < scoreManager.dealerTotalScores)
                 UpDateWinStatus(Winner.DEALERWINS);
@@ -212,9 +211,9 @@ public class TableDealer : MonoBehaviour
         }
         else
         {
-            if (scoreManager.playerTotalScores_P2_Split > LocalSetting.ScoresLimit)
+            if (scoreManager.playerTotalScores_P2_Split > LocalSettingBlackJack.ScoresLimit)
                 UpDateWinStatus(Winner.BUST);
-            else if (scoreManager.playerTotalScores_P2_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSetting.ScoresLimit)
+            else if (scoreManager.playerTotalScores_P2_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
                 UpDateWinStatus(Winner.WON);
             else if (scoreManager.playerTotalScores_P2_Split < scoreManager.dealerTotalScores)
                 UpDateWinStatus(Winner.DEALERWINS);
@@ -229,9 +228,9 @@ public class TableDealer : MonoBehaviour
 
         if (isJackpot)
             UpDateWinStatus(Winner.JACKPOT);
-        else if (scoreManager.playerTotalScores > LocalSetting.ScoresLimit)
+        else if (scoreManager.playerTotalScores > LocalSettingBlackJack.ScoresLimit)
             UpDateWinStatus(Winner.BUST);
-        else if (scoreManager.playerTotalScores > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSetting.ScoresLimit)
+        else if (scoreManager.playerTotalScores > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
             UpDateWinStatus(Winner.WON);
         else if (scoreManager.playerTotalScores < scoreManager.dealerTotalScores)
             UpDateWinStatus(Winner.DEALERWINS);
@@ -265,7 +264,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, 1));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
-                LocalSetting.TotalGamesLost++;
+                LocalSettingBlackJack.TotalGamesLost++;
                 break;
             case Winner.PUSH:
                 //Debug.Log("Match tie");
@@ -279,7 +278,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, 2));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 2));
-                LocalSetting.TotalTieGames++;
+                LocalSettingBlackJack.TotalTieGames++;
                 break;
             case Winner.JACKPOT:
                 //Debug.Log("Jackpot");
@@ -292,7 +291,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, 0));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
-                LocalSetting.TotalJackPOT++;
+                LocalSettingBlackJack.TotalJackPOT++;
                 break;
             case Winner.BUST:
                 //Debug.Log("Busted");
@@ -303,7 +302,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, 1));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
-                LocalSetting.TotalGamesLost++;
+                LocalSettingBlackJack.TotalGamesLost++;
                 break;
             case Winner.WON:
                 //Debug.Log("Won");
@@ -317,7 +316,7 @@ public class TableDealer : MonoBehaviour
                     StartCoroutine(CloneAndSendChips(delayTime, 0));
                 else
                     StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
-                LocalSetting.TotalGamesWon++;
+                LocalSettingBlackJack.TotalGamesWon++;
                 break;
         }
     }
@@ -391,7 +390,7 @@ public class TableDealer : MonoBehaviour
         for (int i = 0; i < bbh.betPlacedChips.Count; i++)
         {
             GameObject chip = Instantiate(bbh.betPlacedChips[i]);
-            LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+            LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
             bbh.betPlacedChips[i].SetActive(false);
             playChipAnimation(chip, finalPos.gameObject);
             yield return new WaitForSeconds(0.01f);
@@ -422,7 +421,7 @@ public class TableDealer : MonoBehaviour
             for (int i = 0; i < bbh.betPlacedChips_1_Split.Count; i++)
             {
                 GameObject chip = Instantiate(bbh.betPlacedChips_1_Split[i]);
-                LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+                LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
                 bbh.betPlacedChips_1_Split[i].SetActive(false);
                 playChipAnimation(chip, finalPos.gameObject);
                 yield return new WaitForSeconds(0.01f);
@@ -433,7 +432,7 @@ public class TableDealer : MonoBehaviour
             for (int i = 0; i < bbh.betPlacedChips_2_Split.Count; i++)
             {
                 GameObject chip = Instantiate(bbh.betPlacedChips_2_Split[i]);
-                LocalSetting.SetPosAndRect(chip, initialPos, initialPos.transform.parent);
+                LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
                 bbh.betPlacedChips_2_Split[i].SetActive(false);
                 playChipAnimation(chip, finalPos.gameObject);
                 yield return new WaitForSeconds(0.01f);
@@ -454,8 +453,8 @@ public class TableDealer : MonoBehaviour
         playerCards_1_Split.Add(playerCards[0]);
         playerCards_2_Split.Add(playerCards[1]);
         playerCards.Clear();
-        LocalSetting.SetPosAndRect(playerCards_1_Split[0].gameObject, playerCardPos_P1_Split, playerCardPos_P1_Split.parent);
-        LocalSetting.SetPosAndRect(playerCards_2_Split[0].gameObject, playerCardPos_P2_Split, playerCardPos_P2_Split.parent);
+        LocalSettingBlackJack.SetPositionAndRectTransform(playerCards_1_Split[0].gameObject, playerCardPos_P1_Split, playerCardPos_P1_Split.parent);
+        LocalSettingBlackJack.SetPositionAndRectTransform(playerCards_2_Split[0].gameObject, playerCardPos_P2_Split, playerCardPos_P2_Split.parent);
         RefMgr.scoreManager.SplitPlayerScores();
     }
 }

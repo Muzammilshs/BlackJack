@@ -9,15 +9,15 @@ public class Purchase : MonoBehaviour
 {
     public GameObject inAppBtn;
     public ProductIDs[] productIDs;
-    IAPManager iapManager;
-    //public IAPManager iapManager;
+    IAPManagerBJ iapManager;
+    //public IAPManagerBJ iapManager;
     [SerializeField] MenuController menuController;
 
     void Start()
     {
 
-        iapManager = GetComponent<IAPManager>();
-        Dictionary<float, float> dict = LocalSetting.dict;
+        iapManager = GetComponent<IAPManagerBJ>();
+        Dictionary<float, float> dict = LocalSettingBlackJack.dict;
         for (int i = 0; i < dict.Count; i++)
         {
             GameObject btn = Instantiate(inAppBtn.gameObject, inAppBtn.transform.parent);
@@ -26,7 +26,7 @@ public class Purchase : MonoBehaviour
             btnThings.price.text = dict.Values.ElementAt(i).ToString() + " $";
             btnThings.IAPBtn.onClick.AddListener(() =>
             {
-                iapManager.BuyProductID(LocalSetting.coins + btnThings.coinsQuantity.text);
+                iapManager.BuyProductID(LocalSettingBlackJack.coins + btnThings.coinsQuantity.text);
             });
             btn.name = btnThings.price.text;
             btn.SetActive(true);
@@ -44,7 +44,7 @@ public class Purchase : MonoBehaviour
     int currentIndex;
     public void OnButtonClick(int buttonIndex)
     {
-        SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.ButtonSound);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
 
         currentIndex = buttonIndex;
         //iapManager.OnPurchaseSuccess = AddAmount;
@@ -56,7 +56,7 @@ public class Purchase : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-            LocalSetting.SetTotalCash(/*LocalSetting.GetTotalCash() +*/ productIDs[index].rewardAmount);
+            LocalSettingBlackJack.SetTotalCash(/*LocalSettingBlackJack.GetTotalCash() +*/ productIDs[index].rewardAmount);
             menuController.UpDateTotalChipsTxts();
         }
         else
@@ -69,7 +69,7 @@ public class Purchase : MonoBehaviour
 
     public void AddIAPAmount(int coins)
     {
-        LocalSetting.SetTotalCash(coins);
+        LocalSettingBlackJack.SetTotalCash(coins);
         //iapManager.OnPurchaseSuccess = null;
 
         // Purchase success message show here

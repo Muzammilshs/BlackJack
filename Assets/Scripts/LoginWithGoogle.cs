@@ -195,7 +195,7 @@ public class LoginWithGoogle : MonoBehaviour
                 {
                     Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
                     Username.text = $"Coins: {updatedCash}";
-                    LocalSetting.GetTotalCash();
+                    LocalSettingBlackJack.GetTotalCash();
                     if (SceneManager.GetActiveScene().buildIndex == 0)
                     {
                         menuController.UpDateTotalChipsTxts();

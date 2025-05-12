@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Purchasing;
 using System.Linq;
 
-public class IAPManager : MonoBehaviour, IStoreListener
+public class IAPManagerBJ : MonoBehaviour, IStoreListener
 {
     private static IStoreController m_StoreController;
     private static IExtensionProvider m_StoreExtensionProvider;
@@ -28,11 +28,11 @@ public class IAPManager : MonoBehaviour, IStoreListener
     void InitializePurchasing()
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-        Dictionary<float, float> dict = LocalSetting.dict;
+        Dictionary<float, float> dict = LocalSettingBlackJack.dict;
 
         for (int i = 0; i < dict.Count; i++)
         {
-            builder.AddProduct(LocalSetting.coins + dict.Keys.ElementAt(i).ToString(), ProductType.Consumable);
+            builder.AddProduct(LocalSettingBlackJack.coins + dict.Keys.ElementAt(i).ToString(), ProductType.Consumable);
         }
 
         UnityPurchasing.Initialize(this, builder);
@@ -80,7 +80,7 @@ public class IAPManager : MonoBehaviour, IStoreListener
         if (!string.IsNullOrEmpty(args.purchasedProduct.definition.id))
         {
             
-            if (args.purchasedProduct.definition.id.Contains(LocalSetting.coins))
+            if (args.purchasedProduct.definition.id.Contains(LocalSettingBlackJack.coins))
             {
                 int quantity;
                 quantity = int.Parse(args.purchasedProduct.definition.id.Split('_')[1]);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public static class LocalSetting
+public static class LocalSettingBlackJack
 {
     const string TOTALCASHKEY = "total_cash";
     public static int firstTimeAmount = 300;
@@ -160,7 +160,7 @@ public static class LocalSetting
         return int.Parse(stg);
     }
 
-    public static void SetPosAndRect(GameObject InstantiatedObj, RectTransform ALReadyObjPos, Transform Parentobj)
+    public static void SetPositionAndRectTransform(GameObject InstantiatedObj, RectTransform ALReadyObjPos, Transform Parentobj)
     {
         InstantiatedObj.transform.SetParent(Parentobj);
         RectTransform MyPlayerRectTransform = InstantiatedObj.GetComponent<RectTransform>();

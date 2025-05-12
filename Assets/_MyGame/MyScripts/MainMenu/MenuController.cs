@@ -36,8 +36,8 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.BGMusic, true);
-        SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.BridSound, true);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BGMusic, true);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BridSound, true);
         exitPanel.SetActive(false);
         //menuController[mainMenuIndex].SetActive(true);
         UpDateTotalChipsTxts();
@@ -69,7 +69,7 @@ public class MenuController : MonoBehaviour
     public void UpDateTotalChipsTxts()
     {
         foreach (var txt in totalChipsTxt)
-            txt.text = LocalSetting.GetTotalCash().ToString("N0");
+            txt.text = LocalSettingBlackJack.GetTotalCash().ToString("N0");
     }
     public void UpdateInStartTxts()
     {
@@ -99,10 +99,10 @@ public class MenuController : MonoBehaviour
 
     void UpdateGameStats()
     {
-        totalGamesPlayedTxt.text = $"PLAYED : {LocalSetting.TotalGamesPlayed}";
-        totalGamesWonTxt.text = $"WON : {LocalSetting.TotalGamesWon}";
-        totalGamesLostTxt.text = $"LOST : {LocalSetting.TotalGamesLost}";
-        totalTieGamesTxt.text = $"TIE : {LocalSetting.TotalTieGames}";
-        totalJackpotsTxt.text = $"JACKPOT : {LocalSetting.TotalJackPOT}";
+        totalGamesPlayedTxt.text = $"PLAYED : {LocalSettingBlackJack.TotalGamesPlayed}";
+        totalGamesWonTxt.text = $"WON : {LocalSettingBlackJack.TotalGamesWon}";
+        totalGamesLostTxt.text = $"LOST : {LocalSettingBlackJack.TotalGamesLost}";
+        totalTieGamesTxt.text = $"TIE : {LocalSettingBlackJack.TotalTieGames}";
+        totalJackpotsTxt.text = $"JACKPOT : {LocalSettingBlackJack.TotalJackPOT}";
     }
 }

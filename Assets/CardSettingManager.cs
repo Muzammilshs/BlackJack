@@ -15,12 +15,12 @@ public class CardSettingManager : MonoBehaviour
     {
         for (int i = 0; i < cardsContainer.CardBackDesigns.Length; i++)
         {
-            //cardDesigns[LocalSetting.SelectedDesignIndex].cardCardDesign.GetComponent<Image>().sprite = cardsContainer.CardBackDesigns[i];
+            //cardDesigns[LocalSettingBlackJack.SelectedDesignIndex].cardCardDesign.GetComponent<Image>().sprite = cardsContainer.CardBackDesigns[i];
             cardDesigns[i].cardCardDesign.GetComponent<Image>().sprite = cardsContainer.CardBackDesigns[i];
             cardDesigns[i].checkMark.SetActive(false);
         }
-        Debug.LogError(LocalSetting.SelectedDesignIndex);
-        cardDesigns[LocalSetting.SelectedDesignIndex].checkMark.SetActive(true);
+        Debug.LogError(LocalSettingBlackJack.SelectedDesignIndex);
+        cardDesigns[LocalSettingBlackJack.SelectedDesignIndex].checkMark.SetActive(true);
     }
 
     public void OnToggleChanged()
@@ -29,7 +29,7 @@ public class CardSettingManager : MonoBehaviour
         for (int i = 0; i < cardDesigns.Length; i++)
         {
             bool isToggleOn = clickedObject == cardDesigns[i].cardCardDesign.gameObject;
-            if (isToggleOn) LocalSetting.SelectedDesignIndex = i;
+            if (isToggleOn) LocalSettingBlackJack.SelectedDesignIndex = i;
             cardDesigns[i].checkMark.SetActive(isToggleOn);
         }
     }

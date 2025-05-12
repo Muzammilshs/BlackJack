@@ -1,5 +1,5 @@
 
-namespace com.muzamil
+namespace com.muzammil
 {
     public static class CardState
     {

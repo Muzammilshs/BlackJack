@@ -49,7 +49,7 @@ public class DealerAIPlay : MonoBehaviour
 
     bool isDropNextCard()
     {
-        if (rm.scoreManager.dealerTotalScores >= LocalSetting.ScoresLimit - 3)
+        if (rm.scoreManager.dealerTotalScores >= LocalSettingBlackJack.ScoresLimit - 3)
             return false;
         else if (isJackPot)
             return false;

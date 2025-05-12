@@ -20,7 +20,7 @@ public class PotHandler : MonoBehaviour
     int doubleBetPlaced;
     void Start()
     {
-        UpDateCashTxt(LocalSetting.GetTotalCash());
+        UpDateCashTxt(LocalSettingBlackJack.GetTotalCash());
         totalbetPlacedTxt.gameObject.SetActive(false);
         totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
         totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
@@ -70,7 +70,7 @@ public class PotHandler : MonoBehaviour
 
     public bool IsHaveAmount(int amount)
     {
-        return amount <= LocalSetting.GetTotalCash() ? true : false;
+        return amount <= LocalSettingBlackJack.GetTotalCash() ? true : false;
     }
     public int GetPotAmount { get { return totalBetPlaced; } }
     public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
@@ -104,11 +104,11 @@ public class PotHandler : MonoBehaviour
     void UpDateTotalCash(int amount, bool isReward)
     {
         int prevAmount = 0;
-        prevAmount = LocalSetting.GetTotalCash();
+        prevAmount = LocalSettingBlackJack.GetTotalCash();
         if (!isReward)
             amount = -amount;
-        LocalSetting.SetTotalCash(amount);
-        UpdateCashAmount(prevAmount, LocalSetting.GetTotalCash());
+        LocalSettingBlackJack.SetTotalCash(amount);
+        UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCash());
 
         Debug.Log("Setting Local Cash " + amount);
     }

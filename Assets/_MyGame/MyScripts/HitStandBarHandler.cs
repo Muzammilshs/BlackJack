@@ -1,5 +1,5 @@
 using UnityEngine;
-using com.muzamil;
+using com.muzammil;
 
 public class HitStandBarHandler : MonoBehaviour
 {
@@ -40,7 +40,7 @@ public class HitStandBarHandler : MonoBehaviour
 
         //Debug.LogError("Player scores after 4 card: " + playerScores + "     Dealer Scores: " + dealerScores);
         // When win with first 2 cards
-        if (playerScores == LocalSetting.ScoresLimit || dealerScores == LocalSetting.ScoresLimit)
+        if (playerScores == LocalSettingBlackJack.ScoresLimit || dealerScores == LocalSettingBlackJack.ScoresLimit)
         {
             ShowHitStandBar(false);
             if (playerScores > dealerScores)

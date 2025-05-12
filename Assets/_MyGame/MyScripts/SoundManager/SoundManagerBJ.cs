@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManagerBJ : MonoBehaviour
 {
     [SerializeField]
     SoundMgrScriptable AllSoundsAsset;
@@ -9,14 +9,14 @@ public class SoundManager : MonoBehaviour
     public static SoundMgrScriptable AllSounds;
 
     #region Creating Instance
-    private static SoundManager _instance;
-    public static SoundManager Instance
+    private static SoundManagerBJ _instance;
+    public static SoundManagerBJ Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindFirstObjectByType<SoundManager>();
+                _instance = FindFirstObjectByType<SoundManagerBJ>();
                 DontDestroyOnLoad(_instance.gameObject);
             }
             return _instance;
@@ -93,7 +93,7 @@ public class SoundManager : MonoBehaviour
             AudioSourcePoolParent = poolObj.transform;
             DontDestroyOnLoad(poolObj); // <-- This line ensures persistence between scenes
         }
-
+        
         for (int i = 0; i < AudioSourcePoolParent.childCount; i++)
         {
             AudioSource source = AudioSourcePoolParent.GetChild(i).GetComponent<AudioSource>();

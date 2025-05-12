@@ -19524,7 +19524,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 500
+  m_text: 50
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 01bbca474409b0746969c4d30e57117d, type: 2}
   m_sharedMaterial: {fileID: 1440633774769984625, guid: 01bbca474409b0746969c4d30e57117d, type: 2}
@@ -29217,6 +29217,7 @@ MonoBehaviour:
   - {fileID: 1564073640}
   - {fileID: 1139297484}
   - {fileID: 820238264}
+  - {fileID: 1034923419}
   totalGamesPlayedTxt: {fileID: 45204987}
   totalGamesWonTxt: {fileID: 647590623}
   totalGamesLostTxt: {fileID: 1497612319}

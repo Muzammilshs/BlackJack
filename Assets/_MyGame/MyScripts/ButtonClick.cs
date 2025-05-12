@@ -15,6 +15,6 @@ public class ButtonClick : MonoBehaviour
 
     public void PlayButtonSound()
     {
-        SoundManager.Instance.PlayAudioClip(SoundManager.AllSounds.ButtonSound);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
     }
 }
