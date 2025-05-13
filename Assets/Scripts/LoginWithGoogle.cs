@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 
 public class LoginWithGoogle : MonoBehaviour
 {
-    public string GoogleAPI = "382515883778-um96eqqrtp23j6sme0t0kgspheqskrg7.apps.googleusercontent.com";
+    public string GoogleAPI = "169344897492-ca16hmmio829q8rllakn574heqmvdg1a.apps.googleusercontent.com";
     private GoogleSignInConfiguration configuration;
 
     Firebase.Auth.FirebaseAuth auth;
@@ -72,6 +72,16 @@ public class LoginWithGoogle : MonoBehaviour
             databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
             auth = FirebaseAuth.DefaultInstance;
             Debug.Log("Firebase Initialized");
+
+            string id = PlayerPrefs.GetString("UserName");
+            if (!string.IsNullOrEmpty(id))
+            {
+                userId = id;
+                Username.text = PlayerPrefs.GetString("DisplayName");                
+                UserEmail.text = PlayerPrefs.GetString("Email");
+                AddCoins(0);
+            }
+
 
 #if UNITY_EDITOR
             AddCoins(0);
@@ -134,6 +144,8 @@ public class LoginWithGoogle : MonoBehaviour
             UserEmail.text = user.Email;
             userId = user.UserId;
             PlayerPrefs.SetString("UserName", userId);
+            PlayerPrefs.SetString("Email", user.Email);
+            PlayerPrefs.SetString("DisplayName", user.DisplayName);
 
             Debug.Log($"User Info: {user.DisplayName} ({user.Email}), ID: {userId}");
 
@@ -150,6 +162,9 @@ public class LoginWithGoogle : MonoBehaviour
 
         Debug.Log("Login() function end reached.");
     }
+
+
+
 
 
     public void AddCoins(int newCoins)
@@ -186,7 +201,7 @@ public class LoginWithGoogle : MonoBehaviour
             }
 
             int updatedCash = currentCash + newCoins;
-          
+
             totalCash = updatedCash;
 
             databaseReference.Child("users").Child(userId).Child("totalCash").SetValueAsync(updatedCash).ContinueWithOnMainThread(saveTask =>

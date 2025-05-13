@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BJGameIcon_0: 7585948753551679486
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
