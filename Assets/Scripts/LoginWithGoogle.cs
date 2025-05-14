@@ -35,7 +35,7 @@ public class LoginWithGoogle : MonoBehaviour
     public static LoginWithGoogle instance;
     public int totalCash;
 
-
+    public GameObject loadingPanel;
 
     public GameObject googleLoginPanel;
     public MenuController menuController;
@@ -52,7 +52,7 @@ public class LoginWithGoogle : MonoBehaviour
     }
     void Start()
     {
-
+        loadingPanel.SetActive(true);
 
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
@@ -77,11 +77,15 @@ public class LoginWithGoogle : MonoBehaviour
             if (!string.IsNullOrEmpty(id))
             {
                 userId = id;
-                Username.text = PlayerPrefs.GetString("DisplayName");                
+                Username.text = PlayerPrefs.GetString("DisplayName");
                 UserEmail.text = PlayerPrefs.GetString("Email");
                 AddCoins(0);
             }
+            else
+            {
 
+                loadingPanel.SetActive(false);
+            }
 
 #if UNITY_EDITOR
             AddCoins(0);
@@ -102,6 +106,7 @@ public class LoginWithGoogle : MonoBehaviour
     public async void LoginAsync()
     {
         Username.text = "Logging in...";
+
         Debug.Log("Login started");
 
         if (!isGoogleSignInInitialized)
@@ -128,8 +133,8 @@ public class LoginWithGoogle : MonoBehaviour
             Username.text = "Google Sign-In Success: " + googleUser.UserId;
 
             Debug.Log("Creating Firebase Credential...");
+            loadingPanel.SetActive(true);
             Credential credential = Firebase.Auth.GoogleAuthProvider.GetCredential(googleUser.IdToken, null);
-
             Debug.Log("Signing into Firebase with Credential...");
             FirebaseUser newUser = await auth.SignInWithCredentialAsync(credential);
             Debug.Log("Firebase Authentication Success");
@@ -158,6 +163,7 @@ public class LoginWithGoogle : MonoBehaviour
         {
             Debug.LogError("Login Failed: " + ex.Message);
             Username.text = "Login failed.";
+            loadingPanel.SetActive(false);
         }
 
         Debug.Log("Login() function end reached.");
@@ -214,6 +220,8 @@ public class LoginWithGoogle : MonoBehaviour
                     if (SceneManager.GetActiveScene().buildIndex == 0)
                     {
                         menuController.UpDateTotalChipsTxts();
+                        if (loadingPanel.activeInHierarchy)
+                            loadingPanel.SetActive(false);
                     }
                     else
                     {

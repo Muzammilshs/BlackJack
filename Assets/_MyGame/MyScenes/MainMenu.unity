@@ -21782,8 +21782,9 @@ MonoBehaviour:
   UserEmail: {fileID: 64590971}
   UserProfilePic: {fileID: 492465500}
   googleAuth: {fileID: 660612675}
-  userId: 
+  userId: Xvstlr1dZIQDrSH7WL6xBSb34yV2
   totalCash: 0
+  loadingPanel: {fileID: 470699689}
   googleLoginPanel: {fileID: 23216903}
   menuController: {fileID: 985408151}
 --- !u!4 &757512694
@@ -23228,7 +23229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183544, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 406632, guid: 6d0acc00cc82d436b9d11446d2ddfef6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -23627,11 +23628,11 @@ RectTransform:
   - {fileID: 1216397566}
   - {fileID: 1377518499511450579}
   - {fileID: 221064620}
-  - {fileID: 470699690}
   - {fileID: 352360662}
   - {fileID: 696562495}
   - {fileID: 2133566885}
   - {fileID: 1886480663}
+  - {fileID: 470699690}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -49780,7 +49781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1754170791
 RectTransform:
   m_ObjectHideFlags: 0
@@ -50861,7 +50862,7 @@ MonoBehaviour:
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
   delay: 0
-  duration: 1
+  duration: 2
   easeType: 35
   easeCurve:
     serializedVersion: 2
