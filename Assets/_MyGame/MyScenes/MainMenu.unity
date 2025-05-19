@@ -4337,7 +4337,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 19.334991, y: -72.5}
+  m_AnchoredPosition: {x: 19.33496, y: -72.5}
   m_SizeDelta: {x: 218.71, y: 90}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &162087715
@@ -21782,7 +21782,7 @@ MonoBehaviour:
   UserEmail: {fileID: 64590971}
   UserProfilePic: {fileID: 492465500}
   googleAuth: {fileID: 660612675}
-  userId: 
+  userId: Muz
   totalCash: 0
   loadingPanel: {fileID: 470699689}
   googleLoginPanel: {fileID: 23216903}
@@ -49830,7 +49830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1754170791
 RectTransform:
   m_ObjectHideFlags: 0
