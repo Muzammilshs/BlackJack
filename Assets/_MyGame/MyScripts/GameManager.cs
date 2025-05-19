@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Rm refMgr;
 
+    [HideInInspector]
     public Sprite dummyCardSprite;
     public GameObject shopPanel;
 
