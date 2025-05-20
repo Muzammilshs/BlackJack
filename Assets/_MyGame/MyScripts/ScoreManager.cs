@@ -8,18 +8,41 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] Rm rm;
     [ShowOnly]
-    public int playerTotalScores, playerTotalScores_P1_Split, playerTotalScores_P2_Split, dealerTotalScores;
+    public int dealerTotalScores,
+        playerTotalScores,
+        playerTotalScores_P1_Split,
+        playerTotalScores_P2_Split,
+        playerTotalScores_P1_P1_Split,
+        playerTotalScores_P1_P2_Split,
+        playerTotalScores_P2_P1_Split,
+        playerTotalScores_P2_P2_Split;
     [ShowOnly]
-    public int playerTotalScoresAce, playerTotalScoresAce_P1_Split, playerTotalScoresAce_P2_Split, dealerTotalScoresAce;
+    public int dealerTotalScoresAce,
+        playerTotalScoresAce,
+        playerTotalScoresAce_P1_Split,
+        playerTotalScoresAce_P2_Split,
+        playerTotalScoresAce_P1_P1_Split,
+        playerTotalScoresAce_P1_P2_Split,
+        playerTotalScoresAce_P2_P1_Split,
+        playerTotalScoresAce_P2_P2_Split;
+
+    [SerializeField] TMP_Text dealerScores;
     [SerializeField] TMP_Text playerScores;
     [SerializeField] TMP_Text playerScoresTxt_P1_Split;
     [SerializeField] TMP_Text playerScoresTxt_P2_Split;
-    [SerializeField] TMP_Text dealerScores;
+    [SerializeField] TMP_Text playerScoresTxt_P1_P1_Split;
+    [SerializeField] TMP_Text playerScoresTxt_P1_P2_Split;
+    [SerializeField] TMP_Text playerScoresTxt_P2_P1_Split;
+    [SerializeField] TMP_Text playerScoresTxt_P2_P2_Split;
 
+    [SerializeField] GameObject dealerScoresParent;
     [SerializeField] GameObject playerScoresParent;
     [SerializeField] GameObject playerScoresParent_P1_Split;
     [SerializeField] GameObject playerScoresParent_P2_Split;
-    [SerializeField] GameObject dealerScoresParent;
+    [SerializeField] GameObject playerScoresParent_P1_P1_Split;
+    [SerializeField] GameObject playerScoresParent_P1_P2_Split;
+    [SerializeField] GameObject playerScoresParent_P2_P1_Split;
+    [SerializeField] GameObject playerScoresParent_P2_P2_Split;
 
 
     public void ShowScoreObjects(bool isShow)
@@ -31,6 +54,12 @@ public class ScoreManager : MonoBehaviour
 
             playerTotalScores_P1_Split = 0;
             playerTotalScores_P2_Split = 0;
+
+            playerTotalScores_P1_P1_Split = 0;
+            playerTotalScores_P1_P2_Split = 0;
+            playerTotalScores_P2_P1_Split = 0;
+            playerTotalScores_P2_P2_Split = 0;
+
         }
         if (!rm.hitStandBarHandler.isSplitting)
         {

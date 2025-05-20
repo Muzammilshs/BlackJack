@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (LoginWithGoogle.instance == null){
+            Debug.LogError("LoginWithGoogle instance is null, going back to scene Mainmenu");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
         exitPanel.SetActive(false);
     }
     public void SetCardDesign()

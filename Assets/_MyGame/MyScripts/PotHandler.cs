@@ -13,6 +13,10 @@ public class PotHandler : MonoBehaviour
     public RectTransform totalbetPlacedTxt_Pos;
     public TMP_Text totalbetPlacedTxt_P1_split;
     public TMP_Text totalbetPlacedTxt_P2_split;
+    public TMP_Text totalbetPlacedTxt_P1_P1_split;
+    public TMP_Text totalbetPlacedTxt_P1_P2_split;
+    public TMP_Text totalbetPlacedTxt_P2_P1_split;
+    public TMP_Text totalbetPlacedTxt_P2_P2_split;
     int totalBetPlaced;
     int totalBetPlaced_1_Split;
     int totalBetPlaced_2_Split;

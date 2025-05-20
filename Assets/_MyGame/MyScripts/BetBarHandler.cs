@@ -20,8 +20,15 @@ public class BetBarHandler : MonoBehaviour
     [SerializeField] GameObject betBarPos1;
     [SerializeField] GameObject betBarPos2;
     [SerializeField] RectTransform bettedChipsPos;
-    public RectTransform bettedChipsPos_1_Split;
-    public RectTransform bettedChipsPos_2_Split;
+    [SerializeField] RectTransform bettedChipsPos_1_Split;
+    [SerializeField] RectTransform bettedChipsPos_2_Split;
+    [Header("Double splitting objects")]
+    [SerializeField] RectTransform bettedChipsPos_1_1_Split;
+    [SerializeField] RectTransform bettedChipsPos_1_2_Split;
+    [SerializeField] RectTransform bettedChipsPos_2_1_Split;
+    [SerializeField] RectTransform bettedChipsPos_2_2_Split;
+
+
     [SerializeField] RectTransform dealerBettedChipsPos;
     [SerializeField] RectTransform dealerBettedChipsPos_P1_Split;
     [SerializeField] RectTransform dealerBettedChipsPos_P2_Split;
@@ -29,13 +36,16 @@ public class BetBarHandler : MonoBehaviour
     [SerializeField] RectTransform playerBettedChipsPos_P1_Split;
     [SerializeField] RectTransform playerBettedChipsPos_P2_Split;
 
-    public List<GameObject> chipsObjects;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips_1_Split;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips_2_Split;
+    [ShowOnly] public List<GameObject> chipsObjects;
+    [ShowOnly] public List<GameObject> betPlacedChips;
+    [ShowOnly] public List<GameObject> betPlacedChips_1_Split;
+    [ShowOnly] public List<GameObject> betPlacedChips_2_Split;
+
+    [Header("Double splitting objects")]
+    [ShowOnly] public List<GameObject> betPlacedChips_1_1_Split;
+    [ShowOnly] public List<GameObject> betPlacedChips_1_2_Split;
+    [ShowOnly] public List<GameObject> betPlacedChips_2_1_Split;
+    [ShowOnly] public List<GameObject> betPlacedChips_2_2_Split;
     List<GameObject> doubleBetPlacedChips;
 
     void Start()

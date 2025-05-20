@@ -11,6 +11,7 @@ public class HitStandBarHandler : MonoBehaviour
     [ShowOnly] public bool isDoubleBet;
 
     [ShowOnly] public bool isSplitting;
+    public static int splitStage = 0; // 0 = first stage, 1 = second stage, 2 = third stage
 
     [ShowOnly] public int splitingTurnNumber;
 
@@ -96,6 +97,10 @@ public class HitStandBarHandler : MonoBehaviour
             rm.gameStateManager.UpDateGameState(GameState.State.STAND);
         else
             rm.tableDealer.OnSplitCheckNextTurn(true);
+        if(splitStage > 0)
+        {
+            splitStage++;
+        }
     }
 
     public void OnSplitBtnClick()
@@ -106,6 +111,10 @@ public class HitStandBarHandler : MonoBehaviour
             return;
         }
         rm.potHandler.BetAmountDeduction(rm.potHandler.GetPotAmount);
+        if (!isSplitting)
+            splitStage = 1;
+        else
+            splitStage++;
         isSplitting = true;
         splitingTurnNumber = 0;
         rm.tableDealer.SplitCardsOnSplit();
@@ -150,5 +159,6 @@ public class HitStandBarHandler : MonoBehaviour
         isDoubleBet = false;
         doubleBtn.SetActive(false);
         splitingTurnNumber = 0;
+        splitStage = 0;
     }
 }
