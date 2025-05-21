@@ -191,6 +191,7 @@ public class LoginWithGoogle : MonoBehaviour
                 {
                     Debug.Log($"Fetched total cash: {currentCash} for user {userId}");
                     totalCash = currentCash;
+                    LocalSettingBlackJack.SetTotalCashLocal(currentCash);
                     if (MenuController.instance != null)
                         MenuController.instance.UpdateInStartTxts();
                 }
@@ -209,7 +210,7 @@ public class LoginWithGoogle : MonoBehaviour
             int updatedCash = currentCash + newCoins;
 
             totalCash = updatedCash;
-
+            LocalSettingBlackJack.SetTotalCashLocal(updatedCash);
             databaseReference.Child("users").Child(userId).Child("totalCash").SetValueAsync(updatedCash).ContinueWithOnMainThread(saveTask =>
             {
                 if (saveTask.IsCompletedSuccessfully)

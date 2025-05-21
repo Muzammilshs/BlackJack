@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PotHandler : MonoBehaviour
 {
@@ -103,14 +104,31 @@ public class PotHandler : MonoBehaviour
     #region Cash add/deduct animation 
     void UpDateTotalCash(int amount, bool isReward)
     {
+        //UpDateCashTexts();
         int prevAmount = 0;
         prevAmount = LocalSettingBlackJack.GetTotalCash();
+        LocalSettingBlackJack.SetTotalCashWithBetLocal(amount, isReward);
         if (!isReward)
             amount = -amount;
+        
         LocalSettingBlackJack.SetTotalCash(amount);
-        UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCash());
+        //UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCash());
+        UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCashLocal());
 
         Debug.Log("Setting Local Cash " + amount);
+    }
+
+    public void UpDateCashTexts()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            MenuController.instance.UpDateTotalChipsTxtsWithLocalValues();
+        }
+        else
+        {
+            Debug.LogError("updateing cash text:    " + LocalSettingBlackJack.GetTotalCashLocal());
+            Rm.Instance.potHandler.UpDateCashTxt(LocalSettingBlackJack.GetTotalCashLocal());
+        }
     }
     void UpdateCashAmount(int currentCash, int targetAmount, float duration = 1f)
     {

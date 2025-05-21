@@ -54956,7 +54956,7 @@ MonoBehaviour:
   refMgr: {fileID: 561212922}
   totalAmountTxt:
   - {fileID: 1581124023}
-  - {fileID: 1184007553}
+  - {fileID: 1305035853}
   totalbetPlacedTxt: {fileID: 1970104871}
   doubleBetPlacedTxt: {fileID: 694379639}
   totalbetPlacedTxt_Pos: {fileID: 938231908}

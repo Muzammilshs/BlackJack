@@ -65,11 +65,17 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void UpDateTotalChipsTxtsWithLocalValues()
+    {
+        foreach (var txt in totalChipsTxt)
+            txt.text = LocalSettingBlackJack.GetTotalCashLocal().ToString("N0");
 
+    }
     public void UpDateTotalChipsTxts()
     {
         foreach (var txt in totalChipsTxt)
             txt.text = LocalSettingBlackJack.GetTotalCash().ToString("N0");
+    
     }
     public void UpdateInStartTxts()
     {
@@ -80,6 +86,7 @@ public class MenuController : MonoBehaviour
         }
 
         int cash = LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : 0;
+        LocalSettingBlackJack.SetTotalCashLocal(cash);
         foreach (var txt in totalChipsTxt)
         {
             if (txt != null)

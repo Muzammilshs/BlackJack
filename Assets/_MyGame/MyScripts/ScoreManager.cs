@@ -137,7 +137,6 @@ public class ScoreManager : MonoBehaviour
             {
                 if (!rm.hitStandBarHandler.isDoubleBet)
                 {
-                    Debug.LogError("activating bar       " + playerTotalScores);
                     rm.hitStandBarHandler.ShowHitStandBar(true);
                 }
                 else

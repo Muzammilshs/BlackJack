@@ -4,6 +4,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class IAPManagerBJ : MonoBehaviour, IStoreListener
 {
@@ -85,6 +86,17 @@ public class IAPManagerBJ : MonoBehaviour, IStoreListener
                 int quantity;
                 quantity = int.Parse(args.purchasedProduct.definition.id.Split('_')[1]);
                 purchaseScript.AddIAPAmount(quantity);
+                Debug.LogError("Purchased: " + args.purchasedProduct.definition.id + "  Quantity: " + quantity);
+                //LocalSettingBlackJack.SetTotalCashWithBetLocal(quantity, true);
+                if (SceneManager.GetActiveScene().buildIndex == 0)
+                {
+                    MenuController.instance.UpDateTotalChipsTxtsWithLocalValues();
+                    LocalSettingBlackJack.SetTotalCash(quantity);
+                }
+                else
+                {
+                    Rm.Instance.potHandler.CollectReward(quantity);
+                }
             }
 
 

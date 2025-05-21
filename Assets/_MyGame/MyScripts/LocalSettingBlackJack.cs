@@ -3,6 +3,7 @@ using Firebase.Extensions;
 using Google;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -84,16 +85,40 @@ public static class LocalSettingBlackJack
     }
 
 
+    public static int SetTotalCashWithBetLocal(int amount, bool isAdd)
+    {
+        if(!isAdd)
+            amount = -amount;
+        int amountTosave = GetTotalCashLocal() + amount;
+        PlayerPrefs.SetInt(TOTALCASHKEY, amountTosave);
+        return GetTotalCashLocal();
+    }
+
+    public static void SetTotalCashLocal(int amount)
+    {
+        PlayerPrefs.SetInt(TOTALCASHKEY, amount);
+        PlayerPrefs.Save();
+    }
+    public static int GetTotalCashLocal()
+    {
+        return PlayerPrefs.GetInt(TOTALCASHKEY, firstTimeAmount);
+    }
+
     public static async Task<int> GetTotalCashAsync()
     {
         if (LoginWithGoogle.instance == null || LoginWithGoogle.instance.databaseReference == null)
         {
             Debug.Log("LoginWithGoogle instance or database reference is null. Returning default value.");
             if (LoginWithGoogle.instance == null)
-                return firstTimeAmount;
+                //return firstTimeAmount;
+                return GetTotalCashLocal();
 
-            LoginWithGoogle.instance.totalCash = firstTimeAmount;
-            return firstTimeAmount;
+            //LoginWithGoogle.instance.totalCash = firstTimeAmount;
+            //    SetTotalCashLocal(firstTimeAmount);
+            //return firstTimeAmount;
+            LoginWithGoogle.instance.totalCash = GetTotalCashLocal();
+                SetTotalCashLocal(GetTotalCashLocal());
+            return GetTotalCashLocal();
         }
         Debug.Log("GETTING CASH");
         try
@@ -108,21 +133,23 @@ public static class LocalSettingBlackJack
             {
                 Debug.Log($"Fetched total cash: {cash} for user {LoginWithGoogle.instance.userId}");
                 LoginWithGoogle.instance.totalCash = cash;
+                SetTotalCashLocal(cash);
                 return cash;
             }
             else
             {
-                Debug.LogWarning($"No total cash value found for user {LoginWithGoogle.instance.userId}. Using default: {firstTimeAmount}.");
-                LoginWithGoogle.instance.totalCash = firstTimeAmount;
-
-                return firstTimeAmount;
+                Debug.LogWarning($"No total cash value found for user {LoginWithGoogle.instance.userId}. Using default: {GetTotalCashLocal()}.");
+                LoginWithGoogle.instance.totalCash = GetTotalCashLocal();
+                SetTotalCashLocal(GetTotalCashLocal());
+                return GetTotalCashLocal();
             }
         }
         catch (Exception ex)
         {
             Debug.LogError($"Failed to fetch total cash: {ex}");
-            LoginWithGoogle.instance.totalCash = firstTimeAmount;
-            return firstTimeAmount;
+            LoginWithGoogle.instance.totalCash = GetTotalCashLocal();
+            SetTotalCashLocal(GetTotalCashLocal());
+            return GetTotalCashLocal();
         }
     }
 
@@ -144,7 +171,7 @@ public static class LocalSettingBlackJack
             var asyncOperation = WaitForTaskCompletion(cashFetchTask);
             while (!asyncOperation.MoveNext()) { }
         }
-
+        SetTotalCashLocal(LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : firstTimeAmount);
         return LoginWithGoogle.instance != null ? LoginWithGoogle.instance.totalCash : firstTimeAmount;
     }
 

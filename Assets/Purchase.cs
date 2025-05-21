@@ -8,7 +8,7 @@ using System.Linq;
 public class Purchase : MonoBehaviour
 {
     public GameObject inAppBtn;
-    public ProductIDs[] productIDs;
+    //public ProductIDs[] productIDs;
     IAPManagerBJ iapManager;
     //public IAPManagerBJ iapManager;
     [SerializeField] MenuController menuController;
@@ -54,14 +54,14 @@ public class Purchase : MonoBehaviour
 
     public void AddAmount(int index)
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            LocalSettingBlackJack.SetTotalCash(/*LocalSettingBlackJack.GetTotalCash() +*/ productIDs[index].rewardAmount);
-            menuController.UpDateTotalChipsTxts();
-        }
-        else
-            Rm.Instance.potHandler.CollectReward(productIDs[index].rewardAmount);
-        Debug.LogError("Added Amount: " + productIDs[index].rewardAmount + "      Index is: " + index);
+        //if (SceneManager.GetActiveScene().buildIndex == 0)
+        //{
+        //    LocalSettingBlackJack.SetTotalCash(/*LocalSettingBlackJack.GetTotalCash() +*/ productIDs[index].rewardAmount);
+        //    menuController.UpDateTotalChipsTxts();
+        //}
+        //else
+        //    Rm.Instance.potHandler.CollectReward(productIDs[index].rewardAmount);
+        //Debug.LogError("Added Amount: " + productIDs[index].rewardAmount + "      Index is: " + index);
         //iapManager.OnPurchaseSuccess = null;
 
         // Purchase success message show here
