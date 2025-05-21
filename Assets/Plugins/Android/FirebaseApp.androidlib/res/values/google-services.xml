@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_android_client_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://ukazimblackjack-default-rtdb.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">169344897492</string>
+  <string name="google_storage_bucket" translatable="false">ukazimblackjack.firebasestorage.app</string>
+  <string name="project_id" translatable="false">ukazimblackjack</string>
+  <string name="google_api_key" translatable="false">AIzaSyDxzSJz0RM5NRu6zJ-Ek1sG3HsGLm_PL_k</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDxzSJz0RM5NRu6zJ-Ek1sG3HsGLm_PL_k</string>
+  <string name="google_app_id" translatable="false">1:169344897492:android:f7be85ac0f2944ac008641</string>
+  <string name="default_android_client_id" translatable="false">169344897492-7he95pr3iqlht5atmpfkmnbll2c8cnsd.apps.googleusercontent.com</string>
+  <string name="default_web_client_id" translatable="false">169344897492-ca16hmmio829q8rllakn574heqmvdg1a.apps.googleusercontent.com</string>
+</resources>
