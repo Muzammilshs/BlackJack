@@ -7,13 +7,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Rm refMgr;
 
-    public Sprite dummyCardSprite;
+   [HideInInspector] public Sprite dummyCardSprite;
     public GameObject shopPanel;
 
     [SerializeField] GameObject exitPanel;
 
     private void Start()
     {
+        if (LoginWithGoogle.instance == null)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         exitPanel.SetActive(false);
     }
     public void SetCardDesign()
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour
     public void OnHomeBtnClick()
     {
         if (LoginWithGoogle.instance != null)
-            DestroyImmediate(LoginWithGoogle.instance.gameObject);        
+            DestroyImmediate(LoginWithGoogle.instance.gameObject);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

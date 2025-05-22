@@ -18,6 +18,11 @@ public class PotHandler : MonoBehaviour
     int totalBetPlaced_1_Split;
     int totalBetPlaced_2_Split;
 
+    [SerializeField] TMP_Text _insuranceAmountTxt;
+
+    int _insuranceBetAmount;
+    public int GetInsuranceAmount { get { return _insuranceBetAmount; } }
+
     int doubleBetPlaced;
     void Start()
     {
@@ -37,6 +42,11 @@ public class PotHandler : MonoBehaviour
         doubleBetPlacedTxt.gameObject.SetActive(false);
     }
 
+    public void ResetInsuranceAmount()
+    {
+        _insuranceBetAmount = 0;
+        _insuranceAmountTxt.transform.parent.gameObject.SetActive(false);
+    }
     public void PlaceBetAmount(int amount)
     {
         if (!IsHaveAmount(amount))
@@ -90,6 +100,33 @@ public class PotHandler : MonoBehaviour
         totalbetPlacedTxt.gameObject.SetActive(false);
     }
 
+    public void SetInsuranceAmount(bool isInsured)
+    {
+        if (isInsured)
+        {
+            int requiredAmount = refMgr.potHandler.GetPotAmount / 2;
+            if (refMgr.potHandler.GetPotAmount % 2 != 0)
+                requiredAmount += 1;
+            if (refMgr.potHandler.IsHaveAmount(requiredAmount))
+            {
+                _insuranceBetAmount = requiredAmount;
+                BetAmountDeduction(_insuranceBetAmount);
+                _insuranceAmountTxt.text = _insuranceBetAmount.ToString();
+                _insuranceAmountTxt.transform.parent.gameObject.SetActive(true);
+            }
+            else
+            {
+                refMgr.gameManager.shopPanel.SetActive(true);
+                refMgr.tableDealer._insurancePanel.SetActive(true);
+                return;
+            }
+        }
+        else
+        {
+            _insuranceAmountTxt.transform.parent.gameObject.SetActive(false);
+            _insuranceBetAmount = 0;
+        }
+    }
     #region Total Cash update
 
     public void BetAmountDeduction(int amount)
@@ -110,7 +147,7 @@ public class PotHandler : MonoBehaviour
         LocalSettingBlackJack.SetTotalCashWithBetLocal(amount, isReward);
         if (!isReward)
             amount = -amount;
-        
+
         LocalSettingBlackJack.SetTotalCash(amount);
         //UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCash());
         UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCashLocal());
@@ -150,7 +187,7 @@ public class PotHandler : MonoBehaviour
     {
         foreach (var amountTxt in totalAmountTxt)
             amountTxt.text = amount.ToString("N0");
-        Debug.Log(amount);
+        //Debug.Log(amount);
     }
     #endregion
 

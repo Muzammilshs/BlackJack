@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using com.muzammil;
 using DG.Tweening;
@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 public class TableDealer : MonoBehaviour
 {
+    [SerializeField] bool isCheat = true;
     [SerializeField] Rm RefMgr;
     [SerializeField] RectTransform playerCardPos;
     [SerializeField] RectTransform playerCardPos_P1_Split;
@@ -21,6 +22,10 @@ public class TableDealer : MonoBehaviour
     public List<CardProperty> playerCards_2_Split;
     [ShowOnly]
     public List<CardProperty> dealerCards;
+
+    public GameObject _insurancePanel;
+    [SerializeField] GameObject _insuranceWinLosePanel;
+    [SerializeField] TMP_Text _insuranceWinLoseTxt;
 
     [SerializeField] GameObject winParticles;
     ScoreManager scoreManager;
@@ -41,6 +46,8 @@ public class TableDealer : MonoBehaviour
     [SerializeField] TMP_Text winAmountTxt;
     [SerializeField] Image image;
     HitStandBarHandler hitStandBar;
+
+    [HideInInspector] public bool isPlayerWonTheInsurance = false;
     void Start()
     {
         scoreManager = RefMgr.scoreManager;
@@ -51,7 +58,7 @@ public class TableDealer : MonoBehaviour
     {
         StartCoroutine(FirstTimeDealCardsCrt());
     }
-
+    bool isInsuranceEligible = false;
     IEnumerator FirstTimeDealCardsCrt()
     {
         RefMgr.cardsManager.ReCreateLimitedCards();
@@ -61,6 +68,13 @@ public class TableDealer : MonoBehaviour
             int playerOrDealer = i % 2;
             RectTransform cardPos = playerOrDealer == 0 ? playerCardPos : dealerCardPos;
             CardProperty card = Get1Card(cardPos);
+            if (isCheat)
+            {
+                if (i == 1)
+                    card = GetSpecificCard(11);
+                else if (i == 3)
+                    card = GetSpecificCard(5);
+            }
             int totalCards = playerOrDealer == 0 ? playerCards.Count : dealerCards.Count;
             bool isFlip = i == 3 ? false : true;
             playCardAnimation(card.gameObject, cardPos.gameObject, totalCards, isFlip, playerOrDealer == 0 ? true : false);
@@ -72,7 +86,50 @@ public class TableDealer : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         yield return new WaitForSeconds(1.0f);
+
+        // Checking for insurance eligibility   
+        Debug.LogError("Dealer cards: " + dealerCards.Count + "       val: " + dealerCards[1].Power);
+        int playerCardsPwoer = playerCards[0].Power + playerCards[1].Power;
+        if (playerCardsPwoer != 21)
+        {
+            if (dealerCards[0].Power == 11)
+                isInsuranceEligible = true;
+        }
+        if (isInsuranceEligible)
+        {
+            _insurancePanel.SetActive(true);
+            yield return new WaitUntil(() => !isInsuranceEligible);
+            if (RefMgr.potHandler.GetInsuranceAmount > 0)
+                isPlayerWonTheInsurance = (dealerCards[0].Power == 11 && dealerCards[1].Power == 10);
+        }
         RefMgr.gameStateManager.UpDateGameState(GameState.State.BETRAISE);
+    }
+
+    public void ShowInsuranceWinLosepanel(bool isWin)
+    {
+        _insuranceWinLosePanel.SetActive(true);
+        _insuranceWinLoseTxt.text = isWin ? "💰 You won the insurance bet! The dealer had Jackpot.\n\nYour insurance payout has been added to your balance." : "❌ You lost the insurance bet. The dealer does not have Jackpot.\n\nYour insurance amount has been deducted.";
+    }
+    CardProperty GetSpecificCard(int power)
+    {
+
+        int card = Random.Range(0, RefMgr.cardsManager.cardsStackList.Count);
+        for (int i = 0; i < RefMgr.cardsManager.cardsStackList.Count; i++)
+        {
+            if (RefMgr.cardsManager.cardsStackList[i].Power == power)
+            {
+                card = i;
+                break;
+            }
+        }
+        CardProperty cp = RefMgr.cardsManager.cardsStackList[card];
+        RefMgr.cardsManager.cardsStackList.Remove(cp);
+        RefMgr.cardsManager.RearrangeCardsStack();
+        if (cp.Power != power)
+        {
+            GetSpecificCard(power);
+        }
+        return cp;
     }
     public void SendOneCard(bool isPlayer)
     {
@@ -81,7 +138,6 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator SendOneCardCrt(bool isPlayer)
     {
-        //string aa = isPlayer ? "Player" : "dealer";
         yield return new WaitForSeconds(0.1f);
 
         RectTransform cardPos = isPlayer ? playerCardPos : dealerCardPos;
@@ -220,12 +276,11 @@ public class TableDealer : MonoBehaviour
             else if (scoreManager.playerTotalScores_P2_Split == scoreManager.dealerTotalScores)
                 UpDateWinStatus(Winner.PUSH);
         }
-        Debug.LogError("Winner exe splitter");
+
     }
 
     public void DeclearWinner(bool isJackpot)
     {
-
         if (isJackpot)
             UpDateWinStatus(Winner.JACKPOT);
         else if (scoreManager.playerTotalScores > LocalSettingBlackJack.ScoresLimit)
@@ -236,8 +291,9 @@ public class TableDealer : MonoBehaviour
             UpDateWinStatus(Winner.DEALERWINS);
         else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
             UpDateWinStatus(Winner.PUSH);
-        //Debug.LogError("Wineer is at pt 1");
-        //Debug.LogError("Winner exe");
+
+        StartCoroutine(InsuranceWinner(1.8f));
+
     }
     public void UpDateWinStatus(Winner status)
     {
@@ -320,7 +376,20 @@ public class TableDealer : MonoBehaviour
                 break;
         }
     }
-
+    public IEnumerator InsuranceWinner(float delayTime)
+    {
+        int insuranceAmount = RefMgr.potHandler.GetInsuranceAmount;
+        yield return new WaitForSeconds(delayTime);
+        // Insuracne  reward
+        if (insuranceAmount > 0)
+            RefMgr.tableDealer.ShowInsuranceWinLosepanel(false);
+        if (RefMgr.tableDealer.isPlayerWonTheInsurance)
+        {
+            RefMgr.potHandler.CollectReward(insuranceAmount * 2);
+            RefMgr.tableDealer.isPlayerWonTheInsurance = false;
+            RefMgr.tableDealer.ShowInsuranceWinLosepanel(true);
+        }
+    }
 
 
     IEnumerator ShowWinPanel(string winStatusMessage)
@@ -331,31 +400,32 @@ public class TableDealer : MonoBehaviour
         //Debug.Log("Current winStatus: " + winStatus);
         //Debug.Log("Image reference: " + (image != null ? "Assigned" : "Not Assigned"));
 
-        if (winStatus == Winner.DEALERWINS)
-        {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            //Debug.Log("Color is " + image.color);
-        }
-        else if (winStatus == Winner.WON)
-        {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            //Debug.Log("Color is " + image.color);
-        }
-        else if (winStatus == Winner.PUSH)
-        {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            //Debug.Log("Color is " + image.color);
-        }
-        else if (winStatus == Winner.JACKPOT)
-        {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            //Debug.Log("Color is " + image.color);
-        }
-        else
-        {
-            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
-            //Debug.Log("Color is " + image.color);
-        }
+        //if (winStatus == Winner.DEALERWINS)
+        //{
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);
+        // RGBA values (0 to 1)
+        //Debug.Log("Color is " + image.color);
+        //}
+        //else if (winStatus == Winner.WON)
+        //{
+        //    image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+        //    //Debug.Log("Color is " + image.color);
+        //}
+        //else if (winStatus == Winner.PUSH)
+        //{
+        //    image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+        //    //Debug.Log("Color is " + image.color);
+        //}
+        //else if (winStatus == Winner.JACKPOT)
+        //{
+        //    image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+        //    //Debug.Log("Color is " + image.color);
+        //}
+        //else
+        //{
+        //    image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);  // RGBA values (0 to 1)
+        //    //Debug.Log("Color is " + image.color);
+        //}
 
         winLooseStatusTxt.text = winStatusMessage;
         yield return new WaitForSeconds(1.5f);
@@ -373,6 +443,7 @@ public class TableDealer : MonoBehaviour
                 resultIndex = 0;
             }
         }
+
     }
 
     IEnumerator CloneAndSendChips(float delay, int winLoose)
@@ -456,5 +527,12 @@ public class TableDealer : MonoBehaviour
         LocalSettingBlackJack.SetPositionAndRectTransform(playerCards_1_Split[0].gameObject, playerCardPos_P1_Split, playerCardPos_P1_Split.parent);
         LocalSettingBlackJack.SetPositionAndRectTransform(playerCards_2_Split[0].gameObject, playerCardPos_P2_Split, playerCardPos_P2_Split.parent);
         RefMgr.scoreManager.SplitPlayerScores();
+    }
+
+    public void InusranceChoice(bool isYes)
+    {
+        isInsuranceEligible = false;
+        _insurancePanel.SetActive(false);
+        RefMgr.potHandler.SetInsuranceAmount(isYes);
     }
 }

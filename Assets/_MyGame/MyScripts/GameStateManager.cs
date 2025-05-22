@@ -79,6 +79,7 @@ public class GameStateManager : MonoBehaviour
         refMgr.hitStandBarHandler.ResetThings();
         refMgr.betBarHandler.CreateBetButtons();
         refMgr.tableDealer.ToggleChipsStatus(true);
+        refMgr.potHandler.ResetInsuranceAmount();
     }
 
 
