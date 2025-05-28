@@ -23,7 +23,7 @@ public class PotHandler : MonoBehaviour
     int _insuranceBetAmount;
     public int GetInsuranceAmount { get { return _insuranceBetAmount; } }
 
-    int doubleBetPlaced;
+    //int doubleBetPlaced;
     void Start()
     {
         UpDateCashTxt(LocalSettingBlackJack.GetTotalCash());
@@ -35,10 +35,11 @@ public class PotHandler : MonoBehaviour
     public void ResetTotalBet()
     {
         //Debug.LogError("Resetting double bet items");
-        totalbetPlacedTxt.gameObject.SetActive(false);
+        //totalbetPlacedTxt.gameObject.SetActive(false);
         totalBetPlaced = 0;
-        totalbetPlacedTxt.text = totalBetPlaced.ToString();
-        totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.transform.position;
+        refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND).SetBettedAmount("");
+        //totalbetPlacedTxt.text = totalBetPlaced.ToString();
+        //totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.transform.position;
         doubleBetPlacedTxt.gameObject.SetActive(false);
     }
 
@@ -54,29 +55,40 @@ public class PotHandler : MonoBehaviour
             refMgr.gameManager.shopPanel.SetActive(true);
             return;
         }
-        totalbetPlacedTxt.gameObject.SetActive(true);
-        totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
-        totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
         totalBetPlaced += amount;
-        totalbetPlacedTxt.text = totalBetPlaced.ToString();
+        CardsData cd = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
+        cd.SetBettedAmount(totalBetPlaced.ToString());
     }
 
 
     public void PlaceDoubleBetAmount()
+    {
+        return;
+        //if (!IsHaveAmount(GetPotAmount))
+        //{
+        //    refMgr.gameManager.shopPanel.SetActive(true);
+        //    return;
+        //}
+        //doubleBetPlaced = GetPotAmount;
+        //doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
+        //doubleBetPlacedTxt.gameObject.SetActive(true);
+        ////totalBetPlaced *= 2;
+        //BetAmountDeduction(doubleBetPlaced);
+        //totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(-100, 0, 0);
+        //doubleBetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(100, 0, 0);
+        //refMgr.betBarHandler.DoubleBetChipsCreation();
+    }
+
+    public void PlaceDoubleBetAmountNew()
     {
         if (!IsHaveAmount(GetPotAmount))
         {
             refMgr.gameManager.shopPanel.SetActive(true);
             return;
         }
-        doubleBetPlaced = GetPotAmount;
-        doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
-        doubleBetPlacedTxt.gameObject.SetActive(true);
-        //totalBetPlaced *= 2;
-        BetAmountDeduction(doubleBetPlaced);
-        totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(-100, 0, 0);
-        doubleBetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(100, 0, 0);
-        refMgr.betBarHandler.DoubleBetChipsCreation();
+        CardsData cd = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
+        cd.ActivateDoubleBetItems();
+        BetAmountDeduction(totalBetPlaced);
     }
 
     public bool IsHaveAmount(int amount)
@@ -84,7 +96,6 @@ public class PotHandler : MonoBehaviour
         return amount <= LocalSettingBlackJack.GetTotalCash() ? true : false;
     }
     public int GetPotAmount { get { return totalBetPlaced; } }
-    public int GetDoubleBetAmount { get { return doubleBetPlaced; } }
 
     public void SetBetAmountForSplit()
     {
@@ -149,10 +160,7 @@ public class PotHandler : MonoBehaviour
             amount = -amount;
 
         LocalSettingBlackJack.SetTotalCash(amount);
-        //UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCash());
         UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCashLocal());
-
-        Debug.Log("Setting Local Cash " + amount);
     }
 
     public void UpDateCashTexts()
@@ -163,7 +171,6 @@ public class PotHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogError("updateing cash text:    " + LocalSettingBlackJack.GetTotalCashLocal());
             Rm.Instance.potHandler.UpDateCashTxt(LocalSettingBlackJack.GetTotalCashLocal());
         }
     }
@@ -174,8 +181,6 @@ public class PotHandler : MonoBehaviour
         DOTween.To(() => startAmount, x => startAmount = x, targetAmount, duration)
             .OnUpdate(() =>
             {
-                //foreach (var amountTxt in totalAmountTxt)
-                //    amountTxt.text = startAmount.ToString("N0");
                 UpDateCashTxt(startAmount);
             })
             .OnComplete(() =>
@@ -187,7 +192,6 @@ public class PotHandler : MonoBehaviour
     {
         foreach (var amountTxt in totalAmountTxt)
             amountTxt.text = amount.ToString("N0");
-        //Debug.Log(amount);
     }
     #endregion
 

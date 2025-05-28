@@ -24,6 +24,7 @@ public class ScoreManager : MonoBehaviour
 
     public void ShowScoreObjects(bool isShow)
     {
+        return;
         if (!isShow)
         {
             playerTotalScores = 0;
@@ -49,6 +50,7 @@ public class ScoreManager : MonoBehaviour
 
     public void RoundPlayerScores()
     {
+        return;
         if (!rm.hitStandBarHandler.isSplitting)
             playerScores.text = playerTotalScores.ToString();
         else
@@ -58,11 +60,13 @@ public class ScoreManager : MonoBehaviour
     }
     public void RoundDealerScores()
     {
+        return;
         dealerScores.text = dealerTotalScores.ToString();
     }
 
     public void SplitPlayerScores()
     {
+        return;
         CalculateCardsScores(rm.tableDealer.playerCards_1_Split, out playerTotalScores_P1_Split, out playerTotalScoresAce_P1_Split);
         CalculateCardsScores(rm.tableDealer.playerCards_2_Split, out playerTotalScores_P2_Split, out playerTotalScoresAce_P2_Split);
 
@@ -75,6 +79,7 @@ public class ScoreManager : MonoBehaviour
     }
     public void SetScores(bool isPlayer)
     {
+        return;
         ShowScoreObjects(true);
 
         if (isPlayer)
@@ -130,6 +135,7 @@ public class ScoreManager : MonoBehaviour
 
     IEnumerator CheckForPlayerScoreLimit()
     {
+        yield break;
         yield return new WaitForSeconds(0.5f);
         if (playerTotalScores < LocalSettingBlackJack.ScoresLimit)
         {
@@ -180,6 +186,7 @@ public class ScoreManager : MonoBehaviour
     {
         highScores = 0;
         lowScores = 0;
+        return;
         int aceCount = 0;
 
         // Calculate initial lowScores, treating Aces as 1
@@ -207,6 +214,7 @@ public class ScoreManager : MonoBehaviour
 
     public void ResetTotalScore()
     {
+        return;
         playerTotalScores = 0;
         dealerTotalScores = 0;
         playerTotalScoresAce = 0;

@@ -1,3 +1,4 @@
+using com.muzammil;
 using System.Collections;
 using UnityEngine;
 
@@ -15,41 +16,30 @@ public class DealerAIPlay : MonoBehaviour
     public void DropDealerCard()
     {
         // flip dealer card
-        rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
+        //rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
+        Rm.currentCardData = rm.GetCardData(HandType.HANDTYPE.DEALERHAND);
+        Rm.currentCardData.FlipCard(Rm.currentCardData.cardsList[1].gameObject, true);
         StartCoroutine(DropCards());
     }
 
     IEnumerator DropCards()
     {
-        //isJackPot = isDropNextCard();
         yield return new WaitForSeconds(1.25f);
-        if (!rm.hitStandBarHandler.isSplitting)
+  
+        Rm.currentCardData = rm.GetCardData(HandType.HANDTYPE.DEALERHAND);
+        while (isDropNextCard() && !isJackPot)
         {
-            while (isDropNextCard() && !isJackPot)
-            {
-                rm.tableDealer.SendOneCard(false);
-                yield return new WaitForSeconds(1.5f);
-            }
+            rm.tableDealer.SendOneCardGen(Rm.currentCardData);
+            yield return new WaitForSeconds(1.5f);
         }
-        else
-        {
-            while (isDropNextCard() && (rm.scoreManager.playerTotalScores_P1_Split <= 21 || rm.scoreManager.playerTotalScores_P2_Split <= 21))
-            {
-                rm.tableDealer.SendOneCard(false);
-                yield return new WaitForSeconds(1.5f);
-            }
-        }
-        //asdf
-        rm.scoreManager.RoundDealerScores();
-        if (!rm.hitStandBarHandler.isSplitting)
-            rm.tableDealer.DeclearWinner(isJackPot);
-        else
-            rm.tableDealer.DeclearWinnerWithSplit();
+
+        rm.tableDealer.ShowResultsNew();
     }
 
     bool isDropNextCard()
     {
-        if (rm.scoreManager.dealerTotalScores >= LocalSettingBlackJack.ScoresLimit - 3)
+        int dealerScores = Rm.currentCardData.highScores;
+        if (dealerScores >= LocalSettingBlackJack.ScoresLimit - 3)
             return false;
         else if (isJackPot)
             return false;
@@ -58,6 +48,7 @@ public class DealerAIPlay : MonoBehaviour
 
     public void ResetDealer()
     {
+        return;
         isDealerTurn = false;
         isJackPot = false;
     }

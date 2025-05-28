@@ -93,7 +93,7 @@ public class MenuController : MonoBehaviour
                 txt.text = cash.ToString("N0");
         }
 
-        Debug.Log($"Updating total chips display: {cash}");
+        //Debug.Log($"Updating total chips display: {cash}");
     }
 
     //public void UpdateInStartTxts()

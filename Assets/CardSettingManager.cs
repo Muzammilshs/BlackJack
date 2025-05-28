@@ -19,7 +19,7 @@ public class CardSettingManager : MonoBehaviour
             cardDesigns[i].cardCardDesign.GetComponent<Image>().sprite = cardsContainer.CardBackDesigns[i];
             cardDesigns[i].checkMark.SetActive(false);
         }
-        Debug.LogError(LocalSettingBlackJack.SelectedDesignIndex);
+        //Debug.LogError(LocalSettingBlackJack.SelectedDesignIndex);
         cardDesigns[LocalSettingBlackJack.SelectedDesignIndex].checkMark.SetActive(true);
     }
 

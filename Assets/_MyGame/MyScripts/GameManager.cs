@@ -67,5 +67,10 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ResetartGameBtnClick()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     #endregion
 }

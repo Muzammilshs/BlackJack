@@ -14,7 +14,7 @@ public class CardsManager : MonoBehaviour
     [ShowOnly]
     public List<CardProperty> cardsStackList;
     public List<GameObject> wasteCardsList;
-    [SerializeField] RectTransform cardsStackPos, wasteCardsPos;
+    public RectTransform cardsStackPos, wasteCardsPos;
 
     void Start()
     {
@@ -124,11 +124,13 @@ public class CardsManager : MonoBehaviour
 
     public void SendCardsToWasteCardsPos()
     {
+        return;
         StartCoroutine(CollectWasteCards());
     }
 
     IEnumerator CollectWasteCards()
     {
+        yield break;
         yield return new WaitForSeconds(0.1f);
         refMgr.scoreManager.ShowScoreObjects(false);
         foreach (CardProperty card in refMgr.tableDealer.playerCards)
@@ -160,10 +162,10 @@ public class CardsManager : MonoBehaviour
         refMgr.tableDealer.playerCards_2_Split.Clear();
         refMgr.tableDealer.dealerCards.Clear();
         yield return new WaitForSeconds(1);
-        ClearCards();
+        ClearWasteCards();
     }
 
-    void ClearCards()
+    public void ClearWasteCards()
     {
         for (int i = wasteCardsList.Count - 1; i > 0; i--)
         {
@@ -339,10 +341,10 @@ public class CardsManager : MonoBehaviour
 //        refMgr.tableDealer.playerCards_2_Split.Clear();
 //        refMgr.tableDealer.dealerCards.Clear();
 //        yield return new WaitForSeconds(1);
-//        ClearCards();
+//        ClearWasteCards();
 //    }
 
-//    void ClearCards()
+//    void ClearWasteCards()
 //    {
 //        for (int i = wasteCardsList.Count - 1; i > 0; i--)
 //        {

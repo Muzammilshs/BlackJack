@@ -156,11 +156,11 @@ public static class LocalSettingBlackJack
 
     public static int GetTotalCash()
     {
-        Debug.Log("GET CASH!");
+        //Debug.Log("GET CASH!");
         if (cashFetchTask == null)
         {
             // Start fetching if not already started
-            Debug.Log("GET CASH!2");
+            //Debug.Log("GET CASH!2");
 
             cashFetchTask = GetTotalCashAsync();
         }

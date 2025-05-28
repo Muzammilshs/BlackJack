@@ -54,20 +54,26 @@ public class GameStateManager : MonoBehaviour
     }
     void OnStand()
     {
-        refMgr.dealerAIPlay.isDealerTurn = true;
+        //refMgr.dealerAIPlay.isDealerTurn = true;
         refMgr.hitStandBarHandler.ShowHitStandBar(false);
         refMgr.dealerAIPlay.DropDealerCard();
-        refMgr.scoreManager.RoundPlayerScores();
+        //refMgr.scoreManager.RoundPlayerScores();
     }
     void OnResult()
     {
         refMgr.hitStandBarHandler.ShowHitStandBar(false);
-
-        StartCoroutine(ResetGame());
+        refMgr.tableDealer.ResetWholeGame();
+        refMgr.betBarHandler.ShowBetbar(false);
+        refMgr.betBarHandler.ResetThings();
+        refMgr.betBarHandler.CreateBetButtons();
+        refMgr.potHandler.ResetInsuranceAmount();
+        //StartCoroutine(ResetGame());
     }
+
 
     IEnumerator ResetGame()
     {
+        yield break;
         yield return new WaitForSeconds(1);
         refMgr.dealerAIPlay.ResetDealer();
         refMgr.cardsManager.SendCardsToWasteCardsPos();

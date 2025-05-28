@@ -91,17 +91,22 @@ public class BetBarHandler : MonoBehaviour
         placeYourBetMsg.SetActive(false);
         CloneChipBtn(EventSystem.current.currentSelectedGameObject);
     }
+    CardsData playerCardsData;
     void CloneChipBtn(GameObject chip)
     {
+        if(playerCardsData == null)
+            playerCardsData = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
         GameObject chipBtn = Instantiate(chip);
-        betPlacedChips.Add(chipBtn);
+        //betPlacedChips.Add(chipBtn);
+        playerCardsData.chipsList.Add(chipBtn);
         chipBtn.transform.GetChild(1).gameObject.SetActive(false);
         Button btn = chipBtn.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() => WhenBettedChipBtnClick());
-        LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, bettedChipsPos, bettedChipsPos.transform.parent);
+        //LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, bettedChipsPos, bettedChipsPos.transform.parent);
+        LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, playerCardsData.chipsPosRect, playerCardsData.chipsPosRect.transform.parent);
         chipBtn.transform.position = chip.transform.position;
-        playChipAnimation(chipBtn, bettedChipsPos.gameObject, true);
+        playChipAnimation(chipBtn, playerCardsData.chipsPosRect.gameObject, true);
     }
     public void DoubleBetChipsCreation()
     {
@@ -153,7 +158,11 @@ public class BetBarHandler : MonoBehaviour
         placeYourBetMsg.SetActive(true);
         dealnClearBtnGroup.SetActive(false);
         ShowBetbar(true);
-        betPlacedChips = refMgr.gameManager.ClearList(betPlacedChips);
+        //betPlacedChips = refMgr.gameManager.ClearList(betPlacedChips);
+        if(playerCardsData == null)
+            playerCardsData = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
+        playerCardsData.ClearAllChips();
+
         if (doubleBetPlacedChips != null)
         {
             if (doubleBetPlacedChips.Count > 0)
@@ -180,35 +189,41 @@ public class BetBarHandler : MonoBehaviour
 
     }
 
+    //public void ResetThings()
+    //{
+    //    dealnClearBtnGroup.SetActive(true);
+    //    if (doubleBetPlacedChips.Count > 0)
+    //    {
+    //        foreach (GameObject obj in doubleBetPlacedChips)
+    //        {
+    //            Destroy(obj);
+    //        }
+    //        doubleBetPlacedChips.Clear();
+    //        refMgr.potHandler.doubleBetPlacedTxt.gameObject.SetActive(false);
+    //        foreach (GameObject chip in betPlacedChips)
+    //        {
+    //            chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
+    //        }
+    //        Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
+    //        txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
+    //    }
+
+    //    for (int i = 0; i < betPlacedChips_2_Split.Count; i++)
+    //        if (betPlacedChips_2_Split[i] != null)
+    //            Destroy(betPlacedChips_2_Split[i]);
+    //    for (int i = 0; i < betPlacedChips_1_Split.Count; i++)
+    //    {
+    //        betPlacedChips.Add(betPlacedChips_1_Split[i]);
+    //        LocalSettingBlackJack.SetPositionAndRectTransform(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
+    //    }
+    //    betPlacedChips_1_Split.Clear();
+    //    betPlacedChips_2_Split.Clear();
+    //    refMgr.potHandler.PlaceBetAmount(0);
+    //}
+
     public void ResetThings()
     {
         dealnClearBtnGroup.SetActive(true);
-        if (doubleBetPlacedChips.Count > 0)
-        {
-            foreach (GameObject obj in doubleBetPlacedChips)
-            {
-                Destroy(obj);
-            }
-            doubleBetPlacedChips.Clear();
-            refMgr.potHandler.doubleBetPlacedTxt.gameObject.SetActive(false);
-            foreach (GameObject chip in betPlacedChips)
-            {
-                chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
-            }
-            Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
-            txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
-        }
-
-        for (int i = 0; i < betPlacedChips_2_Split.Count; i++)
-            if (betPlacedChips_2_Split[i] != null)
-                Destroy(betPlacedChips_2_Split[i]);
-        for (int i = 0; i < betPlacedChips_1_Split.Count; i++)
-        {
-            betPlacedChips.Add(betPlacedChips_1_Split[i]);
-            LocalSettingBlackJack.SetPositionAndRectTransform(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
-        }
-        betPlacedChips_1_Split.Clear();
-        betPlacedChips_2_Split.Clear();
         refMgr.potHandler.PlaceBetAmount(0);
     }
 

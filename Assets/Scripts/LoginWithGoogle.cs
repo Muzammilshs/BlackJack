@@ -189,7 +189,7 @@ public class LoginWithGoogle : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 if (snapshot.Exists && int.TryParse(snapshot.Value.ToString(), out currentCash))
                 {
-                    Debug.Log($"Fetched total cash: {currentCash} for user {userId}");
+                    //Debug.Log($"Fetched total cash: {currentCash} for user {userId}");
                     totalCash = currentCash;
                     LocalSettingBlackJack.SetTotalCashLocal(currentCash);
                     if (MenuController.instance != null)
@@ -215,7 +215,7 @@ public class LoginWithGoogle : MonoBehaviour
             {
                 if (saveTask.IsCompletedSuccessfully)
                 {
-                    Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
+                    //Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
                     Username.text = $"Coins: {updatedCash}";
                     LocalSettingBlackJack.GetTotalCash();
                     if (SceneManager.GetActiveScene().buildIndex == 0)
