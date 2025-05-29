@@ -19,7 +19,7 @@ public class TableDealer : MonoBehaviour
     [SerializeField] GameObject _insuranceWinLosePanel; // Insurance result panel
     [SerializeField] TMP_Text _insuranceWinLoseTxt; // Insurance result text
 
-    [SerializeField] GameObject winParticles; // Particle effect for win/jackpot
+    //[SerializeField] GameObject winParticles; // Particle effect for win/jackpot
     //ScoreManager scoreManager; // Reference to score manager
 
     /// <summary>
@@ -468,7 +468,7 @@ public class TableDealer : MonoBehaviour
                 break;
 
             case Winner.JACKPOT:
-                winParticles.SetActive(true);
+                //winParticles.SetActive(true);
                 winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
                 winAmountTxt.text = "Jackpot! Huge win!\n+$" + winAmount;
                 StartCoroutine(ShowWinPanel("Jackpot", winAmount));

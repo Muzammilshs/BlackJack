@@ -67,8 +67,8 @@ MonoBehaviour:
   - {fileID: 2832795674484764430, guid: adc66aaaacb6fc04099001c10c6bb63d, type: 3}
   CardBackDesigns:
   - {fileID: -767142671, guid: 15a62f634ff181740abac57c741803fa, type: 3}
-  - {fileID: 3343697747613827197, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
-  - {fileID: -521149358376217919, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
-  - {fileID: -8335606122864907939, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
-  - {fileID: -7425872587037328868, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
-  - {fileID: 7339319802674598229, guid: e923c6082eef89646b87f3cce6960c60, type: 3}
+  - {fileID: 671061816, guid: 15a62f634ff181740abac57c741803fa, type: 3}
+  - {fileID: 1693541595, guid: 15a62f634ff181740abac57c741803fa, type: 3}
+  - {fileID: 2102432969, guid: 15a62f634ff181740abac57c741803fa, type: 3}
+  - {fileID: 1111026284, guid: 15a62f634ff181740abac57c741803fa, type: 3}
+  - {fileID: -1708264113, guid: 15a62f634ff181740abac57c741803fa, type: 3}
