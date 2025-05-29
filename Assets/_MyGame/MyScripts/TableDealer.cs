@@ -243,7 +243,7 @@ public class TableDealer : MonoBehaviour
     public void CheckScoresForNext(bool isStand)
     {
         int scores = Rm.currentCardData.highScores;
-        if (scores < LocalSettingBlackJack.ScoresLimit && !isStand)
+        if (scores < LocalSettingBlackJack.ScoresLimit && !isStand && !hitStandBar.isDoubleBet)
         {
             if (Rm.currentCardData.handType != HandType.HANDTYPE.DEALERHAND)
             {
@@ -258,6 +258,7 @@ public class TableDealer : MonoBehaviour
         else
         {
             hitStandBar.ShowHitStandBar(false);
+            Rm.currentCardData.ShowJustHighScores();
             CardsData cd = Rm.Instance.GetValidHandCardData();
             if (cd != null)
             {
@@ -320,6 +321,7 @@ public class TableDealer : MonoBehaviour
     }
     void playCardAnimation(GameObject ObjectToAnimate, GameObject targetObj, int offSet, bool shouldFLip, bool isPlayer)
     {
+        return;
         GameObject card = ObjectToAnimate;
         GameObject TgtObj = targetObj;
         card.transform.SetParent(TgtObj.transform.parent.transform);
@@ -335,6 +337,7 @@ public class TableDealer : MonoBehaviour
 
     public void FlipCard(GameObject obj, bool shouldFLip, bool isPlayer)
     {
+        return;
         if (!shouldFLip)
         {
             MoveSlightlyUp(obj);
@@ -348,6 +351,7 @@ public class TableDealer : MonoBehaviour
 
     public void ReverseRotate(GameObject obj, bool isPlayer)
     {
+        return;
         bool isPlyr = isPlayer;
         scoreManager.SetScores(isPlyr);
         obj.GetComponent<CardProperty>().ShowOriginalSprite();
@@ -356,6 +360,7 @@ public class TableDealer : MonoBehaviour
 
     void MoveSlightlyUp(GameObject obj)
     {
+        return;
         Vector3 targetPosition = obj.transform.position + Vector3.up * 100;
         obj.transform.DOMove(targetPosition, 0.25f).SetLoops(2, LoopType.Yoyo);
     }
@@ -522,6 +527,7 @@ public class TableDealer : MonoBehaviour
 
     IEnumerator CloneAndSendChips(float delay, int winLoose)
     {
+        yield break;
         // 0 => Player win
         // 1 => Dealer win
         // 2 => Push
@@ -545,7 +551,6 @@ public class TableDealer : MonoBehaviour
     {
         for (int i = 0; i < cardsData.chipsList.Count; i++)
         {
-            Debug.LogError("Cloning chip: " + i + "  " + cardsData.chipsList[i].name);
             GameObject chip = Instantiate(cardsData.chipsList[i]);
             LocalSettingBlackJack.SetPositionAndRectTransform(chip, cardsData.chipsPosRect, cardsData.chipsPosRect.transform.parent);
             cardsData.chipsList[i].SetActive(false);

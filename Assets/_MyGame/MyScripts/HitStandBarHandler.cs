@@ -20,25 +20,9 @@ public class HitStandBarHandler : MonoBehaviour
     }
     public void CompareScoresAfter4Cards()
     {
-        //TableDealer td = rm.tableDealer;
-        //ScoreManager sm = rm.scoreManager;
-
         int playerScores = rm.GetCardData(HandType.HANDTYPE.PLAYERHAND).highScores;
         int dealerScores = rm.GetCardData(HandType.HANDTYPE.DEALERHAND).highScores;
 
-        //// getting player score
-        //if (td.playerCards[0].Card == CardState.CARDVALUE.ACE && td.playerCards[1].Card == CardState.CARDVALUE.ACE)
-        //    playerScores = td.playerCards[0].Power + td.playerCards[1].SecondPower;
-        //else
-        //    playerScores = td.playerCards[0].Power + td.playerCards[1].Power;
-
-        //// getting dealer scores
-        //if (td.dealerCards[0].Card == CardState.CARDVALUE.ACE && td.dealerCards[1].Card == CardState.CARDVALUE.ACE)
-        //    dealerScores = td.dealerCards[0].Power + td.dealerCards[1].SecondPower;
-        //else
-        //    dealerScores = td.dealerCards[0].Power + td.dealerCards[1].Power;
-
-        //Debug.LogError("Player scores after 4 card: " + playerScores + "     Dealer Scores: " + dealerScores);
         // When win with first 2 cards
         if (playerScores == LocalSettingBlackJack.ScoresLimit || dealerScores == LocalSettingBlackJack.ScoresLimit)
         {
@@ -47,16 +31,15 @@ public class HitStandBarHandler : MonoBehaviour
             {
                 rm.dealerAIPlay.isJackPot = true;
                 rm.dealerAIPlay.isDealerTurn = true;
-                //rm.dealerAIPlay.DropDealerCard();
             }
             else if (playerScores < dealerScores)
             {
                 rm.dealerAIPlay.isJackPot = false;
                 rm.dealerAIPlay.isDealerTurn = true;
-                //rm.dealerAIPlay.DropDealerCard();
 
             }
-            //rm.dealerAIPlay.DropDealerCard();
+            rm.GetCardData(HandType.HANDTYPE.PLAYERHAND).ShowJustHighScores();
+            rm.GetCardData(HandType.HANDTYPE.DEALERHAND).ShowJustHighScores();
             rm.gameStateManager.UpDateGameState(GameState.State.STAND);
         }
         else
@@ -150,6 +133,7 @@ public class HitStandBarHandler : MonoBehaviour
 
     public void ResetThings()
     {
+        return;
         isSplitting = false;
         isDoubleBet = false;
         doubleBtn.SetActive(false);

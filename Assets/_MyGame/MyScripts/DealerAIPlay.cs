@@ -9,14 +9,10 @@ public class DealerAIPlay : MonoBehaviour
     public bool isDealerTurn;
     [ShowOnly]
     public bool isJackPot = false;
-    void Start()
-    {
-    }
 
     public void DropDealerCard()
     {
         // flip dealer card
-        //rm.tableDealer.FlipCard(rm.tableDealer.dealerCards[1].gameObject, true, false);
         Rm.currentCardData = rm.GetCardData(HandType.HANDTYPE.DEALERHAND);
         Rm.currentCardData.FlipCard(Rm.currentCardData.cardsList[1].gameObject, true);
         StartCoroutine(DropCards());
@@ -32,7 +28,7 @@ public class DealerAIPlay : MonoBehaviour
             rm.tableDealer.SendOneCardGen(Rm.currentCardData);
             yield return new WaitForSeconds(1.5f);
         }
-
+        Rm.currentCardData.ShowJustHighScores();
         rm.tableDealer.ShowResultsNew();
     }
 
