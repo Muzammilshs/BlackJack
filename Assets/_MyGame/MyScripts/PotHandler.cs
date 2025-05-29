@@ -3,51 +3,72 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Handles the pot (betting pool) logic, including bet placement, insurance, cash updates, and UI for the blackjack game.
+/// </summary>
 public class PotHandler : MonoBehaviour
 {
+    #region Inspector Fields
 
-    [SerializeField] Rm refMgr;
-    public TMP_Text[] totalAmountTxt;
-    public TMP_Text totalbetPlacedTxt;
-    public TMP_Text doubleBetPlacedTxt;
+    [SerializeField] Rm refMgr;                        // Reference to the main resource manager
+    public TMP_Text[] totalAmountTxt;                  // UI text(s) displaying the player's total cash
+    [SerializeField] TMP_Text _insuranceAmountTxt;     // UI text for the insurance bet amount
 
-    public RectTransform totalbetPlacedTxt_Pos;
-    public TMP_Text totalbetPlacedTxt_P1_split;
-    public TMP_Text totalbetPlacedTxt_P2_split;
-    int totalBetPlaced;
-    int totalBetPlaced_1_Split;
-    int totalBetPlaced_2_Split;
+    #endregion
 
-    [SerializeField] TMP_Text _insuranceAmountTxt;
+    #region Private Fields
 
-    int _insuranceBetAmount;
+    int totalBetPlaced;            // Total bet placed for the current round
+    int _insuranceBetAmount;       // Current insurance bet amount
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Gets the current insurance bet amount.
+    /// </summary>
     public int GetInsuranceAmount { get { return _insuranceBetAmount; } }
 
-    //int doubleBetPlaced;
+    /// <summary>
+    /// Gets the current total bet placed (the pot amount).
+    /// </summary>
+    public int GetPotAmount { get { return totalBetPlaced; } }
+
+    #endregion
+
+    #region Unity Methods
+
     void Start()
     {
         UpDateCashTxt(LocalSettingBlackJack.GetTotalCash());
-        totalbetPlacedTxt.gameObject.SetActive(false);
-        totalbetPlacedTxt_P1_split.gameObject.SetActive(false);
-        totalbetPlacedTxt_P2_split.gameObject.SetActive(false);
     }
 
+    #endregion
+
+    #region Bet and Insurance Logic
+
+    /// <summary>
+    /// Resets the total bet placed and clears the betted amount UI.
+    /// </summary>
     public void ResetTotalBet()
     {
-        //Debug.LogError("Resetting double bet items");
-        //totalbetPlacedTxt.gameObject.SetActive(false);
         totalBetPlaced = 0;
         refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND).SetBettedAmount("");
-        //totalbetPlacedTxt.text = totalBetPlaced.ToString();
-        //totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.transform.position;
-        doubleBetPlacedTxt.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Resets the insurance bet amount and hides the insurance UI.
+    /// </summary>
     public void ResetInsuranceAmount()
     {
         _insuranceBetAmount = 0;
         _insuranceAmountTxt.transform.parent.gameObject.SetActive(false);
     }
+
+    /// <summary>
+    /// Places a bet of the specified amount, updating the total and UI.
+    /// </summary>
     public void PlaceBetAmount(int amount)
     {
         if (!IsHaveAmount(amount))
@@ -60,25 +81,9 @@ public class PotHandler : MonoBehaviour
         cd.SetBettedAmount(totalBetPlaced.ToString());
     }
 
-
-    public void PlaceDoubleBetAmount()
-    {
-        return;
-        //if (!IsHaveAmount(GetPotAmount))
-        //{
-        //    refMgr.gameManager.shopPanel.SetActive(true);
-        //    return;
-        //}
-        //doubleBetPlaced = GetPotAmount;
-        //doubleBetPlacedTxt.text = doubleBetPlaced.ToString();
-        //doubleBetPlacedTxt.gameObject.SetActive(true);
-        ////totalBetPlaced *= 2;
-        //BetAmountDeduction(doubleBetPlaced);
-        //totalbetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(-100, 0, 0);
-        //doubleBetPlacedTxt.transform.position = totalbetPlacedTxt_Pos.position + new Vector3(100, 0, 0);
-        //refMgr.betBarHandler.DoubleBetChipsCreation();
-    }
-
+    /// <summary>
+    /// Places a double bet (for double down), deducts the amount, and updates UI.
+    /// </summary>
     public void PlaceDoubleBetAmountNew()
     {
         if (!IsHaveAmount(GetPotAmount))
@@ -91,26 +96,17 @@ public class PotHandler : MonoBehaviour
         BetAmountDeduction(totalBetPlaced);
     }
 
+    /// <summary>
+    /// Checks if the player has enough cash for the specified amount.
+    /// </summary>
     public bool IsHaveAmount(int amount)
     {
-        return amount <= LocalSettingBlackJack.GetTotalCash() ? true : false;
-    }
-    public int GetPotAmount { get { return totalBetPlaced; } }
-
-    public void SetBetAmountForSplit()
-    {
-        totalBetPlaced_1_Split = totalBetPlaced;
-        totalBetPlaced_2_Split = totalBetPlaced;
-
-        totalbetPlacedTxt_P1_split.text = totalBetPlaced.ToString();
-        totalbetPlacedTxt_P2_split.text = totalBetPlaced.ToString();
-
-        totalbetPlacedTxt_P1_split.gameObject.SetActive(true);
-        totalbetPlacedTxt_P2_split.gameObject.SetActive(true);
-
-        totalbetPlacedTxt.gameObject.SetActive(false);
+        return amount <= LocalSettingBlackJack.GetTotalCash();
     }
 
+    /// <summary>
+    /// Sets the insurance bet amount and updates UI, or shows shop if not enough cash.
+    /// </summary>
     public void SetInsuranceAmount(bool isInsured)
     {
         if (isInsured)
@@ -138,23 +134,35 @@ public class PotHandler : MonoBehaviour
             _insuranceBetAmount = 0;
         }
     }
-    #region Total Cash update
 
+    #endregion
+
+    #region Cash Update and Animation
+
+    /// <summary>
+    /// Deducts the specified amount from the player's total cash.
+    /// </summary>
     public void BetAmountDeduction(int amount)
     {
         UpDateTotalCash(amount, false);
     }
+
+    /// <summary>
+    /// Adds the specified amount to the player's total cash (reward).
+    /// </summary>
     public void CollectReward(int amount)
     {
         UpDateTotalCash(amount, true);
     }
 
-    #region Cash add/deduct animation 
+    /// <summary>
+    /// Updates the player's total cash, with animation.
+    /// </summary>
+    /// <param name="amount">Amount to add or deduct.</param>
+    /// <param name="isReward">True if adding (reward), false if deducting (bet/insurance).</param>
     void UpDateTotalCash(int amount, bool isReward)
     {
-        //UpDateCashTexts();
-        int prevAmount = 0;
-        prevAmount = LocalSettingBlackJack.GetTotalCash();
+        int prevAmount = LocalSettingBlackJack.GetTotalCash();
         LocalSettingBlackJack.SetTotalCashWithBetLocal(amount, isReward);
         if (!isReward)
             amount = -amount;
@@ -163,6 +171,9 @@ public class PotHandler : MonoBehaviour
         UpdateCashAmount(prevAmount, LocalSettingBlackJack.GetTotalCashLocal());
     }
 
+    /// <summary>
+    /// Updates all cash UI texts to the current cash value.
+    /// </summary>
     public void UpDateCashTexts()
     {
         if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -174,6 +185,10 @@ public class PotHandler : MonoBehaviour
             Rm.Instance.potHandler.UpDateCashTxt(LocalSettingBlackJack.GetTotalCashLocal());
         }
     }
+
+    /// <summary>
+    /// Animates the cash value from the current to the target amount.
+    /// </summary>
     void UpdateCashAmount(int currentCash, int targetAmount, float duration = 1f)
     {
         int startAmount = currentCash;
@@ -188,12 +203,15 @@ public class PotHandler : MonoBehaviour
                 currentCash = targetAmount;
             });
     }
+
+    /// <summary>
+    /// Sets all cash UI texts to the specified amount.
+    /// </summary>
     public void UpDateCashTxt(int amount)
     {
         foreach (var amountTxt in totalAmountTxt)
             amountTxt.text = amount.ToString("N0");
     }
-    #endregion
 
     #endregion
 }

@@ -357,6 +357,7 @@ public class CardsData : MonoBehaviour
     /// </summary>
     void playCardAnimation(GameObject ObjectToAnimate, GameObject targetObj, int offSet, bool shouldFLip)
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.cardDrop);
         Vector3 cardPos = ObjectToAnimate.transform.position;
         GameObject card = ObjectToAnimate;
         GameObject TgtObj = targetObj;
@@ -381,6 +382,7 @@ public class CardsData : MonoBehaviour
         }
         else
         {
+            SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.cardFlip);
             obj.transform.DORotate(Vector2.up * 90, 0.25f)
                 .OnComplete(() => ReverseRotate(obj));
         }
@@ -391,6 +393,7 @@ public class CardsData : MonoBehaviour
     /// </summary>
     void MoveSlightlyUp(GameObject obj)
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.cardSlightlyUp);
         Vector3 targetPosition = obj.transform.position + Vector3.up * 100;
         obj.transform.DOMove(targetPosition, 0.25f).SetLoops(2, LoopType.Yoyo);
     }

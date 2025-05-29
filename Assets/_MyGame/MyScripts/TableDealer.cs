@@ -2,33 +2,29 @@
 using UnityEngine;
 using com.muzammil;
 using DG.Tweening;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+/// <summary>
+/// Handles the main dealer logic for blackjack, including card dealing, split logic, insurance, 
+/// win/lose UI, and chip animations.
+/// </summary>
 public class TableDealer : MonoBehaviour
 {
-    [SerializeField] bool isCheat = true;
-    [SerializeField] Rm RefMgr;
-    [SerializeField] RectTransform playerCardPos;
-    [SerializeField] RectTransform playerCardPos_P1_Split;
-    [SerializeField] RectTransform playerCardPos_P2_Split;
-    [SerializeField] RectTransform dealerCardPos;
+    #region Fields and UI References
 
-    [ShowOnly]
-    public List<CardProperty> playerCards;
-    [ShowOnly]
-    public List<CardProperty> playerCards_1_Split;
-    [ShowOnly]
-    public List<CardProperty> playerCards_2_Split;
-    [ShowOnly]
-    public List<CardProperty> dealerCards;
+    [SerializeField] bool isCheat = true; // Enables cheat mode for testing specific cards
+    [SerializeField] Rm RefMgr; // Reference to the main game manager
 
-    public GameObject _insurancePanel;
-    [SerializeField] GameObject _insuranceWinLosePanel;
-    [SerializeField] TMP_Text _insuranceWinLoseTxt;
+    public GameObject _insurancePanel; // Insurance offer panel
+    [SerializeField] GameObject _insuranceWinLosePanel; // Insurance result panel
+    [SerializeField] TMP_Text _insuranceWinLoseTxt; // Insurance result text
 
-    [SerializeField] GameObject winParticles;
-    ScoreManager scoreManager;
+    [SerializeField] GameObject winParticles; // Particle effect for win/jackpot
+    //ScoreManager scoreManager; // Reference to score manager
+
+    /// <summary>
+    /// Enum for possible hand results.
+    /// </summary>
     public enum Winner
     {
         BUST,
@@ -40,72 +36,42 @@ public class TableDealer : MonoBehaviour
     Winner winStatus;
 
     [Space]
-    [Header("Win and loose ")]
-    [SerializeField] GameObject WinLoosepanel;
-    [SerializeField] TMP_Text winLooseStatusTxt;
-    [SerializeField] TMP_Text winAmountTxt;
-    [SerializeField] Image image;
-    HitStandBarHandler hitStandBar;
+    [Header("Win and lose UI")]
+    [SerializeField] GameObject WinLoosepanel; // Panel for win/lose result
+    [SerializeField] TMP_Text winLooseStatusTxt; // Win/lose status text
+    [SerializeField] TMP_Text winAmountTxt; // Win amount text
+    [SerializeField] Image image; // Background image for result panel
+    HitStandBarHandler hitStandBar; // Reference to hit/stand bar handler
 
-    [HideInInspector] public bool isPlayerWonTheInsurance = false;
+    [HideInInspector] public bool isPlayerWonTheInsurance = false; // Insurance result flag
+
+    #endregion
+
+    #region Unity Methods
+
     void Start()
     {
-        scoreManager = RefMgr.scoreManager;
+        //scoreManager = RefMgr.scoreManager;
         hitStandBar = RefMgr.hitStandBarHandler;
     }
-    #region Cards Distribution
+
+    #endregion
+
+    #region Card Distribution and Dealing
+
+    /// <summary>
+    /// Starts the coroutine to deal the initial four cards (two to player, two to dealer).
+    /// </summary>
     public void FirstTimeDealCards()
     {
         StartCoroutine(FirstTimeDealCardsCrt());
     }
+
     bool isInsuranceEligible = false;
-    //IEnumerator FirstTimeDealCardsCrt()
-    //{
-    //    RefMgr.cardsManager.ReCreateLimitedCards();
-    //    yield return new WaitForSeconds(0.5f);
-    //    for (int i = 0; i < 4; i++)
-    //    {
-    //        int playerOrDealer = i % 2;
-    //        RectTransform cardPos = playerOrDealer == 0 ? playerCardPos : dealerCardPos;
-    //        CardProperty card = Get1Card(cardPos);
 
-    //        if (isCheat)
-    //        {
-    //            if (i == 1)
-    //                card = GetSpecificCard(11);
-    //            else if (i == 3)
-    //                card = GetSpecificCard(5);
-    //        }
-
-    //        int totalCards = playerOrDealer == 0 ? playerCards.Count : dealerCards.Count;
-    //        bool isFlip = i == 3 ? false : true;
-    //        playCardAnimation(card.gameObject, cardPos.gameObject, totalCards, isFlip, playerOrDealer == 0 ? true : false);
-    //        if (playerOrDealer == 0)
-    //            playerCards.Add(card);
-    //        else
-    //            dealerCards.Add(card);
-    //        RefMgr.cardsManager.RearrangeCardsStack();
-    //        yield return new WaitForSeconds(1f);
-    //    }
-    //    yield return new WaitForSeconds(1.0f);
-
-    //    // Checking for insurance eligibility   
-    //    Debug.LogError("Dealer cards: " + dealerCards.Count + "       val: " + dealerCards[1].Power);
-    //    int playerCardsPower = playerCards[0].Power + playerCards[1].Power;
-    //    if (playerCardsPower != 21)
-    //    {
-    //        if (dealerCards[0].Power == 11)
-    //            isInsuranceEligible = true;
-    //    }
-    //    if (isInsuranceEligible)
-    //    {
-    //        _insurancePanel.SetActive(true);
-    //        yield return new WaitUntil(() => !isInsuranceEligible);
-    //        if (RefMgr.potHandler.GetInsuranceAmount > 0)
-    //            isPlayerWonTheInsurance = (dealerCards[0].Power == 11 && dealerCards[1].Power == 10);
-    //    }
-    //    RefMgr.gameStateManager.UpDateGameState(GameState.State.BETRAISE);
-    //}
+    /// <summary>
+    /// Coroutine for dealing the first four cards and handling insurance logic.
+    /// </summary>
     IEnumerator FirstTimeDealCardsCrt()
     {
         RefMgr.cardsManager.ReCreateLimitedCards();
@@ -118,6 +84,7 @@ public class TableDealer : MonoBehaviour
             Rm.currentCardData = RefMgr.GetCardData(ht);
             CardProperty card = Get1Card();
 
+            // Cheat mode: force specific cards for testing
             if (isCheat)
             {
                 if (i == 1)
@@ -126,7 +93,6 @@ public class TableDealer : MonoBehaviour
                     card = GetSpecificCard(5);
             }
 
-            int totalCards = playerOrDealer == 0 ? playerCards.Count : this.dealerCards.Count;
             bool isFlip = i == 3 ? false : true;
             Rm.currentCardData.AddCard(card, isFlip);
 
@@ -135,7 +101,7 @@ public class TableDealer : MonoBehaviour
         }
         yield return new WaitForSeconds(1.0f);
 
-        // Checking for insurance eligibility   
+        // Insurance eligibility check
         CardsData dealerCards = RefMgr.GetCardData(HandType.HANDTYPE.DEALERHAND);
         int playerCardsPower = dealerCards.cardsList[0].Power + dealerCards.cardsList[1].Power;
         if (playerCardsPower != 21)
@@ -151,16 +117,24 @@ public class TableDealer : MonoBehaviour
                 isPlayerWonTheInsurance = (dealerCards.cardsList[0].Power == 11 && dealerCards.cardsList[1].Power == 10);
         }
         RefMgr.gameStateManager.UpDateGameState(GameState.State.BETRAISE);
-        //////////////////////////// Upper step completed
     }
+
+    /// <summary>
+    /// Shows the insurance win/lose panel with the appropriate message.
+    /// </summary>
     public void ShowInsuranceWinLosepanel(bool isWin)
     {
         _insuranceWinLosePanel.SetActive(true);
-        _insuranceWinLoseTxt.text = isWin ? "💰 You won the insurance bet! The dealer had Jackpot.\n\nYour insurance payout has been added to your balance." : "❌ You lost the insurance bet. The dealer does not have Jackpot.\n\nYour insurance amount has been deducted.";
+        _insuranceWinLoseTxt.text = isWin
+            ? "💰 You won the insurance bet! The dealer had Jackpot.\n\nYour insurance payout has been added to your balance."
+            : "❌ You lost the insurance bet. The dealer does not have Jackpot.\n\nYour insurance amount has been deducted.";
     }
+
+    /// <summary>
+    /// Gets a specific card by power value from the deck (used for cheat/testing).
+    /// </summary>
     CardProperty GetSpecificCard(int power)
     {
-
         int card = Random.Range(0, RefMgr.cardsManager.cardsStackList.Count);
         for (int i = 0; i < RefMgr.cardsManager.cardsStackList.Count; i++)
         {
@@ -179,33 +153,33 @@ public class TableDealer : MonoBehaviour
         }
         return cp;
     }
-    public void SendOneCard(bool isPlayer)
+
+    /// <summary>
+    /// Gets a random card from the deck.
+    /// </summary>
+    CardProperty Get1Card()
     {
-        StartCoroutine(SendOneCardCrt(isPlayer));
+        int card = Random.Range(0, RefMgr.cardsManager.cardsStackList.Count);
+        CardProperty cp = RefMgr.cardsManager.cardsStackList[card];
+        RefMgr.cardsManager.cardsStackList.Remove(cp);
+        return cp;
     }
+
+    #endregion
+
+    #region Card Dealing (Split and General)
+
+    /// <summary>
+    /// Deals a card to the specified hand (used for split or general hands).
+    /// </summary>
     public void SendOneCardGen(CardsData cardsData)
     {
         StartCoroutine(SendOneCardCrtGen(cardsData));
     }
 
-    IEnumerator SendOneCardCrt(bool isPlayer)
-    {
-        yield break;
-        yield return new WaitForSeconds(0.1f);
-
-        RectTransform cardPos = isPlayer ? playerCardPos : dealerCardPos;
-        CardProperty card = Get1Card();
-        int totalCards = isPlayer ? playerCards.Count : dealerCards.Count;
-        playCardAnimation(card.gameObject, cardPos.gameObject, totalCards, true, isPlayer);
-        if (isPlayer)
-            playerCards.Add(card);
-        else
-            dealerCards.Add(card);
-        RefMgr.cardsManager.RearrangeCardsStack();
-        yield return new WaitForSeconds(1f);
-        RefMgr.cardsManager.ReCreateLimitedCards();
-    }
-
+    /// <summary>
+    /// Coroutine to deal a card to a hand and update UI/logic.
+    /// </summary>
     public IEnumerator SendOneCardCrtGen(CardsData cardsData)
     {
         yield return new WaitForSeconds(0.1f);
@@ -217,15 +191,21 @@ public class TableDealer : MonoBehaviour
         yield return new WaitForSeconds(1f);
         RefMgr.cardsManager.ReCreateLimitedCards();
 
-        // check scores limit and show drop card or standup 
+        // Check if more actions are needed after dealing
         CheckScoresForNext(false);
     }
 
+    /// <summary>
+    /// Deals a card to the current split hand.
+    /// </summary>
     public void SendOneCardOnSplit()
     {
         StartCoroutine(SendOneCardOnSplitCrt());
     }
 
+    /// <summary>
+    /// Coroutine to deal a card to the current split hand and update UI/logic.
+    /// </summary>
     IEnumerator SendOneCardOnSplitCrt()
     {
         hitStandBar.ShowHitStandBar(false);
@@ -240,6 +220,13 @@ public class TableDealer : MonoBehaviour
         CheckScoresForNext(false);
     }
 
+    #endregion
+
+    #region Game State and Score Checking
+
+    /// <summary>
+    /// Checks the current hand's score and updates the UI and game state accordingly.
+    /// </summary>
     public void CheckScoresForNext(bool isStand)
     {
         int scores = Rm.currentCardData.highScores;
@@ -276,7 +263,7 @@ public class TableDealer : MonoBehaviour
                     }
                     else
                     {
-                        // drop dealer cards
+                        // Dealer's turn to play
                         Debug.LogError("Dealer's turn to drop cards");
                         if (RefMgr.gameStateManager.GetCurrentGameState() != GameState.State.STAND)
                             RefMgr.gameStateManager.UpDateGameState(GameState.State.STAND);
@@ -285,220 +272,18 @@ public class TableDealer : MonoBehaviour
             }
         }
     }
-    public void OnSplitCheckNextTurn(bool isStand)
-    {
-        //CardsData cd =
-        return;
-
-        int splitingNumber = hitStandBar.splitingTurnNumber;
-        if (splitingNumber == 0)
-        {
-            if (isStand || RefMgr.scoreManager.playerTotalScores_P1_Split >= LocalSettingBlackJack.ScoresLimit)
-            {
-                hitStandBar.splitingTurnNumber++;
-                hitStandBar.ShowHitStandBar(false);
-                SendOneCardOnSplit();
-            }
-        }
-        else if (splitingNumber == 1)
-        {
-            if (isStand || RefMgr.scoreManager.playerTotalScores_P2_Split >= LocalSettingBlackJack.ScoresLimit)
-                hitStandBar.splitingTurnNumber++;
-        }
-        splitingNumber = hitStandBar.splitingTurnNumber;
-        if (splitingNumber < 2)
-            hitStandBar.ShowHitStandBar(true);
-        else
-            RefMgr.gameStateManager.UpDateGameState(GameState.State.STAND);
-    }
-
-    CardProperty Get1Card()
-    {
-        int card = Random.Range(0, RefMgr.cardsManager.cardsStackList.Count);
-        CardProperty cp = RefMgr.cardsManager.cardsStackList[card];
-        RefMgr.cardsManager.cardsStackList.Remove(cp);
-        return cp;
-    }
-    void playCardAnimation(GameObject ObjectToAnimate, GameObject targetObj, int offSet, bool shouldFLip, bool isPlayer)
-    {
-        return;
-        GameObject card = ObjectToAnimate;
-        GameObject TgtObj = targetObj;
-        card.transform.SetParent(TgtObj.transform.parent.transform);
-
-        Vector3 tgtPos = TgtObj.transform.position + Vector3.right * offSet * 50;
-        ObjectToAnimate.transform.DOMove(tgtPos, 0.25f)
-            .OnComplete(() => FlipCard(card, shouldFLip, isPlayer));
-
-        ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.25f);
-
-    }
-
-
-    public void FlipCard(GameObject obj, bool shouldFLip, bool isPlayer)
-    {
-        return;
-        if (!shouldFLip)
-        {
-            MoveSlightlyUp(obj);
-        }
-        else
-        {
-            obj.transform.DORotate(Vector2.up * 90, 0.25f)
-                .OnComplete(() => ReverseRotate(obj, isPlayer));
-        }
-    }
-
-    public void ReverseRotate(GameObject obj, bool isPlayer)
-    {
-        return;
-        bool isPlyr = isPlayer;
-        scoreManager.SetScores(isPlyr);
-        obj.GetComponent<CardProperty>().ShowOriginalSprite();
-        obj.transform.DORotate(Vector2.zero, 0.25f);
-    }
-
-    void MoveSlightlyUp(GameObject obj)
-    {
-        return;
-        Vector3 targetPosition = obj.transform.position + Vector3.up * 100;
-        obj.transform.DOMove(targetPosition, 0.25f).SetLoops(2, LoopType.Yoyo);
-    }
 
     #endregion
-    int resultIndex = 0;
-    public void DeclearWinnerWithSplit()
-    {
-        return;
-        if (resultIndex == 0)
-        {
-            if (scoreManager.playerTotalScores_P1_Split > LocalSettingBlackJack.ScoresLimit)
-                UpDateWinStatus(Winner.BUST);
-            else if (scoreManager.playerTotalScores_P1_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
-                UpDateWinStatus(Winner.WON);
-            else if (scoreManager.playerTotalScores_P1_Split < scoreManager.dealerTotalScores)
-                UpDateWinStatus(Winner.DEALERWINS);
-            else if (scoreManager.playerTotalScores_P1_Split == scoreManager.dealerTotalScores)
-                UpDateWinStatus(Winner.PUSH);
-        }
-        else
-        {
-            if (scoreManager.playerTotalScores_P2_Split > LocalSettingBlackJack.ScoresLimit)
-                UpDateWinStatus(Winner.BUST);
-            else if (scoreManager.playerTotalScores_P2_Split > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
-                UpDateWinStatus(Winner.WON);
-            else if (scoreManager.playerTotalScores_P2_Split < scoreManager.dealerTotalScores)
-                UpDateWinStatus(Winner.DEALERWINS);
-            else if (scoreManager.playerTotalScores_P2_Split == scoreManager.dealerTotalScores)
-                UpDateWinStatus(Winner.PUSH);
-        }
 
-    }
+    #region Insurance Logic
 
-    public void DeclearWinner(bool isJackpot)
-    {
-        return;
-        if (isJackpot)
-            UpDateWinStatus(Winner.JACKPOT);
-        else if (scoreManager.playerTotalScores > LocalSettingBlackJack.ScoresLimit)
-            UpDateWinStatus(Winner.BUST);
-        else if (scoreManager.playerTotalScores > scoreManager.dealerTotalScores || scoreManager.dealerTotalScores > LocalSettingBlackJack.ScoresLimit)
-            UpDateWinStatus(Winner.WON);
-        else if (scoreManager.playerTotalScores < scoreManager.dealerTotalScores)
-            UpDateWinStatus(Winner.DEALERWINS);
-        else if (scoreManager.playerTotalScores == scoreManager.dealerTotalScores)
-            UpDateWinStatus(Winner.PUSH);
-
-        //StartCoroutine(InsuranceWinner(1.8f));
-
-    }
-    public void UpDateWinStatus(Winner status)
-    {
-        return;
-        winStatus = status;
-        if (!hitStandBar.isSplitting || resultIndex > 0)
-            RefMgr.gameStateManager.UpDateGameState(GameState.State.RESULT);
-        ShowWinningDetail(winStatus);
-    }
-    int winAmount = 0;
-    void ShowWinningDetail(Winner status)
-    {
-        return;
-        float delayTime = 0.5f;
-        switch (status)
-        {  // 0 => Player win
-           // 1 => Dealer win
-           // 2 => Push
-
-            case Winner.DEALERWINS:
-                //Debug.Log("Dealer Winner");
-                winAmount = 0;
-                winAmountTxt.gameObject.SetActive(false);
-                StartCoroutine(ShowWinPanel("Dealer win", winAmount));
-                //if (!hitStandBar.isSplitting)
-                //    StartCoroutine(CloneAndSendChips(delayTime, 1));
-                //else
-                //    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
-                LocalSettingBlackJack.TotalGamesLost++;
-                break;
-            case Winner.PUSH:
-                //Debug.Log("Match tie");
-                winAmount = RefMgr.potHandler.GetPotAmount;
-                if (RefMgr.hitStandBarHandler.isDoubleBet)
-                    winAmount = winAmount * 2;
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
-                StartCoroutine(ShowWinPanel("Push", winAmount));
-                //if (!hitStandBar.isSplitting)
-                //    StartCoroutine(CloneAndSendChips(delayTime, 2));
-                //else
-                //    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 2));
-                LocalSettingBlackJack.TotalTieGames++;
-                break;
-            case Winner.JACKPOT:
-                //Debug.Log("Jackpot");
-                winParticles.SetActive(true);
-                winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
-                StartCoroutine(ShowWinPanel("Jackpot", winAmount));
-                //if (!hitStandBar.isSplitting)
-                //    StartCoroutine(CloneAndSendChips(delayTime, 0));
-                //else
-                //    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
-                LocalSettingBlackJack.TotalJackPOT++;
-                break;
-            case Winner.BUST:
-                //Debug.Log("Busted");
-                winAmount = 0;
-                winAmountTxt.gameObject.SetActive(false);
-                StartCoroutine(ShowWinPanel("Bust", winAmount));
-                //if (!hitStandBar.isSplitting)
-                //    StartCoroutine(CloneAndSendChips(delayTime, 1));
-                //else
-                //    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 1));
-                LocalSettingBlackJack.TotalGamesLost++;
-                break;
-            case Winner.WON:
-                //Debug.Log("Won");
-                winAmount = RefMgr.potHandler.GetPotAmount * 2;
-                if (RefMgr.hitStandBarHandler.isDoubleBet)
-                    winAmount = winAmount * 2;
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
-                StartCoroutine(ShowWinPanel("won", winAmount));
-                //if (!hitStandBar.isSplitting)
-                //    StartCoroutine(CloneAndSendChips(delayTime, 0));
-                //else
-                //    StartCoroutine(CloneAndSendChipsOnSplit(delayTime, resultIndex, 0));
-                LocalSettingBlackJack.TotalGamesWon++;
-                break;
-        }
-    }
+    /// <summary>
+    /// Handles insurance payout and UI after a delay.
+    /// </summary>
     public IEnumerator InsuranceWinner(float delayTime)
     {
         int insuranceAmount = RefMgr.potHandler.GetInsuranceAmount;
-        // Insuracne  reward
+        // Insurance reward
         if (insuranceAmount > 0)
             RefMgr.tableDealer.ShowInsuranceWinLosepanel(false);
         if (RefMgr.tableDealer.isPlayerWonTheInsurance)
@@ -510,43 +295,36 @@ public class TableDealer : MonoBehaviour
         yield return new WaitForSeconds(delayTime);
     }
 
+    /// <summary>
+    /// Called when player makes an insurance choice.
+    /// </summary>
+    public void InusranceChoice(bool isYes)
+    {
+        isInsuranceEligible = false;
+        _insurancePanel.SetActive(false);
+        RefMgr.potHandler.SetInsuranceAmount(isYes);
+    }
 
+    #endregion
+
+    #region Win/Lose UI and Chip Animation
+
+    /// <summary>
+    /// Shows the win/lose panel with the result message and amount.
+    /// </summary>
     IEnumerator ShowWinPanel(string winStatusMessage, int wonAmount)
     {
         RefMgr.potHandler.CollectReward(wonAmount);
         WinLoosepanel.SetActive(true);
-
-
         image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);
-
         winLooseStatusTxt.text = winStatusMessage;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
         WinLoosepanel.SetActive(false);
-
     }
 
-    IEnumerator CloneAndSendChips(float delay, int winLoose)
-    {
-        yield break;
-        // 0 => Player win
-        // 1 => Dealer win
-        // 2 => Push
-        yield return new WaitForSeconds(delay);
-        RectTransform initialPos = null;
-        RectTransform finalPos = null;
-        RefMgr.betBarHandler.BettedPos(out initialPos, out finalPos, winLoose);
-
-        BetBarHandler bbh = RefMgr.betBarHandler;
-
-        for (int i = 0; i < bbh.betPlacedChips.Count; i++)
-        {
-            GameObject chip = Instantiate(bbh.betPlacedChips[i]);
-            LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
-            bbh.betPlacedChips[i].SetActive(false);
-            playChipAnimation(chip, finalPos.gameObject);
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
+    /// <summary>
+    /// Animates chips moving from a hand to a target position (used for win/lose).
+    /// </summary>
     IEnumerator CloneAndSendChipsOnWinLoose(CardsData cardsData, Vector3 initialPos, Vector3 targetPos)
     {
         for (int i = 0; i < cardsData.chipsList.Count; i++)
@@ -577,60 +355,10 @@ public class TableDealer : MonoBehaviour
             }
         }
     }
-    public void ToggleChipsStatus(bool isActive)
-    {
-        return;
-        BetBarHandler bbh = RefMgr.betBarHandler;
-        for (int i = 0; i < bbh.betPlacedChips.Count; i++)
-        {
-            bbh.betPlacedChips[i].SetActive(isActive);
-        }
-    }
-    IEnumerator CloneAndSendChipsOnSplit(float delay, int splitPart, int winLoose)
-    {
-        // 0 => Player win
-        // 1 => Dealer win
-        // 2 => Push
-        yield return new WaitForSeconds(delay);
-        RectTransform initialPos = null;
-        RectTransform finalPos = null;
 
-        RefMgr.betBarHandler.BettedPosSplit(out initialPos, out finalPos, splitPart, winLoose);
-
-        BetBarHandler bbh = RefMgr.betBarHandler;
-        if (splitPart == 0)
-        {
-            for (int i = 0; i < bbh.betPlacedChips_1_Split.Count; i++)
-            {
-                GameObject chip = Instantiate(bbh.betPlacedChips_1_Split[i]);
-                LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
-                bbh.betPlacedChips_1_Split[i].SetActive(false);
-                playChipAnimation(chip, finalPos.gameObject);
-                yield return new WaitForSeconds(0.01f);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < bbh.betPlacedChips_2_Split.Count; i++)
-            {
-                GameObject chip = Instantiate(bbh.betPlacedChips_2_Split[i]);
-                LocalSettingBlackJack.SetPositionAndRectTransform(chip, initialPos, initialPos.transform.parent);
-                bbh.betPlacedChips_2_Split[i].SetActive(false);
-                playChipAnimation(chip, finalPos.gameObject);
-                yield return new WaitForSeconds(0.01f);
-            }
-        }
-    }
-    void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj)
-    {
-        return;
-        GameObject TgtObj = targetObj;
-        GameObject chip = ObjectToAnimate;
-        chip.transform.SetParent(TgtObj.transform.parent.transform);
-
-        ObjectToAnimate.transform.DOMove(TgtObj.transform.position, 1.5f)
-            .OnComplete(() => Destroy(chip));
-    }
+    /// <summary>
+    /// Animates a chip to a target position and destroys it on arrival.
+    /// </summary>
     void playChipAnimationNew(GameObject ObjectToAnimate, Vector3 targetPos)
     {
         Vector3 TgtPos = targetPos;
@@ -640,13 +368,21 @@ public class TableDealer : MonoBehaviour
             .OnComplete(() => Destroy(chip));
     }
 
-    #region Show win lose of player hands
+    #endregion
 
+    #region Results and Game Reset
+
+    /// <summary>
+    /// Starts the coroutine to show results for all hands.
+    /// </summary>
     public void ShowResultsNew()
     {
         StartCoroutine(ShowResultsCrt());
     }
 
+    /// <summary>
+    /// Coroutine to process and display results for all hands, then reset the game.
+    /// </summary>
     IEnumerator ShowResultsCrt()
     {
         yield return new WaitForSeconds(0.2f);
@@ -688,85 +424,93 @@ public class TableDealer : MonoBehaviour
         {
             StartCoroutine(InsuranceWinner(0));
             yield return new WaitForSeconds(0.1f);
-            yield return new WaitUntil(() => !RefMgr.tableDealer._insuranceWinLosePanel.activeInHierarchy);
+            yield return new WaitUntil(() => !_insuranceWinLosePanel.activeInHierarchy);
         }
         StartCoroutine(CollectWasteCards());
-
     }
+
+    int winAmount = 0;
+
+    /// <summary>
+    /// Shows the win/lose/jackpot/push result for a hand and animates chips accordingly.
+    /// </summary>
     void ShowWinningDetailNew(Winner status, CardsData cd)
     {
         Vector3 tgtPos = Vector3.zero;
         Vector3 initPos = Vector3.zero;
+        winAmountTxt.gameObject.SetActive(true);
         switch (status)
         {
             case Winner.DEALERWINS:
                 winAmount = 0;
-                winAmountTxt.gameObject.SetActive(false);
+                winAmountTxt.text = "Dealer wins the round!";
                 StartCoroutine(ShowWinPanel("Dealer win", winAmount));
                 LocalSettingBlackJack.TotalGamesLost++;
 
                 tgtPos = cd.chipsPosRect.transform.position + Vector3.up * 2500;
                 initPos = cd.chipsPosRect.transform.position;
                 StartCoroutine(CloneAndSendChipsOnWinLoose(cd, initPos, tgtPos));
-                
+                SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.loseSound);
                 break;
+
             case Winner.PUSH:
                 winAmount = RefMgr.potHandler.GetPotAmount;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
+                winAmountTxt.text = "It's a tie! You get\n+$" + winAmount;
                 StartCoroutine(ShowWinPanel("Push", winAmount));
                 LocalSettingBlackJack.TotalTieGames++;
 
                 tgtPos = cd.chipsPosRect.transform.position + Vector3.down * 1000;
                 initPos = cd.chipsPosRect.transform.position;
                 StartCoroutine(CloneAndSendChipsOnWinLoose(cd, initPos, tgtPos));
-
+                SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.tieSound);
                 break;
+
             case Winner.JACKPOT:
                 winParticles.SetActive(true);
                 winAmount = (RefMgr.potHandler.GetPotAmount * 2) + (RefMgr.potHandler.GetPotAmount / 2);
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
+                winAmountTxt.text = "Jackpot! Huge win!\n+$" + winAmount;
                 StartCoroutine(ShowWinPanel("Jackpot", winAmount));
                 LocalSettingBlackJack.TotalJackPOT++;
 
                 tgtPos = cd.chipsPosRect.transform.position + Vector3.down * 1000;
                 initPos = cd.chipsPosRect.transform.position + Vector3.up * 2500;
                 StartCoroutine(CloneAndSendChipsOnWinLoose(cd, initPos, tgtPos));
-
+                SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.jackpotSound);
                 break;
+
             case Winner.BUST:
                 winAmount = 0;
-                winAmountTxt.gameObject.SetActive(false);
+                winAmountTxt.text = "You busted! Better luck next time!";
                 StartCoroutine(ShowWinPanel("Bust", winAmount));
                 LocalSettingBlackJack.TotalGamesLost++;
 
                 tgtPos = cd.chipsPosRect.transform.position + Vector3.up * 2500;
                 initPos = cd.chipsPosRect.transform.position;
                 StartCoroutine(CloneAndSendChipsOnWinLoose(cd, initPos, tgtPos));
-
+                SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.loseSound);
                 break;
+
             case Winner.WON:
                 winAmount = RefMgr.potHandler.GetPotAmount * 2;
                 if (RefMgr.hitStandBarHandler.isDoubleBet)
                     winAmount = winAmount * 2;
-                winAmountTxt.text = "+" + winAmount;
-                winAmountTxt.gameObject.SetActive(true);
-                StartCoroutine(ShowWinPanel("won", winAmount));
+                winAmountTxt.text = "You beat the dealer!\n+$" + winAmount;
+                StartCoroutine(ShowWinPanel("Won", winAmount));
                 LocalSettingBlackJack.TotalGamesWon++;
 
                 tgtPos = cd.chipsPosRect.transform.position + Vector3.down * 1000;
                 initPos = cd.chipsPosRect.transform.position + Vector3.up * 2500;
                 StartCoroutine(CloneAndSendChipsOnWinLoose(cd, cd.chipsPosRect.transform.position, tgtPos));
-
+                SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.winSound);
                 break;
         }
     }
 
-
-    #region Collecting waste cards
+    /// <summary>
+    /// Collects all cards from the table and moves them to the waste pile.
+    /// </summary>
     IEnumerator CollectWasteCards()
     {
         Rm rm = Rm.Instance;
@@ -789,9 +533,10 @@ public class TableDealer : MonoBehaviour
         }
         RefMgr.gameStateManager.UpDateGameState(GameState.State.RESULT);
     }
-    #endregion
 
-
+    /// <summary>
+    /// Resets all game data and clears the table for a new round.
+    /// </summary>
     public void ResetWholeGame()
     {
         Rm rm = Rm.Instance;
@@ -805,11 +550,13 @@ public class TableDealer : MonoBehaviour
         rm.cardsManager.ClearWasteCards();
     }
 
-
     #endregion
 
-    #region cards animation
+    #region Card Animation
 
+    /// <summary>
+    /// Animates a card to a target position and shows its dummy skin.
+    /// </summary>
     void PlayCardAnimation(GameObject objectToAnimate, GameObject targetObj)
     {
         if (objectToAnimate == null || targetObj == null)
@@ -817,19 +564,28 @@ public class TableDealer : MonoBehaviour
             Debug.LogError("Object to animate or target object is null.");
             return;
         }
-
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.cardCollect);
         objectToAnimate.transform.SetParent(targetObj.transform.parent);
         objectToAnimate.transform.DOMove(targetObj.transform.position, 0.2f)
             .OnComplete(() => OnCompleteShowDummyCard(objectToAnimate));
         objectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.2f);
     }
+
+    /// <summary>
+    /// Callback to show the dummy skin of a card after animation.
+    /// </summary>
     void OnCompleteShowDummyCard(GameObject obj)
     {
         obj.GetComponent<CardProperty>().ShowDummySkin();
     }
+
     #endregion
 
-    #region Cards splitting w.r.t current hand
+    #region Card Splitting
+
+    /// <summary>
+    /// Splits the current hand into two new hands, or splits a split hand further if possible.
+    /// </summary>
     public void SplitCardsOnSplit()
     {
         Rm rm = Rm.Instance;
@@ -854,16 +610,6 @@ public class TableDealer : MonoBehaviour
 
             Rm.currentCardData = rm.GetCardData(HandType.HANDTYPE.PLAYERHAND_SPLIT_P2_P1);
         }
-    }
-    #endregion
-
-
-    #region Insurance section
-    public void InusranceChoice(bool isYes)
-    {
-        isInsuranceEligible = false;
-        _insurancePanel.SetActive(false);
-        RefMgr.potHandler.SetInsuranceAmount(isYes);
     }
 
     #endregion

@@ -6,14 +6,18 @@ public class SoundMgrScriptable : ScriptableObject
     public AudioClip BGMusic,
         BridSound,
         ButtonSound,
-        CardFlip,
-        CardDrop,
-        CardCollect,
-        ChipBeting,
-        ChipCollect,
+        cardFlip,
+        cardDrop,
+        cardSlightlyUp,
+        cardCollect,
+        chipBeting,
+        chipCollect,
         coinAdding,
         coinRemoving,
-
-        Win;
+        tieSound,
+        winSound,
+        jackpotSound,
+        loseSound,
+        clearAllChips;
 
 }

@@ -16,11 +16,16 @@ MonoBehaviour:
   BGMusic: {fileID: 8300000, guid: d9c71772b2964b742961da319558831a, type: 3}
   BridSound: {fileID: 8300000, guid: c405fbd12b2b6564aa775d75087f7044, type: 3}
   ButtonSound: {fileID: 8300000, guid: cee566d735b109b4b982f621bd22d7f1, type: 3}
-  CardFlip: {fileID: 0}
-  CardDrop: {fileID: 0}
-  CardCollect: {fileID: 0}
-  ChipBeting: {fileID: 0}
-  ChipCollect: {fileID: 0}
-  coinAdding: {fileID: 0}
-  coinRemoving: {fileID: 0}
-  Win: {fileID: 0}
+  cardFlip: {fileID: 8300000, guid: e87f007f2b0a357418370876686acdd4, type: 3}
+  cardDrop: {fileID: 8300000, guid: 6c2a6bd0bd2cdc1429d7f698d539ef62, type: 3}
+  cardSlightlyUp: {fileID: 8300000, guid: 95801e787d97f47468001ddc6a0ecd07, type: 3}
+  cardCollect: {fileID: 8300000, guid: 6c2a6bd0bd2cdc1429d7f698d539ef62, type: 3}
+  chipBeting: {fileID: 8300000, guid: 07c18dbf70f31a444b8e53fd47b08f1b, type: 3}
+  chipCollect: {fileID: 8300000, guid: 16e341a89f3a50148a6055d5f74cc2f0, type: 3}
+  coinAdding: {fileID: 8300000, guid: 07c18dbf70f31a444b8e53fd47b08f1b, type: 3}
+  coinRemoving: {fileID: 8300000, guid: 07c18dbf70f31a444b8e53fd47b08f1b, type: 3}
+  tieSound: {fileID: 8300000, guid: ef9a41aa0ab427c499c29ac40ad70f1a, type: 3}
+  winSound: {fileID: 8300000, guid: 35b89a912f62d354db46f22f92a720b2, type: 3}
+  jackpotSound: {fileID: 8300000, guid: 44620db9f8f4812489f7abbd65c5f99c, type: 3}
+  loseSound: {fileID: 8300000, guid: d629b6bb4665d0e48b4772262269fdca, type: 3}
+  clearAllChips: {fileID: 8300000, guid: 16e341a89f3a50148a6055d5f74cc2f0, type: 3}

@@ -1,21 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Resource manager and central reference hub for all main game systems in the blackjack game.
+/// Provides singleton access, hand order management, and utility methods for hand/card data.
+/// </summary>
 public class Rm : MonoBehaviour
 {
-    public GameManager gameManager;
-    public GameStateManager gameStateManager;
-    public BetBarHandler betBarHandler;
-    public PotHandler potHandler;
-    public CardsManager cardsManager;
-    public TableDealer tableDealer;
-    public ScoreManager scoreManager;
-    public HitStandBarHandler hitStandBarHandler;
-    public DealerAIPlay dealerAIPlay;
+    #region Game System References
 
+    public GameManager gameManager;               // Reference to the main game manager
+    public GameStateManager gameStateManager;     // Reference to the game state manager
+    public BetBarHandler betBarHandler;           // Reference to the bet bar handler
+    public PotHandler potHandler;                 // Reference to the pot handler
+    public CardsManager cardsManager;             // Reference to the cards manager
+    public TableDealer tableDealer;               // Reference to the table dealer
+    //public ScoreManager scoreManager;             // Reference to the score manager
+    public HitStandBarHandler hitStandBarHandler; // Reference to the hit/stand bar handler
+    public DealerAIPlay dealerAIPlay;             // Reference to the dealer AI logic
 
-    #region Creating Instance
+    #endregion
+
+    #region Singleton Pattern
+
     private static Rm _instance;
+
+    /// <summary>
+    /// Singleton instance for global access.
+    /// </summary>
     public static Rm Instance
     {
         get
@@ -25,6 +37,10 @@ public class Rm : MonoBehaviour
             return _instance;
         }
     }
+
+    /// <summary>
+    /// Ensures only one instance exists in the scene.
+    /// </summary>
     private void Awake()
     {
         if (_instance == null)
@@ -33,10 +49,31 @@ public class Rm : MonoBehaviour
 
     #endregion
 
+    #region Hand Order and Card Data
+
+    /// <summary>
+    /// The order in which hands are processed (player, splits, dealer, etc.).
+    /// </summary>
     public HandType.HANDTYPE[] handsOrderEnum;
+
+    /// <summary>
+    /// The currently active hand's CardsData (static for global access).
+    /// </summary>
     public static CardsData currentCardData;
 
-    #region Get Valid Hand Card Data
+    /// <summary>
+    /// All CardsData objects in the game (player, splits, dealer, etc.).
+    /// </summary>
+    [SerializeField] public List<CardsData> cardsData = new List<CardsData>();
+
+    #endregion
+
+    #region Hand Navigation and Utility
+
+    /// <summary>
+    /// Returns the next valid (active) hand after the currentCardData, or null if none.
+    /// Used for progressing through player/split hands.
+    /// </summary>
     public CardsData GetValidHandCardData()
     {
         HandType.HANDTYPE currentHandType = currentCardData.handType;
@@ -55,7 +92,6 @@ public class Rm : MonoBehaviour
                 {
                     if (cardsData[j].isValidHand)
                     {
-                        HandType.HANDTYPE currentHandType2 = cardsData[j].handType;
                         cd = cardsData[j];
                         break;
                     }
@@ -66,11 +102,18 @@ public class Rm : MonoBehaviour
         }
         return cd;
     }
+
     #endregion
 
-    #region Get Valid Hand For Results
-    [HideInInspector] public int handIndexForResults = 0;
-    [HideInInspector] public CardsData cardsDataForResult;
+    #region Hand Results Navigation
+
+    [HideInInspector] public int handIndexForResults = 0;      // Index for iterating through hands for results
+    [HideInInspector] public CardsData cardsDataForResult;     // The current CardsData being processed for results
+
+    /// <summary>
+    /// Returns the next valid (active) player hand for result processing, skipping the dealer.
+    /// Updates handIndexForResults and cardsDataForResult.
+    /// </summary>
     public CardsData GetValidHandForResults()
     {
         HandType.HANDTYPE currentHandType = handsOrderEnum[handIndexForResults];
@@ -92,10 +135,8 @@ public class Rm : MonoBehaviour
                     {
                         if (cardsData[j].isValidHand)
                         {
-                            HandType.HANDTYPE currentHandType2 = cardsData[j].handType;
                             cd = cardsData[j];
                             handIndexForResults = i;
-                          
                             cardsDataForResult = cd;
                             handIndexForResults++;
                             break;
@@ -108,10 +149,14 @@ public class Rm : MonoBehaviour
         }
         return cd;
     }
+
     #endregion
 
-    #region Get card data by hand type
-    [SerializeField] public List<CardsData> cardsData = new List<CardsData>();
+    #region Card Data Lookup
+
+    /// <summary>
+    /// Returns the CardsData object for the requested hand type, or null if not found.
+    /// </summary>
     public CardsData GetCardData(HandType.HANDTYPE reqHandType)
     {
         foreach (CardsData card in cardsData)
@@ -121,5 +166,6 @@ public class Rm : MonoBehaviour
         }
         return null;
     }
+
     #endregion
 }

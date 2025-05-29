@@ -56,6 +56,7 @@ public class IAPManagerBJ : MonoBehaviour, IStoreListener
     }
     public void BuyProductID(string productId)
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
         if (m_StoreController != null && m_StoreExtensionProvider != null)
         {
             Product product = m_StoreController.products.WithID(productId);

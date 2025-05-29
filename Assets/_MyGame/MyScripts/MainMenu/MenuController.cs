@@ -36,8 +36,8 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BGMusic, true);
-        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BridSound, true);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BGMusic, true, 0.3f);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BridSound, true, 0.7f);
         exitPanel.SetActive(false);
         //menuController[mainMenuIndex].SetActive(true);
         UpDateTotalChipsTxts();

@@ -1,4 +1,3 @@
-
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
@@ -7,52 +6,57 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles the bet bar UI, bet button creation, chip animations, and bet logic for the blackjack game.
+/// </summary>
 public class BetBarHandler : MonoBehaviour
 {
-    [SerializeField] Rm refMgr;
-    [SerializeField] BetAmounts[] betAmounts;
-    [SerializeField] GameObject betBar;
-    [SerializeField] GameObject betBtnPrefab;
-    [SerializeField] GameObject placeYourBetMsg;
-    [SerializeField] GameObject clearBetBtn;
-    [SerializeField] GameObject dealBtn;
-    [SerializeField] GameObject dealnClearBtnGroup;
-    [SerializeField] GameObject betBarPos1;
-    [SerializeField] GameObject betBarPos2;
-    [SerializeField] RectTransform bettedChipsPos;
-    public RectTransform bettedChipsPos_1_Split;
-    public RectTransform bettedChipsPos_2_Split;
-    [SerializeField] RectTransform dealerBettedChipsPos;
-    [SerializeField] RectTransform dealerBettedChipsPos_P1_Split;
-    [SerializeField] RectTransform dealerBettedChipsPos_P2_Split;
-    [SerializeField] RectTransform playerBettedChipsPos;
-    [SerializeField] RectTransform playerBettedChipsPos_P1_Split;
-    [SerializeField] RectTransform playerBettedChipsPos_P2_Split;
+    #region Inspector Fields
 
-    public List<GameObject> chipsObjects;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips_1_Split;
-    /*[HideInInspector] */
-    public List<GameObject> betPlacedChips_2_Split;
-    List<GameObject> doubleBetPlacedChips;
+    [SerializeField] Rm refMgr;                         // Reference to the main game manager
+    [SerializeField] BetAmounts[] betAmounts;           // Array of available bet amounts and their icons
+    [SerializeField] GameObject betBar;                 // The bet bar UI object
+    [SerializeField] GameObject betBtnPrefab;           // Prefab for a single bet button
+    [SerializeField] GameObject placeYourBetMsg;        // "Place your bet" message UI
+    [SerializeField] GameObject clearBetBtn;            // Clear bet button UI
+    [SerializeField] GameObject dealBtn;                // Deal button UI
+    [SerializeField] GameObject dealnClearBtnGroup;     // Group containing deal and clear buttons
+    [SerializeField] GameObject betBarPos1;             // Bet bar position when visible
+    [SerializeField] GameObject betBarPos2;             // Bet bar position when hidden
+
+    #endregion
+
+    #region Runtime Fields
+
+    public List<GameObject> chipsBtnsObjects;           // List of instantiated bet button objects
+    CardsData playerCardsData;                          // Reference to the player's CardsData
+
+    #endregion
+
+    #region Unity Methods
 
     void Start()
     {
         OnResettingBet();
     }
 
+    #endregion
+
+    #region Bet Button Creation
+
+    /// <summary>
+    /// Creates bet buttons for each available bet amount, based on player's balance.
+    /// </summary>
     public void CreateBetButtons()
     {
-        chipsObjects = refMgr.gameManager.ClearList(chipsObjects);
+        chipsBtnsObjects = refMgr.gameManager.ClearList(chipsBtnsObjects);
         for (int i = 0; i < betAmounts.Length; i++)
         {
             if (refMgr.potHandler.IsHaveAmount(betAmounts[i].amount * 10) || i == 0)
             {
                 GameObject btn = Instantiate(betBtnPrefab);
                 btn.SetActive(true);
-                chipsObjects.Add(btn);
+                chipsBtnsObjects.Add(btn);
                 btn.GetComponent<Image>().sprite = betAmounts[i].coinIcon;
                 LocalSettingBlackJack.SetPositionAndRectTransform(btn, betBtnPrefab.GetComponent<RectTransform>(), betBtnPrefab.transform.parent);
                 Button betBtn = btn.GetComponent<Button>();
@@ -63,19 +67,34 @@ public class BetBarHandler : MonoBehaviour
             }
             else break;
         }
-        if (chipsObjects.Count <= 0)
+        if (chipsBtnsObjects.Count <= 0)
             refMgr.gameManager.ShowShopPanel();
     }
+
+    #endregion
+
+    #region Bet Bar UI
+
+    /// <summary>
+    /// Animates the bet bar to show or hide it.
+    /// </summary>
     public void ShowBetbar(bool isShow)
     {
         GameObject targetpos = isShow ? betBarPos1 : betBarPos2;
         betBar.transform.DOMove(targetpos.transform.position, 0.3f)
             .SetEase(Ease.OutCubic);
     }
-    #region Bet place button click
+
+    #endregion
+
+    #region Bet Placement and Chip Handling
+
+    /// <summary>
+    /// Called when a bet button is clicked. Places the bet and animates the chip.
+    /// </summary>
     public void PlaceBetBtnClick(int betAmount)
     {
-        //Debug.LogError("bet amount: " + betAmount);
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
         if (!refMgr.potHandler.IsHaveAmount(betAmount))
         {
             refMgr.gameManager.shopPanel.SetActive(true);
@@ -91,46 +110,45 @@ public class BetBarHandler : MonoBehaviour
         placeYourBetMsg.SetActive(false);
         CloneChipBtn(EventSystem.current.currentSelectedGameObject);
     }
-    CardsData playerCardsData;
+
+    /// <summary>
+    /// Clones the chip button to the player's bet area and animates it.
+    /// </summary>
     void CloneChipBtn(GameObject chip)
     {
-        if(playerCardsData == null)
+        if (playerCardsData == null)
             playerCardsData = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
         GameObject chipBtn = Instantiate(chip);
-        //betPlacedChips.Add(chipBtn);
+
         playerCardsData.chipsList.Add(chipBtn);
         chipBtn.transform.GetChild(1).gameObject.SetActive(false);
         Button btn = chipBtn.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() => WhenBettedChipBtnClick());
-        //LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, bettedChipsPos, bettedChipsPos.transform.parent);
         LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, playerCardsData.chipsPosRect, playerCardsData.chipsPosRect.transform.parent);
         chipBtn.transform.position = chip.transform.position;
         playChipAnimation(chipBtn, playerCardsData.chipsPosRect.gameObject, true);
     }
-    public void DoubleBetChipsCreation()
-    {
-        int totalChipsToCreate = betPlacedChips.Count;
-        foreach (GameObject chip in betPlacedChips)
-            chip.transform.position += new Vector3(-100, 0, 0);
-        for (int i = 0; i < totalChipsToCreate; i++)
-        {
-            GameObject chipBtn = Instantiate(betPlacedChips[i]);
-            doubleBetPlacedChips.Add(chipBtn);
-            LocalSettingBlackJack.SetPositionAndRectTransform(chipBtn, betPlacedChips[i].GetComponent<RectTransform>(), bettedChipsPos.transform.parent);
-            chipBtn.transform.position += new Vector3(100 * 2, 0, 0);
-        }
 
-    }
-    #endregion
+    /// <summary>
+    /// Called when a betted chip is clicked. Only active during the betting phase.
+    /// </summary>
     void WhenBettedChipBtnClick()
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
         if (refMgr.gameStateManager.GetCurrentGameState() != GameState.State.CHOOSINGBET)
             return;
         ShowBetbar(true);
         dealnClearBtnGroup.gameObject.SetActive(true);
-
     }
+
+    #endregion
+
+    #region Deal and Clear Logic
+
+    /// <summary>
+    /// Called when the deal button is clicked. Finalizes the bet and starts the game.
+    /// </summary>
     public void DealBtnClick()
     {
         if (!refMgr.potHandler.IsHaveAmount(refMgr.potHandler.GetPotAmount))
@@ -146,147 +164,73 @@ public class BetBarHandler : MonoBehaviour
         LocalSettingBlackJack.TotalGamesPlayed++;
     }
 
+    /// <summary>
+    /// Called when the clear button is clicked. Resets the bet.
+    /// </summary>
     public void ClearBtnClick()
     {
         OnResettingBet();
     }
 
-
+    /// <summary>
+    /// Resets the bet UI and chips to the initial state.
+    /// </summary>
     public void OnResettingBet()
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.clearAllChips);
         refMgr.potHandler.ResetTotalBet();
         placeYourBetMsg.SetActive(true);
         dealnClearBtnGroup.SetActive(false);
         ShowBetbar(true);
-        //betPlacedChips = refMgr.gameManager.ClearList(betPlacedChips);
-        if(playerCardsData == null)
+        if (playerCardsData == null)
             playerCardsData = refMgr.GetCardData(HandType.HANDTYPE.PLAYERHAND);
         playerCardsData.ClearAllChips();
-
-        if (doubleBetPlacedChips != null)
-        {
-            if (doubleBetPlacedChips.Count > 0)
-                foreach (GameObject chip in betPlacedChips)
-                    chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
-        }
-        doubleBetPlacedChips = refMgr.gameManager.ClearList(doubleBetPlacedChips);
-
     }
 
+    #endregion
+
+    #region Chip Animation
+
+    /// <summary>
+    /// Animates a chip to its target position, with optional offset for stacking.
+    /// </summary>
     void playChipAnimation(GameObject ObjectToAnimate, GameObject targetObj, bool isOffSetUse)
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.chipBeting);
         GameObject TgtObj = targetObj;
         GameObject chip = ObjectToAnimate;
         chip.transform.SetParent(TgtObj.transform.parent.transform);
         if (isOffSetUse)
         {
-            Vector3 tgtPos = TgtObj.transform.position + new Vector3(UnityEngine.Random.Range(-10, 11), betPlacedChips.Count * 1.5f, 0);
+            Vector3 tgtPos = TgtObj.transform.position + new Vector3(UnityEngine.Random.Range(-15, 16), playerCardsData.chipsList.Count * 1.5f, 0);
             ObjectToAnimate.transform.DOMove(tgtPos, 0.25f);
         }
         else
             ObjectToAnimate.transform.DOMove(TgtObj.transform.position, 0.25f);
         ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.25f);
-
     }
 
-    //public void ResetThings()
-    //{
-    //    dealnClearBtnGroup.SetActive(true);
-    //    if (doubleBetPlacedChips.Count > 0)
-    //    {
-    //        foreach (GameObject obj in doubleBetPlacedChips)
-    //        {
-    //            Destroy(obj);
-    //        }
-    //        doubleBetPlacedChips.Clear();
-    //        refMgr.potHandler.doubleBetPlacedTxt.gameObject.SetActive(false);
-    //        foreach (GameObject chip in betPlacedChips)
-    //        {
-    //            chip.transform.position = new Vector3(chip.transform.position.x + 100, chip.transform.position.y, 0);
-    //        }
-    //        Transform txt = refMgr.potHandler.totalbetPlacedTxt.transform;
-    //        txt.position = new Vector3(txt.position.x + 100, txt.position.y, 0);
-    //    }
+    #endregion
 
-    //    for (int i = 0; i < betPlacedChips_2_Split.Count; i++)
-    //        if (betPlacedChips_2_Split[i] != null)
-    //            Destroy(betPlacedChips_2_Split[i]);
-    //    for (int i = 0; i < betPlacedChips_1_Split.Count; i++)
-    //    {
-    //        betPlacedChips.Add(betPlacedChips_1_Split[i]);
-    //        LocalSettingBlackJack.SetPositionAndRectTransform(betPlacedChips[i], bettedChipsPos, bettedChipsPos.transform.parent);
-    //    }
-    //    betPlacedChips_1_Split.Clear();
-    //    betPlacedChips_2_Split.Clear();
-    //    refMgr.potHandler.PlaceBetAmount(0);
-    //}
+    #region Utility
 
+    /// <summary>
+    /// Resets the bet bar and sets the bet to zero.
+    /// </summary>
     public void ResetThings()
     {
         dealnClearBtnGroup.SetActive(true);
         refMgr.potHandler.PlaceBetAmount(0);
     }
 
-    public void BettedPos(out RectTransform initialPos, out RectTransform finalPos, int winLoose)
-    {
-        if (winLoose == 0)
-        {
-            initialPos = dealerBettedChipsPos;
-            finalPos = playerBettedChipsPos;
-        }
-        else if (winLoose == 1)
-        {
-            initialPos = bettedChipsPos;
-            finalPos = dealerBettedChipsPos;
-        }
-        else
-        {
-            initialPos = bettedChipsPos;
-            finalPos = playerBettedChipsPos;
-        }
-    }
-    public void BettedPosSplit(out RectTransform initialPos, out RectTransform finalPos, int splitPart, int winLoose)
-    {
-        // 0 => Player win
-        // 1 => Dealer win
-        // 2 => Push
-        if (splitPart == 0)
-        {
-            if (winLoose == 0) { initialPos = dealerBettedChipsPos_P1_Split; finalPos = playerBettedChipsPos_P1_Split; }
-            else if (winLoose == 1) { initialPos = bettedChipsPos_1_Split; finalPos = dealerBettedChipsPos_P1_Split; }
-            else { initialPos = bettedChipsPos_1_Split; finalPos = playerBettedChipsPos_P1_Split; }
-        }
-        else
-        {
-            if (winLoose == 0) { initialPos = dealerBettedChipsPos_P2_Split; finalPos = playerBettedChipsPos_P2_Split; }
-            else if (winLoose == 1) { initialPos = bettedChipsPos_2_Split; finalPos = dealerBettedChipsPos_P2_Split; }
-            else { initialPos = bettedChipsPos_2_Split; finalPos = playerBettedChipsPos_P2_Split; }
-        }
-    }
-
-    public void DuplicateBettedChipsAndAmountOnSplit()
-    {
-        float rndRange = 3f;
-        for (int i = 0; i < betPlacedChips.Count; i++)
-        {
-            betPlacedChips_1_Split.Add(betPlacedChips[i]);
-            float yPos = betPlacedChips_1_Split[i].GetComponent<RectTransform>().position.y;
-            betPlacedChips_1_Split[i].GetComponent<RectTransform>().position = new Vector2(bettedChipsPos_1_Split.position.x + UnityEngine.Random.Range(-rndRange, rndRange), yPos + UnityEngine.Random.Range(-rndRange, rndRange));
-
-            // for second
-            GameObject chip = Instantiate(betPlacedChips_1_Split[i]);
-            betPlacedChips_2_Split.Add(chip);
-            LocalSettingBlackJack.SetPositionAndRectTransform(chip, bettedChipsPos_2_Split, bettedChipsPos_2_Split.parent);
-            chip.GetComponent<RectTransform>().position = new Vector2(bettedChipsPos_2_Split.position.x + UnityEngine.Random.Range(-rndRange, rndRange), yPos + UnityEngine.Random.Range(-rndRange, rndRange));
-        }
-        betPlacedChips.Clear();
-        refMgr.potHandler.SetBetAmountForSplit();
-    }
-
+    #endregion
 }
+/// <summary>
+/// Serializable class for bet amount and its associated coin icon.
+/// </summary>
 [Serializable]
 public class BetAmounts
 {
-    public int amount;
-    public Sprite coinIcon;
+    public int amount;         // The bet amount value
+    public Sprite coinIcon;    // The icon representing this bet amount
 }

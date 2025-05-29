@@ -1,29 +1,47 @@
 using UnityEngine;
 using com.muzammil;
 
+/// <summary>
+/// Handles the UI and logic for the Hit/Stand bar in blackjack, including split and double bet actions.
+/// </summary>
 public class HitStandBarHandler : MonoBehaviour
 {
-    public Rm rm;
-    public GameObject hitStandBar;
-    public GameObject splitBtn;
-    public GameObject doubleBtn;
+    #region Inspector Fields
 
-    [ShowOnly] public bool isDoubleBet;
+    public Rm rm;                        // Reference to the main resource manager
+    public GameObject hitStandBar;       // The main hit/stand bar UI
+    public GameObject splitBtn;          // Split button UI
+    public GameObject doubleBtn;         // Double bet button UI
 
-    [ShowOnly] public bool isSplitting;
+    [ShowOnly] public bool isDoubleBet;          // True if double bet is active
+    [ShowOnly] public bool isSplitting;          // True if currently splitting
+    [ShowOnly] public int splitingTurnNumber;    // Current split turn number
 
-    [ShowOnly] public int splitingTurnNumber;
+    #endregion
 
+    #region Unity Methods
+
+    /// <summary>
+    /// Initializes the hit/stand bar to be hidden at the start.
+    /// </summary>
     private void Start()
     {
         hitStandBar.SetActive(false);
     }
+
+    #endregion
+
+    #region Main Logic
+
+    /// <summary>
+    /// Compares player and dealer scores after the initial 4 cards and updates the UI accordingly.
+    /// </summary>
     public void CompareScoresAfter4Cards()
     {
         int playerScores = rm.GetCardData(HandType.HANDTYPE.PLAYERHAND).highScores;
         int dealerScores = rm.GetCardData(HandType.HANDTYPE.DEALERHAND).highScores;
 
-        // When win with first 2 cards
+        // Check for natural blackjack or dealer blackjack
         if (playerScores == LocalSettingBlackJack.ScoresLimit || dealerScores == LocalSettingBlackJack.ScoresLimit)
         {
             ShowHitStandBar(false);
@@ -36,7 +54,6 @@ public class HitStandBarHandler : MonoBehaviour
             {
                 rm.dealerAIPlay.isJackPot = false;
                 rm.dealerAIPlay.isDealerTurn = true;
-
             }
             rm.GetCardData(HandType.HANDTYPE.PLAYERHAND).ShowJustHighScores();
             rm.GetCardData(HandType.HANDTYPE.DEALERHAND).ShowJustHighScores();
@@ -44,24 +61,26 @@ public class HitStandBarHandler : MonoBehaviour
         }
         else
         {
-            // when not won with first 2 cards
+            // No blackjack, show hit/stand bar and check for double/split options
             ShowHitStandBar(true);
 
-            // Checking to show Double bet Button.
+            // Show double bet button if player has enough cash
             if (rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
                 doubleBtn.SetActive(true);
             else
                 doubleBtn.SetActive(false);
 
-            // current card data after 4 cards to player hand cards
+            // Set current card data to player hand for split check
             Rm.currentCardData = rm.GetCardData(HandType.HANDTYPE.PLAYERHAND);
 
-            // Checking to show Split button
+            // Check if split button should be enabled
             CheckForSplitButtonActivation();
-
         }
     }
 
+    /// <summary>
+    /// Checks if the split button should be enabled for the current hand.
+    /// </summary>
     public void CheckForSplitButtonActivation()
     {
         if (Rm.currentCardData.handType == HandType.HANDTYPE.PLAYERHAND ||
@@ -74,26 +93,45 @@ public class HitStandBarHandler : MonoBehaviour
                 splitBtn.SetActive(false);
         }
         else
+        {
             splitBtn.SetActive(false);
+        }
     }
 
+    /// <summary>
+    /// Checks if the current hand has two cards of the same power (for split eligibility).
+    /// </summary>
     bool isPlayerHaveSamePowerCards(CardsData cardsData)
     {
         if (cardsData.cardsList.Count == 2)
             return cardsData.cardsList[0].Power == cardsData.cardsList[1].Power;
         return false;
     }
+
+    /// <summary>
+    /// Shows or hides the hit/stand bar and disables the double button.
+    /// </summary>
     public void ShowHitStandBar(bool isShow)
     {
         hitStandBar.SetActive(isShow);
         doubleBtn.SetActive(false);
     }
 
+    #endregion
+
+    #region Button Event Handlers
+
+    /// <summary>
+    /// Called when the Stand button is clicked. Proceeds to the next hand or dealer turn.
+    /// </summary>
     public void OnStandBtnClick()
     {
         rm.tableDealer.CheckScoresForNext(true);
     }
 
+    /// <summary>
+    /// Called when the Split button is clicked. Deducts bet, splits cards, and deals new cards.
+    /// </summary>
     public void OnSplitBtnClick()
     {
         if (!rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
@@ -109,6 +147,9 @@ public class HitStandBarHandler : MonoBehaviour
         rm.tableDealer.SendOneCardOnSplit();
     }
 
+    /// <summary>
+    /// Called when the Double button is clicked. Deducts double bet, disables UI, and hits.
+    /// </summary>
     public void OnDoubleBtnClick()
     {
         if (!rm.potHandler.IsHaveAmount(rm.potHandler.GetPotAmount))
@@ -122,6 +163,9 @@ public class HitStandBarHandler : MonoBehaviour
         Invoke(nameof(OnHitBtnClick), 0.5f);
     }
 
+    /// <summary>
+    /// Called when the Hit button is clicked. Deals a card to the current hand and disables split/double.
+    /// </summary>
     public void OnHitBtnClick()
     {
         ShowHitStandBar(false);
@@ -130,13 +174,5 @@ public class HitStandBarHandler : MonoBehaviour
         doubleBtn.SetActive(false);
     }
 
-
-    public void ResetThings()
-    {
-        return;
-        isSplitting = false;
-        isDoubleBet = false;
-        doubleBtn.SetActive(false);
-        splitingTurnNumber = 0;
-    }
+    #endregion
 }

@@ -25,6 +25,7 @@ public class CardSettingManager : MonoBehaviour
 
     public void OnToggleChanged()
     {
+        SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
         GameObject clickedObject = EventSystem.current.currentSelectedGameObject;
         for (int i = 0; i < cardDesigns.Length; i++)
         {

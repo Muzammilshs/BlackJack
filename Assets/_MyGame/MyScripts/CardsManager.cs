@@ -1,37 +1,65 @@
 using com.muzammil;
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the deck(s) of cards, card instantiation, shuffling, and waste pile for the blackjack game.
+/// Handles card stack creation, drawing, and recycling.
+/// </summary>
 public class CardsManager : MonoBehaviour
 {
-    [SerializeField] int cardsLimit;
-    [SerializeField] Rm refMgr;
-    public CardsContainer allCards;
-    [ShowOnly]
-    public List<int> cardsIndexes;
-    [ShowOnly]
-    public List<CardProperty> cardsStackList;
-    public List<GameObject> wasteCardsList;
-    public RectTransform cardsStackPos, wasteCardsPos;
+    #region Inspector Fields
 
+    [SerializeField] int totalDecks = 10;           // Number of decks to use in the game
+    [SerializeField] int cardsLimit;                // Maximum number of cards in the stack at any time
+    [SerializeField] Rm refMgr;                     // Reference to the main resource manager
+    public CardsContainer allCards;                 // ScriptableObject containing all card prefabs and back designs
+
+    #endregion
+
+    #region Card Stacks and Positions
+
+    [ShowOnly]
+    public List<int> cardsIndexes;                  // List of available card indexes for drawing
+    [ShowOnly]
+    public List<CardProperty> cardsStackList;       // The current stack of card objects in play
+    public List<GameObject> wasteCardsList;         // List of cards that have been discarded
+    public RectTransform cardsStackPos;             // Position for the card stack in the UI
+    public RectTransform wasteCardsPos;             // Position for the waste pile in the UI
+
+    #endregion
+
+    #region Unity Methods
+
+    /// <summary>
+    /// Initializes the card manager, sets card design, and creates the initial card stack.
+    /// </summary>
     void Start()
     {
         refMgr.gameManager.SetCardDesign();
         CardsCreation();
     }
 
+    #endregion
+
+    #region Card Stack Creation and Management
+
+    /// <summary>
+    /// Clears the card stack and creates a new set of card indexes.
+    /// </summary>
     void CardsCreation()
     {
         ClearCardsStack();
         CreateCardsIndexes();
     }
 
+    /// <summary>
+    /// Fills the cardsIndexes list with all card indexes for all decks, then creates the stack.
+    /// </summary>
     void CreateCardsIndexes()
     {
         ClearIntList();
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < totalDecks; j++)
         {
             for (int i = 0; i < allCards.Card.Length; i++)
             {
@@ -41,19 +69,24 @@ public class CardsManager : MonoBehaviour
         CreateLimitedCardsForStack();
     }
 
+    /// <summary>
+    /// Replenishes the card stack and/or indexes if running low.
+    /// </summary>
     public void ReCreateLimitedCards()
     {
-        if (cardsIndexes.Count < 12)
+        if (cardsIndexes.Count < 20)
         {
             CreateCardsIndexes();
         }
         if (cardsStackList.Count < (cardsLimit - 8))
         {
             CreateLimitedCardsForStack();
-            //Debug.LogError("Re CreateLimited Cards");
         }
     }
 
+    /// <summary>
+    /// Instantiates cards from the available indexes until the stack reaches the limit.
+    /// </summary>
     void CreateLimitedCardsForStack()
     {
         while (cardsStackList.Count < cardsLimit)
@@ -78,6 +111,9 @@ public class CardsManager : MonoBehaviour
         RearrangeCardsStack();
     }
 
+    /// <summary>
+    /// Rearranges the card stack visually in the UI.
+    /// </summary>
     public void RearrangeCardsStack()
     {
         for (int i = 0; i < cardsStackList.Count; i++)
@@ -87,6 +123,13 @@ public class CardsManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Card Drawing and Utility
+
+    /// <summary>
+    /// Returns a random card index from the available indexes and removes it from the list.
+    /// </summary>
     int GetRandomCard()
     {
         int cardIndex = Random.Range(0, cardsIndexes.Count);
@@ -95,6 +138,9 @@ public class CardsManager : MonoBehaviour
         return val;
     }
 
+    /// <summary>
+    /// Clears the list of card indexes.
+    /// </summary>
     void ClearIntList()
     {
         if (cardsIndexes == null)
@@ -105,6 +151,9 @@ public class CardsManager : MonoBehaviour
         cardsIndexes.Clear();
     }
 
+    /// <summary>
+    /// Destroys all cards in the stack and clears the list.
+    /// </summary>
     void ClearCardsStack()
     {
         if (cardsStackList == null)
@@ -122,49 +171,13 @@ public class CardsManager : MonoBehaviour
         cardsStackList.Clear();
     }
 
-    public void SendCardsToWasteCardsPos()
-    {
-        return;
-        StartCoroutine(CollectWasteCards());
-    }
+    #endregion
 
-    IEnumerator CollectWasteCards()
-    {
-        yield break;
-        yield return new WaitForSeconds(0.1f);
-        refMgr.scoreManager.ShowScoreObjects(false);
-        foreach (CardProperty card in refMgr.tableDealer.playerCards)
-        {
-            wasteCardsList.Add(card.gameObject);
-            PlayCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-            yield return new WaitForSeconds(0.1f);
-        }
-        foreach (CardProperty card in refMgr.tableDealer.playerCards_1_Split)
-        {
-            wasteCardsList.Add(card.gameObject);
-            PlayCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-            yield return new WaitForSeconds(0.1f);
-        }
-        foreach (CardProperty card in refMgr.tableDealer.playerCards_2_Split)
-        {
-            wasteCardsList.Add(card.gameObject);
-            PlayCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-            yield return new WaitForSeconds(0.1f);
-        }
-        foreach (CardProperty card in refMgr.tableDealer.dealerCards)
-        {
-            wasteCardsList.Add(card.gameObject);
-            PlayCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-            yield return new WaitForSeconds(0.1f);
-        }
-        refMgr.tableDealer.playerCards.Clear();
-        refMgr.tableDealer.playerCards_1_Split.Clear();
-        refMgr.tableDealer.playerCards_2_Split.Clear();
-        refMgr.tableDealer.dealerCards.Clear();
-        yield return new WaitForSeconds(1);
-        ClearWasteCards();
-    }
+    #region Waste Pile Management
 
+    /// <summary>
+    /// Destroys all cards in the waste pile and clears the list.
+    /// </summary>
     public void ClearWasteCards()
     {
         for (int i = wasteCardsList.Count - 1; i > 0; i--)
@@ -175,196 +188,5 @@ public class CardsManager : MonoBehaviour
         }
     }
 
-    void PlayCardAnimation(GameObject objectToAnimate, GameObject targetObj)
-    {
-        if (objectToAnimate == null || targetObj == null)
-        {
-            Debug.LogError("Object to animate or target object is null.");
-            return;
-        }
-
-        objectToAnimate.transform.SetParent(targetObj.transform.parent);
-        objectToAnimate.transform.DOMove(targetObj.transform.position, 0.2f)
-            .OnComplete(() => OnCompleteShowDummyCard(objectToAnimate));
-        objectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.2f);
-    }
-
-    void OnCompleteShowDummyCard(GameObject obj)
-    {
-        obj.GetComponent<CardProperty>().ShowDummySkin();
-    }
+    #endregion
 }
-
-
-
-
-
-
-//using com.muzammil;
-//using DG.Tweening;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class CardsManager : MonoBehaviour
-//{
-//    [SerializeField] int cardsLimit;
-//    [SerializeField] Rm refMgr;
-//    public CardsContainer allCards;
-//    [ShowOnly]
-//    public List<int> cardsIndexes;
-//    [ShowOnly]
-//    public List<CardProperty> cardsStackList;
-//    public List<GameObject> wasteCardsList;
-//    [SerializeField] RectTransform cardsStackPos, wasteCardsPos;
-
-//    void Start()
-//    {
-//        refMgr.gameManager.SetCardDesign();
-//        CardsCreation();
-//    }
-
-//    void CardsCreation()
-//    {
-//        ClearCardsStack();
-//        CreateCardsIndexes();
-//    }
-//    void CreateCardsIndexes()
-//    {
-//        ClearIntList();
-//        for (int j = 0; j < 5; j++)
-//            for (int i = 0; i < allCards.Card.Length; i++)
-//                cardsIndexes.Add(i);
-//        CreateLimitedCardsForStack();
-//    }
-//    public void ReCreateLimitedCards()
-//    {
-//        if (cardsStackList.Count < (cardsLimit - 8))
-//            CreateLimitedCardsForStack();
-//        Debug.LogError("Re CreateLimited Cards");
-//    }
-//    void CreateLimitedCardsForStack()
-//    {
-//        if (cardsStackList.Count < cardsLimit)
-//        {
-//            int cardIndex = GetRandomCard();
-//            GameObject card = Instantiate(allCards.Card[GetRandomCard()].gameObject);
-//            LocalSettingBlackJack.SetPosAndRect(card, cardsStackPos, cardsStackPos.transform.parent);
-//            cardsStackList.Add(card.GetComponent<CardProperty>());
-//            card.GetComponent<CardProperty>().ShowDummySkin();
-//            CreateLimitedCardsForStack();
-//        }
-//        else
-//        {
-//            RearrangeCardsStack();
-//            return;
-//        }
-//    }
-
-//    public void RearrangeCardsStack()
-//    {
-//        for (int i = 0; i < cardsStackList.Count; i++)
-//        {
-//            Vector2 cardPos = cardsStackPos.transform.position + (Vector3.up * (-i * 10));
-//            cardsStackList[i].transform.position = cardPos;
-//        }
-//    }
-//    int GetRandomCard()
-//    {
-//        int cardIndex = Random.Range(0, cardsIndexes.Count);
-//        int val = cardsIndexes[cardIndex];
-//        cardsIndexes.RemoveAt(cardIndex);
-//        return val;
-//    }
-
-
-//    void ClearIntList()
-//    {
-//        if (cardsIndexes == null)
-//        {
-//            cardsIndexes = new List<int>();
-//            return;
-//        }
-//        cardsIndexes.Clear();
-//    }
-//    void ClearCardsStack()
-//    {
-//        if (cardsStackList == null)
-//        {
-//            cardsStackList = new List<CardProperty>();
-//            return;
-//        }
-//        if (cardsStackList.Count > 0)
-//        {
-//            foreach (CardProperty card in cardsStackList)
-//                Destroy(card.gameObject);
-//        }
-//        cardsStackList.Clear();
-//    }
-
-
-//    public void SendCardsToWasteCardsPos()
-//    {
-//        StartCoroutine(CollectWasteCards());
-//    }
-
-//    IEnumerator CollectWasteCards()
-//    {
-//        yield return new WaitForSeconds(0.1f);
-//        refMgr.scoreManager.ShowScoreObjects(false);
-//        foreach (CardProperty card in refMgr.tableDealer.playerCards)
-//        {
-//            wasteCardsList.Add(card.gameObject);
-//            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-//            yield return new WaitForSeconds(0.1f);
-//        }
-//        foreach (CardProperty card in refMgr.tableDealer.playerCards_1_Split)
-//        {
-//            wasteCardsList.Add(card.gameObject);
-//            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-//            yield return new WaitForSeconds(0.1f);
-//        }
-//        foreach (CardProperty card in refMgr.tableDealer.playerCards_2_Split)
-//        {
-//            wasteCardsList.Add(card.gameObject);
-//            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-//            yield return new WaitForSeconds(0.1f);
-//        }
-//        foreach (CardProperty card in refMgr.tableDealer.dealerCards)
-//        {
-//            wasteCardsList.Add(card.gameObject);
-//            playCardAnimation(card.gameObject, wasteCardsPos.gameObject);
-//            yield return new WaitForSeconds(0.1f);
-//        }
-//        refMgr.tableDealer.playerCards.Clear();
-//        refMgr.tableDealer.playerCards_1_Split.Clear();
-//        refMgr.tableDealer.playerCards_2_Split.Clear();
-//        refMgr.tableDealer.dealerCards.Clear();
-//        yield return new WaitForSeconds(1);
-//        ClearWasteCards();
-//    }
-
-//    void ClearWasteCards()
-//    {
-//        for (int i = wasteCardsList.Count - 1; i > 0; i--)
-//        {
-//            GameObject obj = wasteCardsList[i];
-//            wasteCardsList.RemoveAt(i);
-//            Destroy(obj);
-//        }
-//    }
-//    void playCardAnimation(GameObject ObjectToAnimate, GameObject targetObj)
-//    {
-//        GameObject card = ObjectToAnimate;
-//        GameObject TgtObj = targetObj;
-//        card.transform.SetParent(TgtObj.transform.parent.transform);
-//        ObjectToAnimate.transform.DOMove(targetObj.transform.position, 0.2f)
-//            .OnComplete(() => OnCompleteShowDummyCard(card));
-//        ObjectToAnimate.transform.DORotateQuaternion(targetObj.transform.rotation, 0.2f);
-//    }
-
-//    void OnCompleteShowDummyCard(GameObject obj)
-//    {
-//        obj.GetComponent<CardProperty>().ShowDummySkin();
-//    }
-//}
