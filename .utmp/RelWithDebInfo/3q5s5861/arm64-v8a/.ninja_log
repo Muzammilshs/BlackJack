@@ -21,3 +21,5 @@
 21	1486	7702126477383598	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	5b174ecead524f20
 4	1641	7702126478916152	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	492320a380bfc732
 1642	1763	7702126480172072	D:/Amjad_Ali_Work/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3q5s5861/obj/arm64-v8a/libgame.so	c28b78d3b525f828
+3	608	7702890692251098	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	64221e553fb9491c
+608	1210	7702890698330844	D:/Amjad_Ali_Work/BlackJack/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3q5s5861/obj/arm64-v8a/libswappywrapper.so	28cfc9e7033f73a0

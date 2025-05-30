@@ -26996,7 +26996,7 @@ MonoBehaviour:
   - amount: 50
     coinIcon: {fileID: 1808719148, guid: 6eca52e174631bb4db22c57782fb790b, type: 3}
   - amount: 100
-    coinIcon: {fileID: 6505997049489021710, guid: 178038c749c3fcd4daf4867ae2279c01, type: 3}
+    coinIcon: {fileID: -1779511084, guid: 6eca52e174631bb4db22c57782fb790b, type: 3}
   - amount: 250
     coinIcon: {fileID: -417924212, guid: 6eca52e174631bb4db22c57782fb790b, type: 3}
   - amount: 500
