@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour
 {
     #region Inspector Fields
 
-    [SerializeField] Rm refMgr;                  // Reference to the main resource manager
-    [HideInInspector] public Sprite dummyCardSprite; // The current card back sprite
-    public GameObject shopPanel;                 // Shop panel UI
-    [SerializeField] GameObject exitPanel;       // Exit confirmation panel UI
+    [SerializeField] Rm refMgr;                         // Reference to the main resource manager
+    [HideInInspector] public Sprite dummyCardSprite;    // The current card back sprite
+    public GameObject shopPanel;                        // Shop panel UI
+    [SerializeField] GameObject exitPanel;              // Exit confirmation panel UI
 
     #endregion
 
@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        QualitySettings.vSyncCount = 0; // Disable VSync
         Application.targetFrameRate = 120; // Set frame rate above 60fps
         if (LoginWithGoogle.instance == null)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
