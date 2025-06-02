@@ -15,64 +15,72 @@ using UnityEngine.SceneManagement;
 
 public class LoginWithGoogle : MonoBehaviour
 {
+    #region Fields
+
+    // Google API client ID
     public string GoogleAPI = "169344897492-ca16hmmio829q8rllakn574heqmvdg1a.apps.googleusercontent.com";
     private GoogleSignInConfiguration configuration;
 
+    // Firebase authentication and user references
     Firebase.Auth.FirebaseAuth auth;
     Firebase.Auth.FirebaseUser user;
 
+    // UI references for user info
     public TMP_Text Username, UserEmail;
-
     public Image UserProfilePic;
     private string imageUrl;
     private bool isGoogleSignInInitialized = false;
 
+    // Reference to GoogleAuth script for first launch logic
     [SerializeField] private GoogleAuth googleAuth;
+
+    // Firebase Realtime Database reference
     public DatabaseReference databaseReference;
 
+    // User and coin data
     public string userId;
-
     public static LoginWithGoogle instance;
     public int totalCash;
 
+    // UI panels
     public GameObject loadingPanel;
-
     public GameObject googleLoginPanel;
     public MenuController menuController;
 
+    #endregion
+
+    #region Unity Methods
+
     private void Awake()
     {
+        // Singleton pattern to persist instance across scenes
         if (instance == null)
         {
-
             instance = this;
         }
-
         DontDestroyOnLoad(gameObject);
     }
+
     void Start()
     {
+        // Show loading panel while initializing
         loadingPanel.SetActive(true);
 
+        // Initialize Firebase and check for existing user
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
-
             if (task.IsFaulted)
-
             {
-
                 Debug.LogError("Failed to initialize Firebase: " + task.Exception);
-
                 return;
-
             }
 
             FirebaseApp app = FirebaseApp.DefaultInstance;
-
             databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
             auth = FirebaseAuth.DefaultInstance;
             Debug.Log("Firebase Initialized");
 
+            // Check if user info is stored locally
             string id = PlayerPrefs.GetString("UserName");
             if (!string.IsNullOrEmpty(id))
             {
@@ -83,7 +91,6 @@ public class LoginWithGoogle : MonoBehaviour
             }
             else
             {
-
                 loadingPanel.SetActive(false);
             }
 
@@ -91,24 +98,29 @@ public class LoginWithGoogle : MonoBehaviour
             AddCoins(0);
 #endif
         });
-
     }
 
+    #endregion
 
+    #region Google Sign-In Methods
 
-
+    /// <summary>
+    /// Initiates the Google login process.
+    /// </summary>
     public void Login()
     {
         LoginAsync();
     }
 
-
+    /// <summary>
+    /// Handles the asynchronous Google Sign-In and Firebase authentication.
+    /// </summary>
     public async void LoginAsync()
     {
         Username.text = "Logging in...";
-
         Debug.Log("Login started");
 
+        // Initialize Google Sign-In configuration if not already done
         if (!isGoogleSignInInitialized)
         {
             Debug.Log("Initializing Google Sign-In Configuration...");
@@ -169,10 +181,14 @@ public class LoginWithGoogle : MonoBehaviour
         Debug.Log("Login() function end reached.");
     }
 
+    #endregion
 
+    #region Database and Coin Management
 
-
-
+    /// <summary>
+    /// Fetches and updates the user's coin balance in the database.
+    /// </summary>
+    /// <param name="newCoins">Amount of coins to add.</param>
     public void AddCoins(int newCoins)
     {
         if (databaseReference == null)
@@ -189,7 +205,6 @@ public class LoginWithGoogle : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 if (snapshot.Exists && int.TryParse(snapshot.Value.ToString(), out currentCash))
                 {
-                    //Debug.Log($"Fetched total cash: {currentCash} for user {userId}");
                     totalCash = currentCash;
                     LocalSettingBlackJack.SetTotalCashLocal(currentCash);
                     if (MenuController.instance != null)
@@ -215,7 +230,6 @@ public class LoginWithGoogle : MonoBehaviour
             {
                 if (saveTask.IsCompletedSuccessfully)
                 {
-                    //Debug.Log($"Successfully saved total cash {updatedCash} for user {userId}");
                     Username.text = $"Coins: {updatedCash}";
                     LocalSettingBlackJack.GetTotalCash();
                     if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -238,12 +252,22 @@ public class LoginWithGoogle : MonoBehaviour
         });
     }
 
+    #endregion
+
+    #region Coroutines
+
+    /// <summary>
+    /// Waits briefly before checking first launch logic after sign-in.
+    /// </summary>
     IEnumerator DelayedCheckSignIn()
     {
         yield return new WaitForSeconds(0.1f); // tiny wait to ensure Firebase is ready
         googleAuth.CheckFirstLaunch();
     }
 
+    /// <summary>
+    /// Loads a user profile image from a URL and sets it to the UI.
+    /// </summary>
     IEnumerator LoadImage(string imageUri)
     {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUri);
@@ -260,4 +284,6 @@ public class LoginWithGoogle : MonoBehaviour
             Debug.LogError("Error loading image: " + www.error);
         }
     }
+
+    #endregion
 }

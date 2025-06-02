@@ -9,15 +9,15 @@ public class Rm : MonoBehaviour
 {
     #region Game System References
 
-    public GameManager gameManager;               // Reference to the main game manager
-    public GameStateManager gameStateManager;     // Reference to the game state manager
-    public BetBarHandler betBarHandler;           // Reference to the bet bar handler
-    public PotHandler potHandler;                 // Reference to the pot handler
-    public CardsManager cardsManager;             // Reference to the cards manager
-    public TableDealer tableDealer;               // Reference to the table dealer
+    public GameManager gameManager;                 // Reference to the main game manager
+    public GameStateManager gameStateManager;       // Reference to the game state manager
+    public BetBarHandler betBarHandler;             // Reference to the bet bar handler
+    public PotHandler potHandler;                   // Reference to the pot handler
+    public CardsManager cardsManager;               // Reference to the cards manager
+    public TableDealer tableDealer;                 // Reference to the table dealer
     //public ScoreManager scoreManager;             // Reference to the score manager
-    public HitStandBarHandler hitStandBarHandler; // Reference to the hit/stand bar handler
-    public DealerAIPlay dealerAIPlay;             // Reference to the dealer AI logic
+    public HitStandBarHandler hitStandBarHandler;   // Reference to the hit/stand bar handler
+    public DealerAIPlay dealerAIPlay;               // Reference to the dealer AI logic
 
     #endregion
 

@@ -6,16 +6,13 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    //public GameObject[] menuController;
+    #region Fields
+
+    // Reference to the exit confirmation panel
     public GameObject exitPanel;
-    //public Button settingButton;
-    //public Button closeButton;
 
+    // Array of text fields displaying total chips in various UI locations
     [SerializeField] TMP_Text[] totalChipsTxt;
-
-    private int mainMenuIndex = 0;
-    private int loadingpPanelIndex = 1;
-
 
     [Header("Games Stats")]
     public TMP_Text totalGamesPlayedTxt;
@@ -24,27 +21,37 @@ public class MenuController : MonoBehaviour
     public TMP_Text totalTieGamesTxt;
     public TMP_Text totalJackpotsTxt;
 
-
+    // Singleton instance
     public static MenuController instance;
+
+    #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
-        if(instance == null)
+        // Ensure only one instance exists (Singleton pattern)
+        if (instance == null)
             instance = this;
     }
 
-
     void Start()
     {
+        // Play background music and bridge sound
         SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BGMusic, true, 0.3f);
         SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.BridSound, true, 0.7f);
+
+        // Hide exit panel at start
         exitPanel.SetActive(false);
-        //menuController[mainMenuIndex].SetActive(true);
+
+        // Initialize UI with current values
         UpDateTotalChipsTxts();
         UpdateGameStats();
     }
+
     private void Update()
     {
+        // Toggle exit panel when Escape key is released
         if (Keyboard.current.escapeKey.wasReleasedThisFrame)
         {
             if (exitPanel.activeInHierarchy)
@@ -54,29 +61,42 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    #endregion
 
+    #region UI Button Handlers
+
+    // Called when the Exit button is clicked
     public void OnExitButtonClick()
     {
         Application.Quit();
     }
+
+    // Called when the Play button is clicked
     public void OnPlayBtnClick()
     {
-        //menuController[loadingpPanelIndex].SetActive(true);
+        // Load the next scene (gameplay)
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    #endregion
+
+    #region UI Update Methods
+
+    // Updates all total chips text fields with local values
     public void UpDateTotalChipsTxtsWithLocalValues()
     {
         foreach (var txt in totalChipsTxt)
             txt.text = LocalSettingBlackJack.GetTotalCashLocal().ToString("N0");
-
     }
+
+    // Updates all total chips text fields with server values
     public void UpDateTotalChipsTxts()
     {
         foreach (var txt in totalChipsTxt)
             txt.text = LocalSettingBlackJack.GetTotalCash().ToString("N0");
-    
     }
+
+    // Updates total chips text fields at start, using Google login if available
     public void UpdateInStartTxts()
     {
         if (totalChipsTxt == null || totalChipsTxt.Length == 0)
@@ -92,18 +112,9 @@ public class MenuController : MonoBehaviour
             if (txt != null)
                 txt.text = cash.ToString("N0");
         }
-
-        //Debug.Log($"Updating total chips display: {cash}");
     }
 
-    //public void UpdateInStartTxts()
-    //{
-    //    foreach (var txt in totalChipsTxt)
-    //        txt.text = LoginWithGoogle.instance.totalCash.ToString("N0");
-
-    //    Debug.Log("Updating");
-    //}
-
+    // Updates the game statistics UI fields
     void UpdateGameStats()
     {
         totalGamesPlayedTxt.text = $"PLAYED : {LocalSettingBlackJack.TotalGamesPlayed}";
@@ -112,4 +123,6 @@ public class MenuController : MonoBehaviour
         totalTieGamesTxt.text = $"TIE : {LocalSettingBlackJack.TotalTieGames}";
         totalJackpotsTxt.text = $"JACKPOT : {LocalSettingBlackJack.TotalJackPOT}";
     }
+
+    #endregion
 }
