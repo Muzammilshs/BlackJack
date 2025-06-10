@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 public class LoginWithGoogle : MonoBehaviour
 {
     #region Fields
-
+    public GameObject closeBtn;
     // Google API client ID
     public string GoogleAPI = "169344897492-ca16hmmio829q8rllakn574heqmvdg1a.apps.googleusercontent.com";
     private GoogleSignInConfiguration configuration;
@@ -63,6 +63,11 @@ public class LoginWithGoogle : MonoBehaviour
 
     void Start()
     {
+#if UNITY_EDITOR
+        closeBtn.SetActive(true);
+#elif UNITY_ANDROID || UNITY_IOS
+        closeBtn.SetActive(false);
+#endif
         // Show loading panel while initializing
         loadingPanel.SetActive(true);
 

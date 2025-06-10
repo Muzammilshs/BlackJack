@@ -52,7 +52,11 @@ public class BetBarHandler : MonoBehaviour
         chipsBtnsObjects = refMgr.gameManager.ClearList(chipsBtnsObjects);
         for (int i = 0; i < betAmounts.Length; i++)
         {
-            if (refMgr.potHandler.IsHaveAmount(betAmounts[i].amount * 10) || i == 0)
+            //if (refMgr.potHandler.IsHaveAmount(betAmounts[i].amount * 10) || i == 0)
+            int tempIhandle = 1;
+            if (i == 0)
+                tempIhandle = 0;
+            if (refMgr.potHandler.IsHaveAmount(betAmounts[i - tempIhandle].amount) || i == 0)
             {
                 GameObject btn = Instantiate(betBtnPrefab);
                 btn.SetActive(true);
@@ -97,12 +101,14 @@ public class BetBarHandler : MonoBehaviour
         SoundManagerBJ.Instance.PlayAudioClip(SoundManagerBJ.AllSounds.ButtonSound);
         if (!refMgr.potHandler.IsHaveAmount(betAmount))
         {
-            refMgr.gameManager.shopPanel.SetActive(true);
+            //refMgr.gameManager.shopPanel.SetActive(true);
+            BtnClickAction(refMgr.gameManager.shopPanel.GetComponent<CanvasGroup>());
             return;
         }
         if (!refMgr.potHandler.IsHaveAmount(refMgr.potHandler.GetPotAmount + betAmount))
         {
-            refMgr.gameManager.shopPanel.SetActive(true);
+            //refMgr.gameManager.shopPanel.SetActive(true);
+            BtnClickAction(refMgr.gameManager.shopPanel.GetComponent<CanvasGroup>());
             return;
         }
         refMgr.potHandler.PlaceBetAmount(betAmount);
@@ -111,6 +117,19 @@ public class BetBarHandler : MonoBehaviour
         CloneChipBtn(EventSystem.current.currentSelectedGameObject);
     }
 
+
+    void BtnClickAction(CanvasGroup _activateThis)
+    {
+        // Fade in and activate specified CanvasGroups
+        //foreach (CanvasGroup cg in _activateThis)
+        CanvasGroup cg = _activateThis;
+        {
+            cg.gameObject.SetActive(true); // Ensure the object is enabled
+            cg.DOFade(1f, 0.3f).SetUpdate(UpdateType.Normal);
+            cg.interactable = true;
+            cg.blocksRaycasts = true;
+        }
+    }
     /// <summary>
     /// Clones the chip button to the player's bet area and animates it.
     /// </summary>

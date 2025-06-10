@@ -702,7 +702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &23216904
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13412,6 +13412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272f2439f64e0534b93a28c4cea45840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  closeBtn: {fileID: 1754170790}
   GoogleAPI: 169344897492-ca16hmmio829q8rllakn574heqmvdg1a.apps.googleusercontent.com
   Username: {fileID: 1227202533}
   UserEmail: {fileID: 64590971}
@@ -29816,7 +29817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1754170791
 RectTransform:
   m_ObjectHideFlags: 0
