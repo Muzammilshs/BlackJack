@@ -56,7 +56,7 @@ public class BetBarHandler : MonoBehaviour
             int tempIhandle = 1;
             if (i == 0)
                 tempIhandle = 0;
-            if (refMgr.potHandler.IsHaveAmount(betAmounts[i - tempIhandle].amount) || i == 0)
+            if (refMgr.potHandler.IsHaveAmount(betAmounts[i - tempIhandle].amount) || i <= 10)
             {
                 GameObject btn = Instantiate(betBtnPrefab);
                 btn.SetActive(true);

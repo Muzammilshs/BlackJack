@@ -542,6 +542,7 @@ public class TableDealer : MonoBehaviour
         Rm rm = Rm.Instance;
         rm.cardsDataForResult = null;
         rm.handIndexForResults = 0;
+        rm.dealerAIPlay.isJackPot = false;
 
         for (int i = 0; i < rm.cardsData.Count; i++)
         {
